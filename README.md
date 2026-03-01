@@ -286,6 +286,8 @@ For `opengym run` (multi-session mode), both `tests/` and `steps/` are excluded 
 
 ## Multi-Session Challenges (Infra-Only)
 
+> **Hard ≠ infra.** Single-session challenges test LLM reasoning and coding. Only multi-session challenges are true infrastructure tests — they kill your agent between steps and verify that state persists through your system, not through a large context window.
+
 Challenges that test **memory persistence, multi-agent coordination, and cross-session state** require `opengym run` — manual `opengym score` is blocked for these challenges.
 
 ```bash
