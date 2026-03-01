@@ -30,7 +30,7 @@ jobs:
           import yaml
           from pathlib import Path
           required = {'id', 'name', 'difficulty', 'category', 'language', 'verify', 'dimension'}
-          valid_dimensions = {'coding', 'memory', 'tool-use', 'self-correction', 'safety', 'multi-agent', 'planning'}
+          valid_dimensions = {'coding', 'memory', 'tool-use', 'resilience', 'safety', 'multi-agent', 'planning'}
           for meta in sorted(Path('challenges').glob('*/metadata.yaml')):
               data = yaml.safe_load(meta.read_text())
               missing = required - set(data.keys())
