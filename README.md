@@ -5,7 +5,7 @@
 OpenGym is an open-source benchmark that evaluates AI agents across **7 capability dimensions**: coding, memory persistence, tool discovery, multi-step planning, self-correction, safety boundaries, and multi-agent coordination. Unlike benchmarks that only test "can the model solve this?", OpenGym tests "does the agent system work reliably?"
 
 ```bash
-git clone https://github.com/opengym-ai/opengym && cd opengym
+git clone https://github.com/widingmarcus-cyber/opengym && cd opengym
 pip install -e .
 opengym run 101 --agent "python my_agent.py --task '{task}' --dir {workspace}"
 opengym score all --summary

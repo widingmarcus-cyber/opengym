@@ -33,8 +33,8 @@ dependencies = [
 opengym = "cli.__main__:main"
 
 [project.urls]
-Homepage = "https://github.com/opengym-ai/opengym"
-Repository = "https://github.com/opengym-ai/opengym"
+Homepage = "https://github.com/widingmarcus-cyber/opengym"
+Repository = "https://github.com/widingmarcus-cyber/opengym"
 
 [tool.setuptools.packages.find]
 include = ["cli*"]
