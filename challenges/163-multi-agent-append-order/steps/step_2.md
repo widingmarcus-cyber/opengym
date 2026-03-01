@@ -7,10 +7,6 @@ You are Agent B. Your task is to append the second line to the shared log file.
 B:step2
 ```
 
-After this step, the file should contain exactly 2 lines:
-```
-A:step1
-B:step2
-```
+After this step, the file should contain the previous content plus your new line.
 
 IMPORTANT: You MUST preserve Agent A's existing line. Append only, do not overwrite.

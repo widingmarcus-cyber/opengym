@@ -7,23 +7,8 @@ The configuration has been updated since your last session. The current config i
 
 Compare the current configuration against the baseline you stored in `setup/drift_report.json` during Step 1.
 
-Detect the drift and write your findings to `setup/answer.json`:
+Detect any drift and write your findings to `setup/answer.json` with:
+- `"drifted"`: `true` if any field changed, `false` otherwise
+- `"changes"`: array of objects describing each change, with keys `"task"`, `"field"`, `"from"` (baseline value), `"to"` (current value)
 
-```json
-{
-  "drifted": true,
-  "changes": [
-    {"task": "sync", "field": "interval", "from": "daily", "to": "weekly"}
-  ]
-}
-```
-
-Also update `setup/config.json` to reflect the current (drifted) state:
-```json
-{
-  "tasks": [
-    {"name": "backup", "interval": "hourly"},
-    {"name": "sync", "interval": "weekly"}
-  ]
-}
-```
+Also update `setup/config.json` to reflect the current (drifted) configuration state described above.

@@ -32,8 +32,8 @@ def fetch(challenge_id: str, output: str | None):
             click.echo(f"  {cid}: already exists, skipping (use --output to fetch elsewhere)")
             continue
 
-        # Copy the challenge folder to workspace
-        shutil.copytree(src, dest)
+        # Copy the challenge folder to workspace (exclude tests to prevent answer leakage)
+        shutil.copytree(src, dest, ignore=shutil.ignore_patterns('tests'))
         click.echo(f"  {cid}: fetched -> {dest}")
 
     click.echo(f"\nWorkspace: {workspace}")

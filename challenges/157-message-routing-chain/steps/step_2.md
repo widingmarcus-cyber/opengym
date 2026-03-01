@@ -2,15 +2,10 @@ You are the Processor agent. Your task is to read an incoming message, transform
 
 1. Read `setup/messages/msg_001.json`.
 2. Transform the `payload` value to UPPERCASE.
-3. Write a new message to `setup/messages/msg_002.json`:
+3. Write a new message to `setup/messages/msg_002.json` with:
+   - `"from"`: `"processor"`
+   - `"to"`: `"sink"`
+   - `"payload"`: the uppercase version of the payload from msg_001.json
+   - `"timestamp"`: `2`
 
-```json
-{
-  "from": "processor",
-  "to": "sink",
-  "payload": "HELLO WORLD",
-  "timestamp": 2
-}
-```
-
-The `payload` must be the uppercase version of what was in msg_001.json. Keep the routing chain intact: `from` is "processor", `to` is "sink".
+Keep the routing chain intact.

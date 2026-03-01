@@ -17,19 +17,6 @@ Add the following entry:
 }
 ```
 
-After this step, `setup/shared.json` must contain BOTH `agent_a` and `agent_b` entries:
-
-```json
-{
-  "agent_a": {
-    "status": "done",
-    "result": 42
-  },
-  "agent_b": {
-    "status": "done",
-    "result": 99
-  }
-}
-```
+After this step, `setup/shared.json` must contain BOTH `agent_a` and `agent_b` entries.
 
 **Important:** Do NOT overwrite the file with only Agent B's data. You must merge both entries.

@@ -2,21 +2,13 @@
 
 Read `setup/progress.json` to determine where the batch job was interrupted.
 
-Resume processing from the first remaining item and complete all remaining items (8, 9, 10).
+Resume processing from the first remaining item and complete all remaining items.
 
 Update `setup/progress.json` to reflect full completion:
-```json
-{
-  "completed": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-  "remaining": [],
-  "interrupted": false
-}
-```
+- Move all remaining items to the `completed` list
+- Set `remaining` to an empty array
+- Set `interrupted` to `false`
 
-Write `setup/answer.json` with the summary:
-```json
-{
-  "total_completed": 10,
-  "resumed_from": 8
-}
-```
+Write `setup/answer.json` with:
+- `"total_completed"`: total number of items processed across both sessions
+- `"resumed_from"`: the first item ID that was resumed in this session

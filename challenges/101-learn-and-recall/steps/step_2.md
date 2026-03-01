@@ -7,6 +7,6 @@ Write a Python function in `setup/distraction.py` called `sum_primes_below_100()
 The function should:
 - Take no arguments
 - Return an integer (the sum of all primes below 100)
-- Be correct (the answer is 1060)
+- Be correct
 
 This is a standalone task. Complete it fully before moving on.

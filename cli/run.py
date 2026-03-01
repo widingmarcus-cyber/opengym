@@ -86,9 +86,9 @@ def _run_sequential(ids: list[str], challenges_dir: Path, ws: Path, agent: str,
         src = challenges_dir / cid
         challenge_ws = ws / cid
 
-        # Fetch if not already present
+        # Fetch if not already present (exclude tests/steps to prevent answer leakage)
         if not challenge_ws.exists():
-            shutil.copytree(src, challenge_ws)
+            shutil.copytree(src, challenge_ws, ignore=shutil.ignore_patterns('tests', 'steps'))
             click.echo(f"  Fetched to {challenge_ws}", err=True)
 
         # Load metadata
@@ -100,13 +100,13 @@ def _run_sequential(ids: list[str], challenges_dir: Path, ws: Path, agent: str,
         run_start = time.time()
 
         if challenge_type == "multi-session":
-            run_multi_session(cid, challenge_ws, agent, meta, timeout)
+            run_multi_session(cid, challenge_ws, agent, meta, timeout, original_path=src)
         else:
             run_single_session(cid, challenge_ws, agent, meta, timeout)
 
         # Score
         if not no_score:
-            result = score_challenge(cid, challenge_ws, src, timeout=timeout)
+            result = score_challenge(cid, challenge_ws, src, timeout=timeout, _internal=True)
             # Override duration to include agent run time, not just scoring time
             result["duration_seconds"] = round(time.time() - run_start, 2)
             results.append(result)
@@ -177,9 +177,9 @@ def _run_one_challenge(cid: str, challenges_dir: Path, ws: Path, agent_cmd: str,
     src = challenges_dir / cid
     challenge_ws = ws / cid
 
-    # Fetch if not already present
+    # Fetch if not already present (exclude tests/steps to prevent answer leakage)
     if not challenge_ws.exists():
-        shutil.copytree(src, challenge_ws)
+        shutil.copytree(src, challenge_ws, ignore=shutil.ignore_patterns('tests', 'steps'))
 
     # Load metadata
     meta_file = src / "metadata.yaml"
@@ -190,12 +190,12 @@ def _run_one_challenge(cid: str, challenges_dir: Path, ws: Path, agent_cmd: str,
     run_start = time.time()
 
     if challenge_type == "multi-session":
-        run_multi_session(cid, challenge_ws, agent_cmd, meta, timeout)
+        run_multi_session(cid, challenge_ws, agent_cmd, meta, timeout, original_path=src)
     else:
         run_single_session(cid, challenge_ws, agent_cmd, meta, timeout)
 
     if not no_score:
-        result = score_challenge(cid, challenge_ws, src, timeout=timeout)
+        result = score_challenge(cid, challenge_ws, src, timeout=timeout, _internal=True)
         result["duration_seconds"] = round(time.time() - run_start, 2)
         return result
     return None
@@ -215,13 +215,16 @@ def run_single_session(challenge_id: str, workspace: Path, agent_cmd: str, meta:
     return invoke_agent(agent_cmd, task, workspace, meta, timeout)
 
 
-def run_multi_session(challenge_id: str, workspace: Path, agent_cmd: str, meta: dict, timeout: int) -> bool:
+def run_multi_session(challenge_id: str, workspace: Path, agent_cmd: str, meta: dict,
+                      timeout: int, original_path: Path = None) -> bool:
     """Run agent across multiple sessions, killing process between steps."""
     num_steps = meta.get("steps", 1)
     persist_patterns = meta.get("persist", [])
     step_timeout = meta.get("step_timeout", timeout)
 
-    steps_dir = workspace / "steps"
+    # Read steps from original challenge path (not workspace) to prevent agent
+    # from browsing future step files
+    steps_dir = original_path / "steps" if original_path else workspace / "steps"
     if not steps_dir.exists():
         click.echo(f"  Error: Multi-session challenge missing steps/ directory", err=True)
         return False

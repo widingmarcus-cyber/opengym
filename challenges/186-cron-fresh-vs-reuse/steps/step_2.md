@@ -8,12 +8,5 @@ The schedule runs again. Execute all tasks from `setup/schedule.json` a second t
 Update `setup/execution_log.json` to include both run 1 and run 2 executions.
 
 Then write `setup/answer.json` with the total count of fresh vs reuse executions across both runs:
-- t1 (fresh) ran in run 1 and run 2 = 2 fresh executions
-- t2 (reuse) ran in run 1 and run 2 = 2 reuse executions
-- t3 (fresh) ran in run 1 and run 2 = 2 fresh executions
-- Total: fresh_count = 4, reuse_count = 2
-
-Expected `setup/answer.json`:
-```json
-{"fresh_count": 4, "reuse_count": 2}
-```
+- `"fresh_count"`: total number of executions that used "fresh" policy across all runs
+- `"reuse_count"`: total number of executions that used "reuse" policy across all runs

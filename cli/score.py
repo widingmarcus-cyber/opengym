@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -101,7 +102,8 @@ def score(challenge_id: str, workspace: str | None, summary: bool, json_output: 
             print_summary(report)
 
 
-def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path, timeout: int = 120) -> dict:
+def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path,
+                    timeout: int = 120, _internal: bool = False) -> dict:
     """Run tests for a single challenge and return results."""
     meta_file = original_path / "metadata.yaml"
     with open(meta_file) as f:
@@ -110,10 +112,13 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
     estimated_cost = meta.get("estimated_cost_usd", 0.0)
     challenge_type = meta.get("challenge_type", "MODEL_DEPENDENT")
 
-    # Check test integrity — compare test files against originals
-    tampered = check_test_integrity(workspace_path / "tests", original_path / "tests")
-
-    if tampered:
+    # Block direct scoring of multi-session challenges
+    if meta.get("type") == "multi-session" and not _internal:
+        click.echo(
+            f"  Error: '{challenge_id}' is a multi-session challenge. "
+            f"Use 'opengym run {challenge_id} --agent <cmd>' instead.",
+            err=True,
+        )
         return {
             "challenge": challenge_id,
             "name": meta["name"],
@@ -127,83 +132,115 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
             "score": 0,
             "duration_seconds": 0.0,
             "estimated_cost_usd": estimated_cost,
-            "error": "Test files were tampered with. Score invalidated.",
+            "error": "Multi-session challenge cannot be scored directly. Use 'opengym run'.",
         }
 
-    # Run the verify command, ensuring we use the current Python interpreter
-    verify_cmd = meta.get("verify", "pytest tests/ -v")
-    if verify_cmd.startswith(("python ", "python3 ")):
-        verify_cmd = f"{sys.executable} " + verify_cmd.split(" ", 1)[1]
+    # Inject tests from original if not in workspace (fetch excludes them)
+    workspace_tests = workspace_path / "tests"
+    tests_injected = False
+    if not workspace_tests.exists() and (original_path / "tests").exists():
+        shutil.copytree(original_path / "tests", workspace_tests)
+        tests_injected = True
 
-    start_time = time.time()
     try:
-        result = subprocess.run(
-            verify_cmd,
-            shell=True,
-            cwd=str(workspace_path),
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-        )
-    except subprocess.TimeoutExpired:
+        # Check test integrity — compare test files against originals
+        tampered = check_test_integrity(workspace_path / "tests", original_path / "tests")
+
+        if tampered:
+            return {
+                "challenge": challenge_id,
+                "name": meta["name"],
+                "difficulty": meta["difficulty"],
+                "category": meta["category"],
+                "dimension": meta.get("dimension", "coding"),
+                "challenge_type": challenge_type,
+                "passed": False,
+                "tests_passed": 0,
+                "tests_total": 0,
+                "score": 0,
+                "duration_seconds": 0.0,
+                "estimated_cost_usd": estimated_cost,
+                "error": "Test files were tampered with. Score invalidated.",
+            }
+
+        # Run the verify command, ensuring we use the current Python interpreter
+        verify_cmd = meta.get("verify", "pytest tests/ -v")
+        if verify_cmd.startswith(("python ", "python3 ")):
+            verify_cmd = f"{sys.executable} " + verify_cmd.split(" ", 1)[1]
+
+        start_time = time.time()
+        try:
+            result = subprocess.run(
+                verify_cmd,
+                shell=True,
+                cwd=str(workspace_path),
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+            )
+        except subprocess.TimeoutExpired:
+            duration = time.time() - start_time
+            return {
+                "challenge": challenge_id,
+                "name": meta["name"],
+                "difficulty": meta["difficulty"],
+                "category": meta["category"],
+                "dimension": meta.get("dimension", "coding"),
+                "challenge_type": challenge_type,
+                "passed": False,
+                "tests_passed": 0,
+                "tests_total": 0,
+                "score": 0,
+                "duration_seconds": round(duration, 2),
+                "estimated_cost_usd": estimated_cost,
+                "error": f"Verification timed out after {timeout}s. Try --timeout {timeout * 2}.",
+            }
+
         duration = time.time() - start_time
-        return {
+
+        # Parse output based on verify command type
+        is_pytest = "pytest" in verify_cmd
+        if is_pytest:
+            tests_passed, tests_total, test_details = parse_pytest_output(result.stdout + result.stderr)
+        else:
+            tests_passed, tests_total, test_details = parse_verify_output(result.stdout)
+
+        challenge_score = round((tests_passed / tests_total) * 100) if tests_total > 0 else 0
+
+        # For verify.py scripts, pass/fail is determined by test results (they always exit 0).
+        # For pytest, use the exit code.
+        if is_pytest:
+            challenge_passed = result.returncode == 0
+        else:
+            challenge_passed = tests_total > 0 and tests_passed == tests_total
+
+        res = {
             "challenge": challenge_id,
             "name": meta["name"],
             "difficulty": meta["difficulty"],
             "category": meta["category"],
             "dimension": meta.get("dimension", "coding"),
             "challenge_type": challenge_type,
-            "passed": False,
-            "tests_passed": 0,
-            "tests_total": 0,
-            "score": 0,
+            "passed": challenge_passed,
+            "tests_passed": tests_passed,
+            "tests_total": tests_total,
+            "score": challenge_score,
             "duration_seconds": round(duration, 2),
             "estimated_cost_usd": estimated_cost,
-            "error": f"Verification timed out after {timeout}s. Try --timeout {timeout * 2}.",
         }
 
-    duration = time.time() - start_time
+        # Include per-test failure details for failed challenges
+        if not challenge_passed:
+            failed_tests = [t for t in test_details if not t["passed"]]
+            if failed_tests:
+                res["failed_tests"] = failed_tests
+            res["output"] = result.stdout[-1000:]
 
-    # Parse output based on verify command type
-    is_pytest = "pytest" in verify_cmd
-    if is_pytest:
-        tests_passed, tests_total, test_details = parse_pytest_output(result.stdout + result.stderr)
-    else:
-        tests_passed, tests_total, test_details = parse_verify_output(result.stdout)
-
-    challenge_score = round((tests_passed / tests_total) * 100) if tests_total > 0 else 0
-
-    # For verify.py scripts, pass/fail is determined by test results (they always exit 0).
-    # For pytest, use the exit code.
-    if is_pytest:
-        challenge_passed = result.returncode == 0
-    else:
-        challenge_passed = tests_total > 0 and tests_passed == tests_total
-
-    res = {
-        "challenge": challenge_id,
-        "name": meta["name"],
-        "difficulty": meta["difficulty"],
-        "category": meta["category"],
-        "dimension": meta.get("dimension", "coding"),
-        "challenge_type": challenge_type,
-        "passed": challenge_passed,
-        "tests_passed": tests_passed,
-        "tests_total": tests_total,
-        "score": challenge_score,
-        "duration_seconds": round(duration, 2),
-        "estimated_cost_usd": estimated_cost,
-    }
-
-    # Include per-test failure details for failed challenges
-    if not challenge_passed:
-        failed_tests = [t for t in test_details if not t["passed"]]
-        if failed_tests:
-            res["failed_tests"] = failed_tests
-        res["output"] = result.stdout[-1000:]
-
-    return res
+        return res
+    finally:
+        # Remove injected tests to keep workspace clean for agent
+        if tests_injected and workspace_tests.exists():
+            shutil.rmtree(workspace_tests)
 
 
 def parse_pytest_output(output: str) -> tuple[int, int, list[dict]]:
