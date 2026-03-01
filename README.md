@@ -278,13 +278,35 @@ opengym score all --csv-output > results.csv
 - **Not an LLM benchmark.** We don't measure raw model quality (MMLU, HumanEval, etc.).
 - **It's an agent infrastructure test.** Does your agent's memory, tool use, error handling, and safety actually work end-to-end?
 
-## Fair Use
+## Fair Use & Anti-Cheat
 
-Tests live in the `tests/` folder and are technically readable by your agent. The CLI detects if tests are **modified**, but not if they're **read**. Reading tests to reverse-engineer answers defeats the purpose of the benchmark. If your agent reads `tests/` to solve challenges, you're benchmarking its ability to cheat, not its ability to work.
+**Test files are excluded from the workspace.** When you `opengym fetch` a challenge, the `tests/` directory is not copied to your workspace. Your agent cannot read test files to reverse-engineer answers. Verification happens by temporarily injecting tests during `opengym score`.
 
-For honest results: instruct your agent to only read `README.md` and files in `setup/`.
+For `opengym run` (multi-session mode), both `tests/` and `steps/` are excluded — your agent only sees the current step, not future ones.
 
-> We plan to add encrypted/server-side test execution in a future version. For now, it's an honor system.
+## Multi-Session Challenges (Infra-Only)
+
+Challenges that test **memory persistence, multi-agent coordination, and cross-session state** require `opengym run` — manual `opengym score` is blocked for these challenges.
+
+```bash
+# Single-session: fetch + solve + score
+opengym fetch 167 && opengym score 167
+
+# Multi-session: must use run (kills agent between steps)
+opengym run 130 --agent "python my_agent.py"
+```
+
+**Why?** A bare LLM can solve single-session challenges by reading the README and writing files. But multi-session challenges require actual infrastructure: persistent memory that survives process restarts, state management across sessions, and coordination between agents. `opengym run` enforces this by killing the agent process between steps — only persisted files survive.
+
+| Dimension | Requires `opengym run`? | What it tests |
+|-----------|------------------------|---------------|
+| Memory (101-147) | **Yes** | State survives process kill |
+| Multi-Agent (148-165) | **Yes** | Coordination across agents |
+| Planning/Cron (186-197) | **Yes** | Scheduling across sessions |
+| Tool Use (166-185) | No | Retry, discovery, resilience |
+| Safety (116-120, 213-222) | No | Boundary enforcement |
+| Resilience (198-212) | Mixed | Some require restart |
+| Coding (001-100) | No | Implementation capability |
 
 ## Safety
 
