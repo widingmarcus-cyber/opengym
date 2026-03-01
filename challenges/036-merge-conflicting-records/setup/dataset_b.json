@@ -1,0 +1,8 @@
+[
+  {"id": "001", "name": "Alice Johnson", "email": "alice.j@company.com", "department": "Engineering", "updated_at": "2024-03-20T12:00:00"},
+  {"id": "002", "name": "Bob Smith", "email": "bob@company.com", "department": "Sales", "updated_at": "2024-01-05T10:00:00"},
+  {"id": "003", "name": "Charles Brown", "email": "charlie@company.com", "department": "Design", "updated_at": "2024-04-10T11:30:00"},
+  {"id": "005", "name": "Eve Torres", "email": "eve@company.com", "department": "Marketing", "updated_at": "2024-02-28T13:00:00"},
+  {"id": "007", "name": "Grace Hopper", "email": "grace@company.com", "department": "Engineering", "updated_at": "2024-05-15T10:00:00"},
+  {"id": "008", "name": "Hank Pym", "email": "hank.p@company.com", "department": "Research", "updated_at": "2024-05-01T09:30:00"}
+]

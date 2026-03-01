@@ -1,0 +1,8 @@
+id: "063"
+name: "Fix GitHub Actions Workflow"
+difficulty: "easy"
+category: "devops-config"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.01
+verify: "pytest tests/ -v"

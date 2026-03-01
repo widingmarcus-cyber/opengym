@@ -1,0 +1,11 @@
+User Profile: Alex Chen
+- Preferred language: Rust
+- Timezone: Asia/Tokyo
+- Editor: Neovim
+- Theme: dark mode
+- Build system: Cargo
+- OS: Arch Linux
+- Shell: fish
+- Font: JetBrains Mono
+- Tab width: 4
+- VCS: Git

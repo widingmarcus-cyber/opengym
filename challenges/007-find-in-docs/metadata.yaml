@@ -1,0 +1,8 @@
+id: "007"
+name: "Find in the Docs"
+difficulty: "medium"
+category: "info-retrieval"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.03
+verify: "pytest tests/ -v"

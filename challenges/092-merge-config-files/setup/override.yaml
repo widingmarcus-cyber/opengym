@@ -1,0 +1,12 @@
+database:
+  port: 5433
+  name: production_db
+  options:
+    pool_size: 20
+    ssl: true
+features:
+  - auth
+  - logging
+  - metrics
+debug: true
+log_level: info

@@ -1,0 +1,6 @@
+[2024-03-01 10:15:32] ERROR: UserService.get_profile() returned null for user_id=42
+[2024-03-01 10:15:32] STACK: at ProfileController.show (controllers/profile.py:28)
+[2024-03-01 10:15:32] STACK: at UserService.get_profile (services/user.py:15)
+[2024-03-01 10:15:32] STACK: at UserRepository.find_by_id (repos/user.py:8)
+[2024-03-01 10:15:33] CONTEXT: user_id=42 was recently migrated from legacy system
+[2024-03-01 10:15:33] NOTE: Legacy IDs use format "L-42", new system expects integer 42

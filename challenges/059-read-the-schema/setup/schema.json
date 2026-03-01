@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CustomerOrder",
+  "description": "Schema for a customer order in the e-commerce system",
+  "type": "object",
+  "required": ["order_id", "customer_name", "email", "status", "items", "shipping_address"],
+  "properties": {
+    "order_id": {
+      "type": "string",
+      "pattern": "^ORD-[0-9]{6}$",
+      "description": "Unique order identifier"
+    },
+    "customer_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string",
+      "pattern": "^\\+?[1-9]\\d{1,14}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"]
+    },
+    "priority": {
+      "$ref": "#/$defs/priority_level"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/$defs/order_item"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "maxLength": 30
+      }
+    },
+    "shipping_address": {
+      "$ref": "#/$defs/address"
+    },
+    "billing_address": {
+      "$ref": "#/$defs/address"
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": ["web", "mobile", "api"]
+        },
+        "ip_address": {
+          "type": "string",
+          "format": "ipv4"
+        },
+        "user_agent": {
+          "type": "string"
+        }
+      },
+      "required": ["source"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "address": {
+      "type": "object",
+      "required": ["street", "city", "zip_code", "country"],
+      "properties": {
+        "street": {
+          "type": "string",
+          "minLength": 1
+        },
+        "street2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string"
+        },
+        "zip_code": {
+          "type": "string",
+          "pattern": "^[0-9]{5}(-[0-9]{4})?$"
+        },
+        "country": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2
+        }
+      }
+    },
+    "order_item": {
+      "type": "object",
+      "required": ["product_id", "name", "quantity", "unit_price"],
+      "properties": {
+        "product_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999
+        },
+        "unit_price": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMinimum": true
+        },
+        "discount": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "priority_level": {
+      "type": "string",
+      "enum": ["low", "normal", "high", "urgent"]
+    }
+  }
+}

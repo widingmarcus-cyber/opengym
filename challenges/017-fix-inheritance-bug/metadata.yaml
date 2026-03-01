@@ -1,0 +1,8 @@
+id: "017"
+name: "Fix the Inheritance Bugs"
+difficulty: "hard"
+category: "code-fixing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.05
+verify: "pytest tests/ -v"

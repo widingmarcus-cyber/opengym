@@ -1,0 +1,12 @@
+[
+  {"id": 1, "type": "standard", "value": "100.00", "currency": "USD"},
+  {"id": 2, "type": "standard", "value": "250.50", "currency": "EUR"},
+  {"id": 3, "type": "premium", "value": "500", "currency": "USD"},
+  {"id": 4, "type": "standard", "value": "-50.00", "currency": "USD"},
+  {"id": 5, "type": "standard", "value": "75.25", "currency": "GBP"},
+  {"id": 6, "type": "premium", "value": "1000.00", "currency": "USD"},
+  {"id": 7, "type": "standard", "value": "0", "currency": "USD"},
+  {"id": 8, "type": "express", "value": "300.00", "currency": "USD"},
+  {"id": 9, "type": "standard", "value": "150.00", "currency": "JPY"},
+  {"id": 10, "type": "standard", "value": "425.00 USD", "currency": "USD"}
+]

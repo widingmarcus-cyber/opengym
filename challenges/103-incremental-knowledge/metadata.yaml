@@ -1,0 +1,14 @@
+id: "103"
+name: "Incremental Knowledge"
+difficulty: "medium"
+category: "memory-recall"
+dimension: "memory"
+language: "python"
+estimated_cost_usd: 0.06
+type: "multi-session"
+steps: 4
+persist:
+  - "setup/constraints.json"
+  - "setup/server_config.json"
+step_timeout: 120
+verify: "python tests/verify.py"

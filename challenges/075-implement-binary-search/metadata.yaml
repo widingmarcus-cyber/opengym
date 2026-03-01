@@ -1,0 +1,8 @@
+id: "075"
+name: "Implement Binary Search"
+difficulty: "easy"
+category: "algorithm"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.01
+verify: "pytest tests/ -v"

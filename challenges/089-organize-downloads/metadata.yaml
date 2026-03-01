@@ -1,0 +1,8 @@
+id: "089"
+name: "Organize Downloads"
+difficulty: "easy"
+category: "file-operations"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.01
+verify: "pytest tests/ -v"

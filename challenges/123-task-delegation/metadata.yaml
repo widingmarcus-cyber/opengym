@@ -1,0 +1,14 @@
+id: "123"
+name: "Task Delegation"
+difficulty: "hard"
+category: "task-splitting"
+dimension: "multi-agent"
+language: "python"
+estimated_cost_usd: 0.08
+type: "multi-session"
+steps: 2
+persist:
+  - "setup/tasks/*"
+  - "setup/contact_book.py"
+step_timeout: 180
+verify: "python tests/verify.py"

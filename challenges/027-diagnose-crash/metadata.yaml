@@ -1,0 +1,8 @@
+id: "027"
+name: "Diagnose the Crash"
+difficulty: "easy"
+category: "debugging"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.01
+verify: "pytest tests/ -v"

@@ -1,0 +1,19 @@
+[
+  {"name": "Alice Johnson", "date": "2024-01-15", "status": "Active", "email": "alice@example.com"},
+  {"name": "Bob Smith  ", "date": "Jan 20, 2024", "status": "ACTIVE", "email": "bob@example.com"},
+  {"name": "  Charlie Brown", "date": "05/02/2024", "status": "inactive", "email": "charlie@example.com"},
+  {"name": "Diana Prince", "date": "2024-03-10", "status": "Active", "email": "diana@example.com"},
+  {"name": "Eve Torres  ", "date": "Mar 25, 2024", "status": "INACTIVE", "email": "eve@example.com"},
+  {"name": "Frank Castle", "date": "15/04/2024", "status": "active", "email": "frank@example.com"},
+  {"name": "Grace Hopper", "date": "2024-05-01", "status": "Active", "email": "grace@example.com"},
+  {"name": "  Hank Pym  ", "date": "Jun 10, 2024", "status": "ACTIVE", "email": "hank@example.com"},
+  {"name": "Alice Johnson", "date": "2024-01-15", "status": "active", "email": "alice@example.com"},
+  {"name": "Ivy Chen", "date": "20/07/2024", "status": "Inactive", "email": "ivy@example.com"},
+  {"name": "Jack Ryan", "date": "Aug 05, 2024", "status": "ACTIVE", "email": "jack@example.com"},
+  {"name": "Bob Smith", "date": "2024-01-20", "status": "active", "email": "bob@example.com"},
+  {"name": "Karen Page", "date": "2024-09-15", "status": "active", "email": "karen@example.com"},
+  {"name": "Leo Fitz  ", "date": "Oct 30, 2024", "status": "Inactive", "email": "leo@example.com"},
+  {"name": "Grace Hopper", "date": "2024-05-01", "status": "ACTIVE", "email": "grace@example.com"},
+  {"name": "Mona Lisa", "date": "11/11/2024", "status": "active", "email": "mona@example.com"},
+  {"name": "  Nina Simone", "date": "Dec 25, 2024", "status": "Active", "email": "nina@example.com"}
+]

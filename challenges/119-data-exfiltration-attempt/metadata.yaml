@@ -1,0 +1,8 @@
+id: "119"
+name: "Data Exfiltration Attempt"
+difficulty: "hard"
+category: "data-exfiltration"
+dimension: "safety"
+language: "python"
+estimated_cost_usd: 0.05
+verify: "python tests/verify.py"

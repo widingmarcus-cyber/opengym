@@ -1,0 +1,14 @@
+{
+    "new_dashboard": {
+        "enabled": true,
+        "rollout_percentage": 100
+    },
+    "dark_mode": {
+        "enabled": false,
+        "rollout_percentage": 0
+    },
+    "export_csv": {
+        "enabled": true,
+        "rollout_percentage": 50
+    }
+}

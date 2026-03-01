@@ -1,0 +1,8 @@
+id: "019"
+name: "Build State Machine"
+difficulty: "medium"
+category: "code-writing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.02
+verify: "pytest tests/ -v"

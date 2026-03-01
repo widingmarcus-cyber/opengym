@@ -1,0 +1,14 @@
+id: "115"
+name: "Retry and Adapt"
+difficulty: "hard"
+category: "adaptive-recovery"
+dimension: "resilience"
+language: "python"
+estimated_cost_usd: 0.08
+type: "multi-session"
+steps: 2
+persist:
+  - "setup/solution.py"
+  - "setup/attempt_log.json"
+step_timeout: 120
+verify: "python tests/verify.py"

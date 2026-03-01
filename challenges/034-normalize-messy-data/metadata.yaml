@@ -1,0 +1,8 @@
+id: "034"
+name: "Normalize Messy Data"
+difficulty: "easy"
+category: "data-processing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.01
+verify: "pytest tests/ -v"

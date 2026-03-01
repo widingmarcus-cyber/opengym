@@ -1,0 +1,8 @@
+id: "124"
+name: "Dependency Ordering"
+difficulty: "medium"
+category: "task-sequencing"
+dimension: "planning"
+language: "python"
+estimated_cost_usd: 0.05
+verify: "python tests/verify.py"

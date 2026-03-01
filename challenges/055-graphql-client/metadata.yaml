@@ -1,0 +1,8 @@
+id: "055"
+name: "GraphQL Client"
+difficulty: "hard"
+category: "api-integration"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.08
+verify: "pytest tests/ -v"

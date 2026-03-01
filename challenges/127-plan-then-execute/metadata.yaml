@@ -1,0 +1,14 @@
+id: "127"
+name: "Plan Then Execute"
+difficulty: "hard"
+category: "plan-execute"
+dimension: "planning"
+language: "python"
+estimated_cost_usd: 0.08
+type: "multi-session"
+steps: 2
+persist:
+  - "setup/plan.md"
+  - "setup/inventory.py"
+step_timeout: 180
+verify: "python tests/verify.py"

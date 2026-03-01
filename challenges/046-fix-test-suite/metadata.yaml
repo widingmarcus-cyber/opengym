@@ -1,0 +1,8 @@
+id: "046"
+name: "Fix Test Suite"
+difficulty: "easy"
+category: "testing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.01
+verify: "pytest tests/ -v"

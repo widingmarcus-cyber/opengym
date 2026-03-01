@@ -1,0 +1,8 @@
+id: "064"
+name: "Write Docker Compose"
+difficulty: "medium"
+category: "devops-config"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.03
+verify: "pytest tests/ -v"

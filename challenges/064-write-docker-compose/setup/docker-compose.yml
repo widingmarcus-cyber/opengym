@@ -1,0 +1,4 @@
+# TODO: Write the complete docker-compose configuration
+# See requirements.md for details
+version: "3.8"
+services: {}

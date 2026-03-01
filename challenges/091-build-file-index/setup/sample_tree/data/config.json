@@ -1,0 +1,5 @@
+{
+    "database": "app.db",
+    "port": 8080,
+    "debug": true
+}

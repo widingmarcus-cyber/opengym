@@ -1,0 +1,4 @@
+Hello, world! This is a sample file.
+Café au lait is delicious.
+I love coding! Great job! Keep it up!
+Accented: à è ì ò ù ñ ü ö ä

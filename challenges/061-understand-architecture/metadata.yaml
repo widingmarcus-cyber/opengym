@@ -1,0 +1,8 @@
+id: "061"
+name: "Understand Architecture"
+difficulty: "hard"
+category: "info-retrieval"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.08
+verify: "pytest tests/ -v"

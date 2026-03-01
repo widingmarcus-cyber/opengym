@@ -1,0 +1,14 @@
+processing:
+  precision: 2
+  rounding: "floor"     # BUG: should be "round" — causes all values to be truncated
+  currency: "USD"
+  batch_size: 50
+
+cache:
+  enabled: false        # This is fine — cache is optional
+  ttl: 300
+
+metrics:
+  enabled: true
+  endpoint: "http://metrics.internal:9090"
+  timeout: 5

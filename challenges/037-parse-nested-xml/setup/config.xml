@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+    <database>
+        <host>localhost</host>
+        <port>5432</port>
+        <credentials>
+            <username>admin</username>
+            <password>secret123</password>
+        </credentials>
+        <connection pool_size="10" timeout="30">
+            <retry>
+                <max_attempts>3</max_attempts>
+                <delay_ms>500</delay_ms>
+            </retry>
+        </connection>
+    </database>
+    <server port="8080" workers="4">
+        <ssl enabled="true">
+            <certificate>/etc/ssl/cert.pem</certificate>
+            <key>/etc/ssl/key.pem</key>
+        </ssl>
+        <logging>
+            <level>INFO</level>
+            <output>
+                <file>/var/log/app.log</file>
+                <rotation max_size="100MB" keep="5"/>
+            </output>
+        </logging>
+    </server>
+    <cache>
+        <provider>redis</provider>
+        <settings>
+            <host>cache.internal</host>
+            <port>6379</port>
+            <ttl>3600</ttl>
+        </settings>
+    </cache>
+    <notifications>
+        <email enabled="true">
+            <smtp_host>mail.internal</smtp_host>
+            <smtp_port>587</smtp_port>
+            <sender>noreply@app.com</sender>
+        </email>
+        <slack enabled="false">
+            <webhook_url>https://hooks.slack.com/services/xxx</webhook_url>
+            <channel>#alerts</channel>
+        </slack>
+    </notifications>
+</application>

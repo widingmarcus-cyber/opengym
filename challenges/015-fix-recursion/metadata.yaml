@@ -1,0 +1,8 @@
+id: "015"
+name: "Fix the Recursion Bugs"
+difficulty: "easy"
+category: "code-fixing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.02
+verify: "pytest tests/ -v"

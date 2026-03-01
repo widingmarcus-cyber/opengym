@@ -1,0 +1,8 @@
+id: "077"
+name: "Topological Sort"
+difficulty: "medium"
+category: "algorithm"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.03
+verify: "pytest tests/ -v"

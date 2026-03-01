@@ -1,0 +1,17 @@
+id: "122"
+name: "Information Asymmetry"
+difficulty: "hard"
+category: "agent-collaboration"
+dimension: "multi-agent"
+language: "python"
+estimated_cost_usd: 0.08
+type: "multi-session"
+steps: 3
+persist:
+  - "setup/messages.json"
+  - "setup/services/user.py"
+  - "setup/repos/user.py"
+  - "setup/services/__init__.py"
+  - "setup/repos/__init__.py"
+step_timeout: 120
+verify: "python tests/verify.py"

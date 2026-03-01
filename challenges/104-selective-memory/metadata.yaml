@@ -1,0 +1,13 @@
+id: "104"
+name: "Selective Memory"
+difficulty: "hard"
+category: "memory-filtering"
+dimension: "memory"
+language: "python"
+estimated_cost_usd: 0.05
+type: "multi-session"
+steps: 3
+persist:
+  - "setup/memory.json"
+step_timeout: 120
+verify: "python tests/verify.py"

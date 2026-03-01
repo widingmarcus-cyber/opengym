@@ -1,0 +1,8 @@
+id: "013"
+name: "Fix the Race Condition"
+difficulty: "medium"
+category: "code-fixing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.04
+verify: "pytest tests/ -v"

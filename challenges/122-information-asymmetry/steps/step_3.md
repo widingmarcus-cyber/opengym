@@ -1,0 +1,1 @@
+You are the Implementation Agent. Read ALL messages from setup/messages.json. Apply the recommended fix to setup/services/user.py. The fix should handle legacy user IDs (format 'L-{id}') by trying the legacy format when integer lookup returns None.

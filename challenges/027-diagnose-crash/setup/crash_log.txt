@@ -1,0 +1,43 @@
+========================================
+CRASH REPORT - Data Processing Pipeline
+Timestamp: 2025-11-14 03:22:17 UTC
+Server: prod-worker-07
+========================================
+
+Process started at 03:22:14 UTC
+Loading configuration... OK
+Connecting to data source... OK
+Fetching batch #4471... OK (238 records)
+
+Processing batch #4471...
+
+Traceback (most recent call last):
+  File "app.py", line 85, in run_pipeline
+    results = process_batch(batch)
+  File "app.py", line 62, in process_batch
+    transformed = transform_record(record)
+  File "app.py", line 48, in transform_record
+    cleaned = clean_data(raw_data)
+  File "app.py", line 35, in clean_data
+    for key in data.keys():
+AttributeError: 'NoneType' object has no attribute 'keys'
+
+During handling of the above exception, another exception was raised:
+
+Traceback (most recent call last):
+  File "app.py", line 90, in main
+    run_pipeline()
+  File "app.py", line 88, in run_pipeline
+    log_error(e)
+  File "app.py", line 15, in log_error
+    print(f"Error: {e}")
+
+Pipeline terminated with 0 records processed.
+
+========================================
+Additional context:
+- Batch contained 238 records
+- Failure occurred on record index 142
+- Record 142 had a missing 'metadata' field
+- parse_metadata() returned None for this record
+========================================

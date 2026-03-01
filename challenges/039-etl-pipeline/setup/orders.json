@@ -1,0 +1,12 @@
+[
+  {"id": "O001", "customer_id": "C001", "product_id": "P001", "quantity": 2, "date": "2024-01-15"},
+  {"id": "O002", "customer_id": "C002", "product_id": "P003", "quantity": 1, "date": "2024-01-16"},
+  {"id": "O003", "customer_id": "C001", "product_id": "P002", "quantity": 3, "date": "2024-01-17"},
+  {"id": "O004", "customer_id": "C003", "product_id": "P001", "quantity": 1, "date": "2024-01-18"},
+  {"id": "O005", "customer_id": "C004", "product_id": "P004", "quantity": 5, "date": "2024-01-19"},
+  {"id": "O006", "customer_id": "C002", "product_id": "P002", "quantity": 2, "date": "2024-01-20"},
+  {"id": "O007", "customer_id": "C005", "product_id": "P005", "quantity": 1, "date": "2024-01-21"},
+  {"id": "O008", "customer_id": "C001", "product_id": "P003", "quantity": 4, "date": "2024-01-22"},
+  {"id": "O009", "customer_id": "C003", "product_id": "P004", "quantity": 2, "date": "2024-01-23"},
+  {"id": "O010", "customer_id": "C004", "product_id": "P001", "quantity": 3, "date": "2024-01-24"}
+]

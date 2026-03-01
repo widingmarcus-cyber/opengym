@@ -1,0 +1,15 @@
+{
+    "app_name": "MyApp",
+    "version": "1.0.0",
+    "database": {
+        "host": "localhost",
+        "port": 5432,
+        "name": "mydb",
+        "options": {
+            "pool_size": 5,
+            "timeout": 30
+        }
+    },
+    "features": ["auth", "logging"],
+    "debug": false
+}

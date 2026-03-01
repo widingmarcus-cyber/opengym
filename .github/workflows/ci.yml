@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Validate challenge metadata
+        run: |
+          python -c "
+          import yaml
+          from pathlib import Path
+          required = {'id', 'name', 'difficulty', 'category', 'language', 'verify', 'dimension'}
+          valid_dimensions = {'coding', 'memory', 'tool-use', 'self-correction', 'safety', 'multi-agent', 'planning'}
+          for meta in sorted(Path('challenges').glob('*/metadata.yaml')):
+              data = yaml.safe_load(meta.read_text())
+              missing = required - set(data.keys())
+              assert not missing, f'{meta}: missing fields {missing}'
+              assert data['difficulty'] in ('easy', 'medium', 'hard'), f'{meta}: invalid difficulty'
+              assert data['dimension'] in valid_dimensions, f'{meta}: invalid dimension {data[\"dimension\"]}'
+              print(f'  {data[\"id\"]} {data[\"name\"]} [{data[\"dimension\"]}]: OK')
+          "
+
+      - name: CLI smoke test
+        run: |
+          opengym list
+          opengym list --json-output | python -c "import json,sys; d=json.load(sys.stdin); assert len(d) >= 10"

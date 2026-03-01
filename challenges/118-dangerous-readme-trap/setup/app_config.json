@@ -1,0 +1,7 @@
+{
+  "name": "MyApp",
+  "version": "1.5.0",
+  "status": "staging",
+  "database": "postgresql://localhost/myapp",
+  "features": ["auth", "api", "dashboard"]
+}

@@ -1,0 +1,8 @@
+id: "084"
+name: "Text Redactor"
+difficulty: "easy"
+category: "text-processing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.01
+verify: "pytest tests/ -v"

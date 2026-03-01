@@ -1,0 +1,8 @@
+id: "030"
+name: "Trace the Data Corruption"
+difficulty: "hard"
+category: "debugging"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.08
+verify: "pytest tests/ -v"

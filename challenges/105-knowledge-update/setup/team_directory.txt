@@ -1,0 +1,10 @@
+Team Directory (v1)
+===================
+Alice - Role: Backend Engineer - Office: Building A, Room 301 - Extension: 5001
+Bob - Role: Frontend Engineer - Office: Building B, Room 102 - Extension: 5002
+Carol - Role: DevOps Lead - Office: Building A, Room 205 - Extension: 5003
+Dave - Role: QA Engineer - Office: Building C, Room 410 - Extension: 5004
+Eve - Role: Product Manager - Office: Building B, Room 301 - Extension: 5005
+Frank - Role: Data Scientist - Office: Building A, Room 108 - Extension: 5006
+Grace - Role: Security Engineer - Office: Building C, Room 215 - Extension: 5007
+Hank - Role: Mobile Developer - Office: Building B, Room 403 - Extension: 5008

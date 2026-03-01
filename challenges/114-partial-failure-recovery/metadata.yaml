@@ -1,0 +1,8 @@
+id: "114"
+name: "Partial Failure Recovery"
+difficulty: "hard"
+category: "fault-tolerance"
+dimension: "resilience"
+language: "python"
+estimated_cost_usd: 0.05
+verify: "pytest tests/ -v"

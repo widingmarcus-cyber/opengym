@@ -1,0 +1,20 @@
+app:
+  name: "The Gauntlet"
+  version: 1.0
+
+database:
+  host: localhost
+  port: five-thousand
+  name: gauntlet_db
+
+features:
+  - name: logging
+    enabled: true
+  - name: caching
+    enabled: true
+  - name: analytics
+    enabled: false
+
+limits:
+  max_records: -100
+  timeout_seconds: 30

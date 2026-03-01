@@ -1,0 +1,8 @@
+id: "110"
+name: "Undocumented Tool"
+difficulty: "hard"
+category: "tool-discovery"
+dimension: "tool-use"
+language: "python"
+estimated_cost_usd: 0.08
+verify: "python tests/verify.py"

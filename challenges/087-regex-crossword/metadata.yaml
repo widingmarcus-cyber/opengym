@@ -1,0 +1,8 @@
+id: "087"
+name: "Regex Crossword"
+difficulty: "medium"
+category: "text-processing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.03
+verify: "pytest tests/ -v"

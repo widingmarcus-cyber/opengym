@@ -1,0 +1,8 @@
+id: "014"
+name: "Fix the Broken Regexes"
+difficulty: "medium"
+category: "code-fixing"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.03
+verify: "pytest tests/ -v"

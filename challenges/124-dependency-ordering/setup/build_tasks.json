@@ -1,0 +1,44 @@
+{
+  "tasks": {
+    "compile_core": {
+      "command": "Write 'core_v1' to setup/outputs/core.txt",
+      "depends_on": [],
+      "output": "setup/outputs/core.txt"
+    },
+    "compile_utils": {
+      "command": "Write 'utils_v1' to setup/outputs/utils.txt",
+      "depends_on": [],
+      "output": "setup/outputs/utils.txt"
+    },
+    "compile_api": {
+      "command": "Read setup/outputs/core.txt, append '_api' to its content, write to setup/outputs/api.txt",
+      "depends_on": ["compile_core"],
+      "output": "setup/outputs/api.txt"
+    },
+    "compile_auth": {
+      "command": "Read setup/outputs/core.txt and setup/outputs/utils.txt, combine with '_auth', write to setup/outputs/auth.txt",
+      "depends_on": ["compile_core", "compile_utils"],
+      "output": "setup/outputs/auth.txt"
+    },
+    "link_backend": {
+      "command": "Read api.txt and auth.txt, combine with '_backend', write to setup/outputs/backend.txt",
+      "depends_on": ["compile_api", "compile_auth"],
+      "output": "setup/outputs/backend.txt"
+    },
+    "compile_frontend": {
+      "command": "Write 'frontend_v1' to setup/outputs/frontend.txt",
+      "depends_on": [],
+      "output": "setup/outputs/frontend.txt"
+    },
+    "link_app": {
+      "command": "Read backend.txt and frontend.txt, combine with '_app', write to setup/outputs/app.txt",
+      "depends_on": ["link_backend", "compile_frontend"],
+      "output": "setup/outputs/app.txt"
+    },
+    "package": {
+      "command": "Read app.txt, wrap with 'PACKAGE[...]', write to setup/outputs/package.txt",
+      "depends_on": ["link_app"],
+      "output": "setup/outputs/package.txt"
+    }
+  }
+}

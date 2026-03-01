@@ -1,0 +1,13 @@
+id: "125"
+name: "Changing Requirements"
+difficulty: "medium"
+category: "requirement-adaptation"
+dimension: "planning"
+language: "python"
+estimated_cost_usd: 0.05
+type: "multi-session"
+steps: 2
+persist:
+  - "setup/converter.py"
+step_timeout: 120
+verify: "python tests/verify.py"

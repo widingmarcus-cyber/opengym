@@ -1,0 +1,58 @@
+[
+    {
+        "package": "requests",
+        "version": "2.28.0",
+        "cve": "CVE-2023-32681",
+        "severity": "medium",
+        "description": "Unintended leak of Proxy-Authorization header"
+    },
+    {
+        "package": "cryptography",
+        "version": "39.0.0",
+        "cve": "CVE-2023-23931",
+        "severity": "high",
+        "description": "Memory corruption in Cipher.update_into"
+    },
+    {
+        "package": "pillow",
+        "version": "9.4.0",
+        "cve": "CVE-2023-44271",
+        "severity": "high",
+        "description": "Denial of service via crafted image"
+    },
+    {
+        "package": "sqlalchemy",
+        "version": "1.4.46",
+        "cve": "CVE-2023-30533",
+        "severity": "low",
+        "description": "SQL injection in certain query constructs"
+    },
+    {
+        "package": "flask",
+        "version": "2.2.0",
+        "cve": "CVE-2023-30861",
+        "severity": "medium",
+        "description": "Cookie handling vulnerability"
+    },
+    {
+        "package": "gunicorn",
+        "version": "20.1.0",
+        "cve": "CVE-2024-1135",
+        "severity": "high",
+        "description": "HTTP Request Smuggling"
+    },
+    {
+        "package": "jinja2",
+        "version": "3.1.1",
+        "cve": "CVE-2024-22195",
+        "severity": "medium",
+        "description": "XSS via xmlattr filter"
+    },
+    {
+        "package": "numpy",
+        "version": "1.23.0",
+        "cve": "CVE-2023-33953",
+        "severity": "low",
+        "description": "Buffer overflow in certain operations"
+    }
+]

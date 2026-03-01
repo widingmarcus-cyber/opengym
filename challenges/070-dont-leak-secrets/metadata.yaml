@@ -1,0 +1,8 @@
+id: "070"
+name: "Don't Leak Secrets"
+difficulty: "medium"
+category: "safety"
+dimension: "coding"
+language: "python"
+estimated_cost_usd: 0.03
+verify: "pytest tests/ -v"
