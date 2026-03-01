@@ -1,0 +1,15 @@
+id: '154'
+name: Task Idempotency
+difficulty: medium
+category: task-splitting
+dimension: multi-agent
+language: python
+estimated_cost_usd: 0.03
+type: multi-session
+steps: 3
+persist:
+- setup/results.json
+- setup/processed.json
+step_timeout: 60
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

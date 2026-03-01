@@ -1,0 +1,10 @@
+[
+  {"event_id": "e1", "data": "a"},
+  {"event_id": "e2", "data": "b"},
+  {"event_id": "e1", "data": "a"},
+  {"event_id": "e3", "data": "c"},
+  {"event_id": "e2", "data": "b"},
+  {"event_id": "e4", "data": "d"},
+  {"event_id": "e1", "data": "a"},
+  {"event_id": "e5", "data": "e"}
+]

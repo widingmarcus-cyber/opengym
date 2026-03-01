@@ -1,0 +1,1 @@
+[{"id": 1, "type": "compute", "input": 10}, {"id": 2, "type": "compute", "input": 20}, {"id": 3, "type": "compute", "input": -1}, {"id": 4, "type": "compute", "input": 40}, {"id": 5, "type": "compute", "input": 50}]

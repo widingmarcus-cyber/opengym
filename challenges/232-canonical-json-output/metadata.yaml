@@ -1,0 +1,9 @@
+id: '232'
+name: Canonical JSON Output
+difficulty: medium
+category: determinism
+dimension: coding
+language: python
+estimated_cost_usd: 0.02
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

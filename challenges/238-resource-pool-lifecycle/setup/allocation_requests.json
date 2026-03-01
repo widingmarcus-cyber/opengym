@@ -1,0 +1,15 @@
+{
+  "requests": [
+    {"request_id": "req-001", "requester": "service-alpha", "min_cpu": 2, "min_memory_gb": 4, "ttl_minutes": 60, "timestamp": "2024-01-15T08:00:00Z"},
+    {"request_id": "req-002", "requester": "service-beta", "min_cpu": 4, "min_memory_gb": 8, "ttl_minutes": 120, "timestamp": "2024-01-15T08:05:00Z"},
+    {"request_id": "req-003", "requester": "service-gamma", "min_cpu": 8, "min_memory_gb": 16, "ttl_minutes": 30, "timestamp": "2024-01-15T08:10:00Z"},
+    {"request_id": "req-004", "requester": "service-delta", "min_cpu": 4, "min_memory_gb": 16, "ttl_minutes": 180, "timestamp": "2024-01-15T08:15:00Z"},
+    {"request_id": "req-005", "requester": "service-epsilon", "min_cpu": 16, "min_memory_gb": 32, "ttl_minutes": 45, "timestamp": "2024-01-15T08:20:00Z"},
+    {"request_id": "req-006", "requester": "service-zeta", "min_cpu": 2, "min_memory_gb": 8, "ttl_minutes": 90, "timestamp": "2024-01-15T08:25:00Z"},
+    {"request_id": "req-007", "requester": "service-eta", "min_cpu": 8, "min_memory_gb": 32, "ttl_minutes": 60, "timestamp": "2024-01-15T08:30:00Z"},
+    {"request_id": "req-008", "requester": "service-theta", "min_cpu": 16, "min_memory_gb": 64, "ttl_minutes": 240, "timestamp": "2024-01-15T08:35:00Z"},
+    {"request_id": "req-009", "requester": "service-iota", "min_cpu": 4, "min_memory_gb": 8, "ttl_minutes": 30, "timestamp": "2024-01-15T08:40:00Z"},
+    {"request_id": "req-010", "requester": "service-kappa", "min_cpu": 2, "min_memory_gb": 4, "ttl_minutes": 60, "timestamp": "2024-01-15T08:45:00Z"},
+    {"request_id": "req-011", "requester": "service-lambda", "min_cpu": 32, "min_memory_gb": 128, "ttl_minutes": 60, "timestamp": "2024-01-15T08:50:00Z"}
+  ]
+}

@@ -1,8 +1,9 @@
-id: "076"
-name: "Merge Intervals"
-difficulty: "easy"
-category: "algorithm"
-dimension: "coding"
-language: "python"
+id: '076'
+name: Merge Intervals
+difficulty: easy
+category: algorithm
+dimension: coding
+language: python
 estimated_cost_usd: 0.01
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

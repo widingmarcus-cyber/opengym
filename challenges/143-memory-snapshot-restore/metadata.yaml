@@ -1,0 +1,15 @@
+id: '143'
+name: Memory Snapshot Restore
+difficulty: hard
+category: memory-state
+dimension: memory
+language: python
+estimated_cost_usd: 0.05
+type: multi-session
+steps: 3
+persist:
+- setup/state.json
+- setup/snapshots/
+step_timeout: 120
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

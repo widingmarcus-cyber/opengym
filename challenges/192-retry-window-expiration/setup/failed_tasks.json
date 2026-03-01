@@ -1,0 +1,5 @@
+[
+  {"id": "t1", "failed_at": "2024-01-01T00:00:00Z", "retry_window_minutes": 60},
+  {"id": "t2", "failed_at": "2024-01-01T00:00:00Z", "retry_window_minutes": 10},
+  {"id": "t3", "failed_at": "2024-01-01T00:25:00Z", "retry_window_minutes": 60}
+]

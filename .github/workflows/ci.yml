@@ -8,10 +8,12 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.11", "3.12"]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +42,65 @@ jobs:
               print(f'  {data[\"id\"]} {data[\"name\"]} [{data[\"dimension\"]}]: OK')
           "
 
+      - name: Infra Conformance Gate
+        run: |
+          python -c "
+          import yaml, os, re
+          from pathlib import Path
+
+          valid_types = {'INFRA_CONFORMANCE', 'MODEL_DEPENDENT', 'HYBRID'}
+          errors = []
+          infra_count = 0
+          model_count = 0
+
+          for meta in sorted(Path('challenges').glob('*/metadata.yaml')):
+              data = yaml.safe_load(meta.read_text())
+              cdir = meta.parent
+              cid = data.get('id', '?')
+              ctype = data.get('challenge_type', '')
+
+              # Gate 1: challenge_type must exist and be valid
+              if ctype not in valid_types:
+                  errors.append(f'{cdir.name}: missing or invalid challenge_type (got {ctype!r})')
+                  continue
+
+              if ctype == 'INFRA_CONFORMANCE':
+                  infra_count += 1
+
+                  # Gate 2: INFRA challenges must have verify.py (not just pytest)
+                  verify_py = cdir / 'tests' / 'verify.py'
+                  verify_cmd = data.get('verify', '')
+                  if verify_py.exists():
+                      content = verify_py.read_text(encoding='utf-8', errors='replace')
+                      # Gate 3: verify.py must use JSON-line output format
+                      if 'json.dumps' not in content:
+                          errors.append(f'{cdir.name}: INFRA verify.py missing json.dumps (not JSON-line format)')
+
+                  # Gate 4: deterministic initial state must exist (setup/, tools/, or steps/)
+                  has_state = False
+                  for state_dir in ['setup', 'tools', 'steps']:
+                      d = cdir / state_dir
+                      if d.exists() and any(d.rglob('*')):
+                          has_state = True
+                          break
+                  if not has_state:
+                      errors.append(f'{cdir.name}: INFRA challenge missing initial state (no setup/, tools/, or steps/)')
+
+              elif ctype == 'MODEL_DEPENDENT':
+                  model_count += 1
+
+          if errors:
+              print(f'INFRA CONFORMANCE GATE FAILED ({len(errors)} issues):')
+              for e in errors:
+                  print(f'  ERROR: {e}')
+              raise SystemExit(1)
+          else:
+              print(f'Infra Conformance Gate: PASS')
+              print(f'  INFRA_CONFORMANCE: {infra_count}')
+              print(f'  MODEL_DEPENDENT: {model_count}')
+          "
+
       - name: CLI smoke test
         run: |
           opengym list
-          opengym list --json-output | python -c "import json,sys; d=json.load(sys.stdin); assert len(d) >= 10"
+          opengym list --json-output | python -c "import json,sys; d=json.load(sys.stdin); assert len(d) >= 240"

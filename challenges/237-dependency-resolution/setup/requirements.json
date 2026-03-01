@@ -1,0 +1,8 @@
+{
+  "requirements": {
+    "web-framework": ">=2.5.0",
+    "database-driver": ">=3.5.0",
+    "auth-module": ">=2.0.0",
+    "logging-lib": ">=1.5.0"
+  }
+}

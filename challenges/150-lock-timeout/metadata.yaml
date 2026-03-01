@@ -1,0 +1,15 @@
+id: '150'
+name: Lock Timeout
+difficulty: hard
+category: shared-resources
+dimension: multi-agent
+language: python
+estimated_cost_usd: 0.03
+type: multi-session
+steps: 2
+persist:
+- setup/lock.json
+- setup/result.txt
+step_timeout: 60
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

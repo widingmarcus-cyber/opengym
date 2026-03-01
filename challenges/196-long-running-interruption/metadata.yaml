@@ -1,0 +1,23 @@
+id: '196'
+title: Long-Running Interruption
+slug: 196-long-running-interruption
+difficulty: hard
+category: task-sequencing
+dimension: planning
+type: multi-session
+steps: 2
+persist:
+- setup/progress.json
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- interruption
+- resume
+- state-persistence
+name: Long-Running Interruption
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

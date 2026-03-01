@@ -1,0 +1,120 @@
+[
+  {
+    "step": 1,
+    "name": "upgrade_database",
+    "status": "completed",
+    "action": {
+      "type": "set_field",
+      "path": "database_version",
+      "old_value": "v3.2.0",
+      "new_value": "v4.0.0"
+    },
+    "rollback": {
+      "type": "set_field",
+      "path": "database_version",
+      "value": "v3.2.0"
+    }
+  },
+  {
+    "step": 2,
+    "name": "add_phone_column",
+    "status": "completed",
+    "action": {
+      "type": "add_to_list",
+      "path": "schema.users.columns",
+      "value": "phone"
+    },
+    "rollback": {
+      "type": "remove_from_list",
+      "path": "schema.users.columns",
+      "value": "phone"
+    }
+  },
+  {
+    "step": 3,
+    "name": "enable_features",
+    "status": "completed",
+    "action": {
+      "type": "set_fields",
+      "changes": [
+        {
+          "path": "feature_flags.new_ui",
+          "old_value": false,
+          "new_value": true
+        },
+        {
+          "path": "feature_flags.beta_api",
+          "old_value": false,
+          "new_value": true
+        }
+      ]
+    },
+    "rollback": {
+      "type": "set_fields",
+      "changes": [
+        {
+          "path": "feature_flags.new_ui",
+          "value": false
+        },
+        {
+          "path": "feature_flags.beta_api",
+          "value": false
+        }
+      ]
+    }
+  },
+  {
+    "step": 4,
+    "name": "update_config",
+    "status": "completed",
+    "action": {
+      "type": "set_fields",
+      "changes": [
+        {
+          "path": "config.max_connections",
+          "old_value": 100,
+          "new_value": 200
+        },
+        {
+          "path": "config.timeout",
+          "old_value": 30,
+          "new_value": 60
+        }
+      ]
+    },
+    "rollback": {
+      "type": "set_fields",
+      "changes": [
+        {
+          "path": "config.max_connections",
+          "value": 100
+        },
+        {
+          "path": "config.timeout",
+          "value": 30
+        }
+      ]
+    }
+  },
+  {
+    "step": 5,
+    "name": "stop_scheduler",
+    "status": "failed",
+    "action": {
+      "type": "set_field",
+      "path": "services.scheduler",
+      "old_value": "running",
+      "new_value": "stopped"
+    },
+    "error": "Service scheduler refused to stop: active jobs in progress"
+  },
+  {
+    "step": 6,
+    "name": "deploy_new_code",
+    "status": "skipped",
+    "action": {
+      "type": "deploy",
+      "artifact": "app-v4.0.0.tar.gz"
+    }
+  }
+]

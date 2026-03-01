@@ -1,0 +1,9 @@
+id: '209'
+name: Write Ack Lost
+difficulty: hard
+category: failure-recovery
+dimension: resilience
+language: python
+estimated_cost_usd: 0.03
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

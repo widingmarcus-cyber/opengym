@@ -1,0 +1,7 @@
+{
+  "returns": [
+    {"return_id": "ret-001", "resource_id": "inst-001", "returned_by": "service-alpha", "timestamp": "2024-01-15T09:00:00Z"},
+    {"return_id": "ret-002", "resource_id": "inst-005", "returned_by": "service-gamma", "timestamp": "2024-01-15T09:30:00Z"},
+    {"return_id": "ret-003", "resource_id": "inst-007", "returned_by": "service-epsilon", "timestamp": "2024-01-15T09:45:00Z"}
+  ]
+}

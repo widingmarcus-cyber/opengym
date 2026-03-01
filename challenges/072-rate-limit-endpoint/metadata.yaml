@@ -1,8 +1,9 @@
-id: "072"
-name: "Rate Limit Endpoint"
-difficulty: "medium"
-category: "safety"
-dimension: "coding"
-language: "python"
+id: '072'
+name: Rate Limit Endpoint
+difficulty: medium
+category: safety
+dimension: coding
+language: python
 estimated_cost_usd: 0.03
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

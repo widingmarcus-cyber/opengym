@@ -1,0 +1,1 @@
+{"agent_a": {"waiting_for": "agent_b_output.txt"}, "agent_b": {"waiting_for": "agent_a_output.txt"}}

@@ -1,0 +1,165 @@
+{
+  "description": "Migrate all records: change email domain to @new.com, set role to admin for id<=5 else member, bump version to 2",
+  "changes": [
+    {
+      "id": 1,
+      "set": {
+        "email": "user_1@new.com",
+        "role": "admin",
+        "version": 2
+      }
+    },
+    {
+      "id": 2,
+      "set": {
+        "email": "user_2@new.com",
+        "role": "admin",
+        "version": 2
+      }
+    },
+    {
+      "id": 3,
+      "set": {
+        "email": "user_3@new.com",
+        "role": "admin",
+        "version": 2
+      }
+    },
+    {
+      "id": 4,
+      "set": {
+        "email": "user_4@new.com",
+        "role": "admin",
+        "version": 2
+      }
+    },
+    {
+      "id": 5,
+      "set": {
+        "email": "user_5@new.com",
+        "role": "admin",
+        "version": 2
+      }
+    },
+    {
+      "id": 6,
+      "set": {
+        "email": "user_6@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 7,
+      "set": {
+        "email": "user_7@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 8,
+      "set": {
+        "email": "user_8@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 9,
+      "set": {
+        "email": "user_9@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 10,
+      "set": {
+        "email": "user_10@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 11,
+      "set": {
+        "email": "user_11@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 12,
+      "set": {
+        "email": "user_12@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 13,
+      "set": {
+        "email": "user_13@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 14,
+      "set": {
+        "email": "user_14@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 15,
+      "set": {
+        "email": "user_15@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 16,
+      "set": {
+        "email": "user_16@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 17,
+      "set": {
+        "email": "user_17@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 18,
+      "set": {
+        "email": "user_18@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 19,
+      "set": {
+        "email": "user_19@new.com",
+        "role": "member",
+        "version": 2
+      }
+    },
+    {
+      "id": 20,
+      "set": {
+        "email": "user_20@new.com",
+        "role": "member",
+        "version": 2
+      }
+    }
+  ]
+}

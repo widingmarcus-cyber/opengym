@@ -1,0 +1,86 @@
+{
+  "packages": {
+    "web-framework": {
+      "versions": {
+        "3.0.0": {"dependencies": {"template-engine": ">=2.0.0,<3.0.0", "http-utils": ">=1.5.0"}},
+        "2.5.0": {"dependencies": {"template-engine": ">=1.5.0,<3.0.0", "http-utils": ">=1.0.0"}},
+        "2.0.0": {"dependencies": {"template-engine": ">=1.0.0,<2.0.0", "http-utils": ">=1.0.0"}}
+      }
+    },
+    "template-engine": {
+      "versions": {
+        "2.5.0": {"dependencies": {"string-utils": ">=1.0.0"}},
+        "2.0.0": {"dependencies": {"string-utils": ">=1.0.0"}},
+        "1.8.0": {"dependencies": {"string-utils": ">=0.9.0"}},
+        "1.0.0": {"dependencies": {}}
+      }
+    },
+    "http-utils": {
+      "versions": {
+        "2.0.0": {"dependencies": {"url-parser": ">=1.0.0", "json-lib": ">=2.0.0"}},
+        "1.5.0": {"dependencies": {"url-parser": ">=1.0.0", "json-lib": ">=1.5.0"}},
+        "1.0.0": {"dependencies": {"json-lib": ">=1.0.0"}}
+      }
+    },
+    "database-driver": {
+      "versions": {
+        "4.0.0": {"dependencies": {"connection-pool": ">=2.0.0", "json-lib": ">=2.0.0"}},
+        "3.5.0": {"dependencies": {"connection-pool": ">=1.5.0", "json-lib": ">=1.5.0"}},
+        "3.0.0": {"dependencies": {"connection-pool": ">=1.0.0", "json-lib": ">=1.0.0"}}
+      }
+    },
+    "connection-pool": {
+      "versions": {
+        "2.5.0": {"dependencies": {"logging-lib": ">=1.0.0"}},
+        "2.0.0": {"dependencies": {"logging-lib": ">=1.0.0"}},
+        "1.5.0": {"dependencies": {}},
+        "1.0.0": {"dependencies": {}}
+      }
+    },
+    "json-lib": {
+      "versions": {
+        "3.0.0": {"dependencies": {}},
+        "2.5.0": {"dependencies": {}},
+        "2.0.0": {"dependencies": {}},
+        "1.5.0": {"dependencies": {}},
+        "1.0.0": {"dependencies": {}}
+      }
+    },
+    "url-parser": {
+      "versions": {
+        "2.0.0": {"dependencies": {"string-utils": ">=1.0.0"}},
+        "1.5.0": {"dependencies": {"string-utils": ">=0.9.0"}},
+        "1.0.0": {"dependencies": {}}
+      }
+    },
+    "string-utils": {
+      "versions": {
+        "2.0.0": {"dependencies": {}},
+        "1.5.0": {"dependencies": {}},
+        "1.0.0": {"dependencies": {}},
+        "0.9.0": {"dependencies": {}}
+      }
+    },
+    "logging-lib": {
+      "versions": {
+        "2.0.0": {"dependencies": {}},
+        "1.5.0": {"dependencies": {}},
+        "1.0.0": {"dependencies": {}}
+      }
+    },
+    "auth-module": {
+      "versions": {
+        "2.0.0": {"dependencies": {"json-lib": ">=2.0.0", "http-utils": ">=1.5.0", "crypto-lib": ">=1.0.0"}},
+        "1.5.0": {"dependencies": {"json-lib": ">=1.5.0", "http-utils": ">=1.0.0", "crypto-lib": ">=1.0.0"}},
+        "1.0.0": {"dependencies": {"json-lib": ">=1.0.0"}}
+      }
+    },
+    "crypto-lib": {
+      "versions": {
+        "2.0.0": {"dependencies": {}},
+        "1.5.0": {"dependencies": {}},
+        "1.0.0": {"dependencies": {}}
+      }
+    }
+  }
+}

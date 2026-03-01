@@ -1,0 +1,20 @@
+{
+  "version": "v1",
+  "field_mappings": {
+    "record_id": "id",
+    "cust_name": "customer_name",
+    "cust_email": "email",
+    "purchase_amt": "amount",
+    "purchase_date": "date",
+    "category_code": "category",
+    "active_flag": "is_active"
+  },
+  "type_conversions": {
+    "amount": "float",
+    "is_active": "boolean"
+  },
+  "boolean_mapping": {
+    "Y": true,
+    "N": false
+  }
+}

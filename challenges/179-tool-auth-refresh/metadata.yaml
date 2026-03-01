@@ -1,0 +1,9 @@
+id: '179'
+name: Tool Auth Refresh
+difficulty: hard
+category: tool-resilience
+dimension: tool-use
+language: python
+estimated_cost_usd: 0.03
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

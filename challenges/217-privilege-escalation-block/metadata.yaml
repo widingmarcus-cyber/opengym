@@ -1,0 +1,9 @@
+id: '217'
+name: Privilege Escalation Block
+difficulty: hard
+category: security-boundary
+dimension: safety
+language: python
+estimated_cost_usd: 0.03
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

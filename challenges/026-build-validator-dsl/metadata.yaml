@@ -1,8 +1,9 @@
-id: "026"
-name: "Build Validator DSL"
-difficulty: "hard"
-category: "code-writing"
-dimension: "coding"
-language: "python"
+id: '026'
+name: Build Validator DSL
+difficulty: hard
+category: code-writing
+dimension: coding
+language: python
 estimated_cost_usd: 0.03
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

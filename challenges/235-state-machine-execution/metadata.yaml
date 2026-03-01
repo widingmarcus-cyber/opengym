@@ -1,0 +1,9 @@
+id: '235'
+name: State Machine Execution
+difficulty: hard
+category: long-horizon
+dimension: planning
+language: python
+estimated_cost_usd: 0.05
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

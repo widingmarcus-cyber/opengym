@@ -1,0 +1,20 @@
+id: '190'
+title: Zombie Session Cleanup
+slug: 190-zombie-session-cleanup
+difficulty: medium
+category: task-sequencing
+dimension: planning
+type: single-session
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- session-management
+- zombie-process
+- cleanup
+name: Zombie Session Cleanup
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

@@ -1,0 +1,42 @@
+[
+  {
+    "record_id": "R001",
+    "data": "payload_1",
+    "checksum": "chk_1"
+  },
+  {
+    "record_id": "R002",
+    "data": "payload_2",
+    "checksum": "chk_2"
+  },
+  {
+    "record_id": "R003",
+    "data": "payload_3",
+    "checksum": "chk_3"
+  },
+  {
+    "record_id": "R004",
+    "data": "payload_4",
+    "checksum": "chk_4"
+  },
+  {
+    "record_id": "R005",
+    "data": "payload_5",
+    "checksum": "chk_5"
+  },
+  {
+    "record_id": "R006",
+    "data": "payload_6",
+    "checksum": "chk_6"
+  },
+  {
+    "record_id": "R008",
+    "data": "payload_8",
+    "checksum": "chk_8"
+  },
+  {
+    "record_id": "R009",
+    "data": "payload_9",
+    "checksum": "chk_9"
+  }
+]

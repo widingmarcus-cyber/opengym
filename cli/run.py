@@ -5,6 +5,7 @@ import os
 import shutil
 import subprocess
 import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from fnmatch import fnmatch
 from pathlib import Path
 
@@ -12,7 +13,7 @@ import click
 import yaml
 
 from cli.utils import get_workspace_dir, resolve_challenge_ids, get_challenges_dir
-from cli.score import score_challenge, build_summary, print_summary
+from cli.score import score_challenge, build_summary, print_summary, build_scorecard, print_scorecard, write_csv
 
 
 @click.command()
@@ -22,8 +23,14 @@ from cli.score import score_challenge, build_summary, print_summary
 @click.option("--timeout", "-t", default=300, help="Timeout per step in seconds (default: 300)")
 @click.option("--summary", is_flag=True, help="Show summary with diagnostics")
 @click.option("--json-output", is_flag=True, help="Output as JSON")
+@click.option("--csv-output", is_flag=True, help="Output results as CSV")
+@click.option("--scorecard", is_flag=True, help="Show infra scorecard (per-category breakdown)")
+@click.option("--verbose", "-v", is_flag=True, help="Show full test output for each challenge")
+@click.option("--parallel", "-p", default=1, help="Number of parallel workers (default: 1, sequential)")
 @click.option("--no-score", is_flag=True, help="Skip scoring after run")
-def run(challenge_id: str, agent: str, workspace: str | None, timeout: int, summary: bool, json_output: bool, no_score: bool):
+def run(challenge_id: str, agent: str, workspace: str | None, timeout: int,
+        summary: bool, json_output: bool, csv_output: bool, scorecard: bool,
+        verbose: bool, parallel: int, no_score: bool):
     """Run an agent against a challenge or all challenges.
 
     The agent command template uses {task} and {workspace} placeholders:
@@ -41,11 +48,40 @@ def run(challenge_id: str, agent: str, workspace: str | None, timeout: int, summ
         click.echo(f"Error: Challenge '{challenge_id}' not found.", err=True)
         raise SystemExit(1)
 
-    results = []
-    for cid in ids:
+    if parallel > 1:
+        results = _run_parallel(ids, challenges_dir, ws, agent, timeout, no_score, parallel)
+    else:
+        results = _run_sequential(ids, challenges_dir, ws, agent, timeout, no_score, verbose)
+
+    # Output results
+    if results and csv_output:
+        write_csv(results)
+    elif results and scorecard:
+        report = build_scorecard(results)
+        if json_output:
+            click.echo(json.dumps(report, indent=2))
+        else:
+            print_scorecard(report)
+    elif results and (summary or json_output):
+        report = build_summary(results)
+        if json_output:
+            click.echo(json.dumps(report, indent=2))
+        else:
+            print_summary(report)
+    elif results and not json_output and not csv_output:
+        total = round(sum(r["score"] for r in results) / len(results))
+        passed = sum(1 for r in results if r["passed"])
         click.echo(f"\n{'='*50}", err=True)
-        click.echo(f"  Running: {cid}", err=True)
+        click.echo(f"  Total: {total}/100 ({passed}/{len(results)} passed)", err=True)
         click.echo(f"{'='*50}", err=True)
+
+
+def _run_sequential(ids: list[str], challenges_dir: Path, ws: Path, agent: str,
+                    timeout: int, no_score: bool, verbose: bool) -> list[dict]:
+    """Run challenges one at a time with progress reporting."""
+    results = []
+    for i, cid in enumerate(ids, 1):
+        click.echo(f"\n[{i}/{len(ids)}] Running: {cid}", err=True)
 
         src = challenges_dir / cid
         challenge_ws = ws / cid
@@ -61,15 +97,18 @@ def run(challenge_id: str, agent: str, workspace: str | None, timeout: int, summ
             meta = yaml.safe_load(f)
 
         challenge_type = meta.get("type", "single-session")
+        run_start = time.time()
 
         if challenge_type == "multi-session":
-            success = run_multi_session(cid, challenge_ws, agent, meta, timeout)
+            run_multi_session(cid, challenge_ws, agent, meta, timeout)
         else:
-            success = run_single_session(cid, challenge_ws, agent, meta, timeout)
+            run_single_session(cid, challenge_ws, agent, meta, timeout)
 
         # Score
         if not no_score:
             result = score_challenge(cid, challenge_ws, src, timeout=timeout)
+            # Override duration to include agent run time, not just scoring time
+            result["duration_seconds"] = round(time.time() - run_start, 2)
             results.append(result)
 
             status = "PASS" if result["passed"] else "FAIL"
@@ -88,18 +127,78 @@ def run(challenge_id: str, agent: str, workspace: str | None, timeout: int, summ
                 if remaining > 0:
                     click.echo(f"    ... and {remaining} more failed tests", err=True)
 
-    if results and (summary or json_output):
-        report = build_summary(results)
-        if json_output:
-            click.echo(json.dumps(report, indent=2))
-        else:
-            print_summary(report)
-    elif results and not json_output:
-        total = round(sum(r["score"] for r in results) / len(results))
-        passed = sum(1 for r in results if r["passed"])
-        click.echo(f"\n{'='*50}", err=True)
-        click.echo(f"  Total: {total}/100 ({passed}/{len(results)} passed)", err=True)
-        click.echo(f"{'='*50}", err=True)
+            if verbose and "output" in result:
+                click.echo(result["output"], err=True)
+
+    return results
+
+
+def _run_parallel(ids: list[str], challenges_dir: Path, ws: Path, agent: str,
+                  timeout: int, no_score: bool, parallel: int) -> list[dict]:
+    """Run challenges in parallel using ProcessPoolExecutor."""
+    click.echo(f"\nRunning {len(ids)} challenges with {parallel} workers...\n", err=True)
+
+    results = []
+    completed = 0
+
+    with ProcessPoolExecutor(max_workers=parallel) as executor:
+        futures = {
+            executor.submit(
+                _run_one_challenge, cid, challenges_dir, ws, agent, timeout, no_score
+            ): cid
+            for cid in ids
+        }
+        for future in as_completed(futures):
+            cid = futures[future]
+            completed += 1
+            try:
+                result = future.result()
+                if result:
+                    results.append(result)
+                    status = "PASS" if result["passed"] else "FAIL"
+                    click.echo(
+                        f"  [{completed}/{len(ids)}] {cid}: {status} ({result['score']}/100)",
+                        err=True,
+                    )
+            except Exception as exc:
+                click.echo(
+                    f"  [{completed}/{len(ids)}] {cid}: ERROR ({exc})",
+                    err=True,
+                )
+
+    # Sort results by challenge ID for deterministic output
+    results.sort(key=lambda r: r["challenge"])
+    return results
+
+
+def _run_one_challenge(cid: str, challenges_dir: Path, ws: Path, agent_cmd: str,
+                       timeout: int, no_score: bool) -> dict | None:
+    """Run and score a single challenge. Designed to be called by parallel workers."""
+    src = challenges_dir / cid
+    challenge_ws = ws / cid
+
+    # Fetch if not already present
+    if not challenge_ws.exists():
+        shutil.copytree(src, challenge_ws)
+
+    # Load metadata
+    meta_file = src / "metadata.yaml"
+    with open(meta_file) as f:
+        meta = yaml.safe_load(f)
+
+    challenge_type = meta.get("type", "single-session")
+    run_start = time.time()
+
+    if challenge_type == "multi-session":
+        run_multi_session(cid, challenge_ws, agent_cmd, meta, timeout)
+    else:
+        run_single_session(cid, challenge_ws, agent_cmd, meta, timeout)
+
+    if not no_score:
+        result = score_challenge(cid, challenge_ws, src, timeout=timeout)
+        result["duration_seconds"] = round(time.time() - run_start, 2)
+        return result
+    return None
 
 
 def run_single_session(challenge_id: str, workspace: Path, agent_cmd: str, meta: dict, timeout: int) -> bool:
@@ -188,7 +287,7 @@ def invoke_agent(agent_cmd: str, task: str, workspace: Path, meta: dict, timeout
                 click.echo(f"  Agent stderr: {proc.stderr[-300:]}", err=True)
         return proc.returncode == 0
     except subprocess.TimeoutExpired:
-        click.echo(f"  Agent timed out after {timeout}s", err=True)
+        click.echo(f"  Agent timed out after {timeout}s. Try --timeout {timeout * 2} for complex challenges.", err=True)
         return False
     finally:
         # Clean up task file
@@ -206,7 +305,6 @@ def clean_workspace(workspace: Path, persist_patterns: list[str]) -> int:
     if not setup_dir.exists():
         return 0
 
-    protected_names = {"tests", "steps", "tools", "README.md", "metadata.yaml", ".opengym_task.md"}
     removed = 0
 
     for item in list(setup_dir.rglob("*")):

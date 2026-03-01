@@ -1,0 +1,24 @@
+id: '187'
+title: Cron Config Drift
+slug: 187-cron-config-drift
+difficulty: medium
+category: task-sequencing
+dimension: planning
+type: multi-session
+steps: 2
+persist:
+- setup/config.json
+- setup/drift_report.json
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- cron
+- config-drift
+- monitoring
+name: Cron Config Drift
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

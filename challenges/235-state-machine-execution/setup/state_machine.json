@@ -1,0 +1,17 @@
+{
+  "initial_state": "idle",
+  "states": ["idle", "processing", "validating", "approved", "rejected", "completed", "error"],
+  "transitions": [
+    {"source": "idle", "event": "submit", "target": "processing"},
+    {"source": "processing", "event": "validate", "target": "validating"},
+    {"source": "processing", "event": "error_occurred", "target": "error"},
+    {"source": "validating", "event": "approve", "target": "approved", "guard": {"field": "amount", "operator": "lte", "value": 10000}},
+    {"source": "validating", "event": "approve", "target": "rejected", "guard": {"field": "amount", "operator": "gt", "value": 10000}},
+    {"source": "validating", "event": "reject", "target": "rejected"},
+    {"source": "approved", "event": "finalize", "target": "completed"},
+    {"source": "rejected", "event": "resubmit", "target": "idle"},
+    {"source": "error", "event": "retry", "target": "processing"},
+    {"source": "error", "event": "abort", "target": "rejected"},
+    {"source": "completed", "event": "reset", "target": "idle"}
+  ]
+}

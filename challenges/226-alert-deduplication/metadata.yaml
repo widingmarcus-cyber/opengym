@@ -1,0 +1,9 @@
+id: '226'
+name: Alert Deduplication
+difficulty: medium
+category: observability
+dimension: coding
+language: python
+estimated_cost_usd: 0.02
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

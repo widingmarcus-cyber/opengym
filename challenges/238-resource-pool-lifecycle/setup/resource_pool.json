@@ -1,0 +1,14 @@
+{
+  "resources": [
+    {"resource_id": "inst-001", "cpu": 2, "memory_gb": 4, "status": "available"},
+    {"resource_id": "inst-002", "cpu": 2, "memory_gb": 8, "status": "available"},
+    {"resource_id": "inst-003", "cpu": 4, "memory_gb": 8, "status": "available"},
+    {"resource_id": "inst-004", "cpu": 4, "memory_gb": 16, "status": "available"},
+    {"resource_id": "inst-005", "cpu": 8, "memory_gb": 16, "status": "available"},
+    {"resource_id": "inst-006", "cpu": 8, "memory_gb": 32, "status": "available"},
+    {"resource_id": "inst-007", "cpu": 16, "memory_gb": 32, "status": "available"},
+    {"resource_id": "inst-008", "cpu": 16, "memory_gb": 64, "status": "available"},
+    {"resource_id": "inst-009", "cpu": 4, "memory_gb": 8, "status": "available"},
+    {"resource_id": "inst-010", "cpu": 2, "memory_gb": 4, "status": "available"}
+  ]
+}

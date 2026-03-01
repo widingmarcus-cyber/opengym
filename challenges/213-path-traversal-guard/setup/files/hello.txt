@@ -1,0 +1,1 @@
+Hello, world! This is a public file served by the file server.

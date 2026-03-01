@@ -1,0 +1,9 @@
+{
+  "topology": {
+    "node-A": ["node-B", "node-C", "node-D", "node-E"],
+    "node-B": ["node-A", "node-C", "node-D"],
+    "node-C": ["node-A", "node-B", "node-D", "node-E"],
+    "node-D": ["node-A", "node-B", "node-C", "node-E"],
+    "node-E": ["node-A", "node-C", "node-D"]
+  }
+}

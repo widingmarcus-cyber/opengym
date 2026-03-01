@@ -1,0 +1,7 @@
+{
+  "host": "cache-new.example.com",
+  "port": 6380,
+  "ttl": 600,
+  "max_memory": "512mb",
+  "version": 2
+}

@@ -1,0 +1,1 @@
+{"A": {"waits_for": "B"}, "B": {"waits_for": "C"}, "C": {"waits_for": "A"}}

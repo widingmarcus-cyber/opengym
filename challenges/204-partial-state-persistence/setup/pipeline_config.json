@@ -1,0 +1,9 @@
+{
+  "stages": [
+    {"stage": 1, "name": "filter", "description": "Remove all negative numbers"},
+    {"stage": 2, "name": "transform", "description": "Square each remaining number"},
+    {"stage": 3, "name": "sort", "description": "Sort results in ascending order"},
+    {"stage": 4, "name": "aggregate", "description": "Compute sum, count, mean, min, max"},
+    {"stage": 5, "name": "report", "description": "Produce final report"}
+  ]
+}

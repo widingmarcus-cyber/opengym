@@ -1,0 +1,9 @@
+{
+  "nodes": {
+    "node-A": {"initial_value": "alpha"},
+    "node-B": {"initial_value": "beta"},
+    "node-C": {"initial_value": "alpha"},
+    "node-D": {"initial_value": "beta"},
+    "node-E": {"initial_value": "alpha"}
+  }
+}

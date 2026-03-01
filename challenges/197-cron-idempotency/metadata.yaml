@@ -1,0 +1,24 @@
+id: '197'
+title: Cron Idempotency
+slug: 197-cron-idempotency
+difficulty: medium
+category: task-sequencing
+dimension: planning
+type: multi-session
+steps: 2
+persist:
+- setup/state.json
+- setup/run_log.json
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- cron
+- idempotency
+- deduplication
+name: Cron Idempotency
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

@@ -1,8 +1,9 @@
-id: "069"
-name: "Sanitize User Input"
-difficulty: "easy"
-category: "safety"
-dimension: "coding"
-language: "python"
+id: 069
+name: Sanitize User Input
+difficulty: easy
+category: safety
+dimension: coding
+language: python
 estimated_cost_usd: 0.01
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

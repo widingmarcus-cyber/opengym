@@ -1,8 +1,9 @@
-id: "106"
-name: "Find the Right Tool"
-difficulty: "easy"
-category: "tool-discovery"
-dimension: "tool-use"
-language: "python"
+id: '106'
+name: Find the Right Tool
+difficulty: easy
+category: tool-discovery
+dimension: tool-use
+language: python
 estimated_cost_usd: 0.03
-verify: "python3 tests/verify.py"
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

@@ -1,8 +1,9 @@
-id: "006"
-name: "Refactor the Monster Function"
-difficulty: "medium"
-category: "code-writing"
-dimension: "coding"
-language: "python"
+id: '006'
+name: Refactor the Monster Function
+difficulty: medium
+category: code-writing
+dimension: coding
+language: python
 estimated_cost_usd: 0.03
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

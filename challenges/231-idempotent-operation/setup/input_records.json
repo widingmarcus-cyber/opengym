@@ -1,0 +1,12 @@
+[
+  {"id": "rec-001", "name": "Alice Johnson", "email": "alice@example.com", "amount": 150.00},
+  {"id": "rec-002", "name": "Bob Smith", "email": "bob@example.com", "amount": 275.50},
+  {"id": "rec-003", "name": "Charlie Brown", "email": "charlie@example.com", "amount": 89.99},
+  {"id": "rec-001", "name": "Alice Johnson", "email": "alice@example.com", "amount": 150.00},
+  {"id": "rec-004", "name": "Diana Prince", "email": "diana@example.com", "amount": 320.00},
+  {"id": "rec-005", "name": "Eve Wilson", "email": "eve@example.com", "amount": 45.75},
+  {"id": "rec-002", "name": "Bob Smith", "email": "bob@example.com", "amount": 275.50},
+  {"id": "rec-006", "name": "Frank Miller", "email": "frank@example.com", "amount": 199.99},
+  {"id": "rec-003", "name": "Charlie Brown", "email": "charlie@example.com", "amount": 89.99},
+  {"id": "rec-007", "name": "Grace Lee", "email": "grace@example.com", "amount": 510.00}
+]

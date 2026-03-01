@@ -1,0 +1,6 @@
+[
+  {"id": 1, "task": "build", "status": "pending"},
+  {"id": 2, "task": "test", "status": "pending"},
+  {"id": 3, "task": "deploy", "status": "cancelled"},
+  {"id": 4, "task": "notify", "status": "pending"}
+]

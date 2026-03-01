@@ -1,0 +1,17 @@
+id: '234'
+name: Config Drift Detection
+difficulty: hard
+category: long-horizon
+dimension: planning
+language: python
+estimated_cost_usd: 0.05
+type: multi-session
+steps: 3
+persist:
+- setup/*.json
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

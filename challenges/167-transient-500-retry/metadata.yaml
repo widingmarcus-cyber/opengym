@@ -1,0 +1,9 @@
+id: '167'
+name: Transient 500 Retry
+difficulty: easy
+category: tool-resilience
+dimension: tool-use
+language: python
+estimated_cost_usd: 0.01
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

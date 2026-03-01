@@ -1,8 +1,9 @@
-id: "113"
-name: "Red Herring Logs"
-difficulty: "medium"
-category: "noise-filtering"
-dimension: "resilience"
-language: "python"
+id: '113'
+name: Red Herring Logs
+difficulty: medium
+category: noise-filtering
+dimension: resilience
+language: python
 estimated_cost_usd: 0.05
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: INFRA_CONFORMANCE

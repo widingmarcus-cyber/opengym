@@ -1,0 +1,24 @@
+{
+  "events": [
+    {"name": "submit", "payload": {}},
+    {"name": "validate", "payload": {}},
+    {"name": "approve", "payload": {"amount": 5000}},
+    {"name": "finalize", "payload": {}},
+    {"name": "reset", "payload": {}},
+    {"name": "submit", "payload": {}},
+    {"name": "error_occurred", "payload": {"code": "TIMEOUT"}},
+    {"name": "retry", "payload": {}},
+    {"name": "validate", "payload": {}},
+    {"name": "approve", "payload": {"amount": 15000}},
+    {"name": "resubmit", "payload": {}},
+    {"name": "submit", "payload": {}},
+    {"name": "finalize", "payload": {}},
+    {"name": "validate", "payload": {}},
+    {"name": "reject", "payload": {"reason": "incomplete"}},
+    {"name": "resubmit", "payload": {}},
+    {"name": "submit", "payload": {}},
+    {"name": "validate", "payload": {}},
+    {"name": "approve", "payload": {"amount": 8000}},
+    {"name": "finalize", "payload": {}}
+  ]
+}

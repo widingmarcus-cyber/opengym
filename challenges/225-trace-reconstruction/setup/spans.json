@@ -1,0 +1,74 @@
+[
+  {
+    "trace_id": "trace-7f3a9b",
+    "span_id": "span-001",
+    "parent_span_id": null,
+    "service": "api-gateway",
+    "operation": "POST /checkout",
+    "start_time_ms": 1000,
+    "end_time_ms": 1450
+  },
+  {
+    "trace_id": "trace-7f3a9b",
+    "span_id": "span-004",
+    "parent_span_id": "span-002",
+    "service": "inventory-service",
+    "operation": "checkStock",
+    "start_time_ms": 1035,
+    "end_time_ms": 1100
+  },
+  {
+    "trace_id": "trace-7f3a9b",
+    "span_id": "span-002",
+    "parent_span_id": "span-001",
+    "service": "order-service",
+    "operation": "createOrder",
+    "start_time_ms": 1020,
+    "end_time_ms": 1300
+  },
+  {
+    "trace_id": "trace-7f3a9b",
+    "span_id": "span-007",
+    "parent_span_id": "span-003",
+    "service": "email-service",
+    "operation": "sendReceipt",
+    "start_time_ms": 1330,
+    "end_time_ms": 1420
+  },
+  {
+    "trace_id": "trace-7f3a9b",
+    "span_id": "span-003",
+    "parent_span_id": "span-001",
+    "service": "payment-service",
+    "operation": "chargeCard",
+    "start_time_ms": 1310,
+    "end_time_ms": 1440
+  },
+  {
+    "trace_id": "trace-7f3a9b",
+    "span_id": "span-005",
+    "parent_span_id": "span-002",
+    "service": "db-service",
+    "operation": "insertOrder",
+    "start_time_ms": 1110,
+    "end_time_ms": 1200
+  },
+  {
+    "trace_id": "trace-7f3a9b",
+    "span_id": "span-006",
+    "parent_span_id": "span-002",
+    "service": "cache-service",
+    "operation": "invalidateCache",
+    "start_time_ms": 1210,
+    "end_time_ms": 1280
+  },
+  {
+    "trace_id": "trace-7f3a9b",
+    "span_id": "span-008",
+    "parent_span_id": "span-003",
+    "service": "fraud-detection",
+    "operation": "validateTransaction",
+    "start_time_ms": 1315,
+    "end_time_ms": 1325
+  }
+]

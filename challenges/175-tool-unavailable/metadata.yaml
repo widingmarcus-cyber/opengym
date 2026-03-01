@@ -1,0 +1,9 @@
+id: '175'
+name: Tool Unavailable
+difficulty: medium
+category: tool-resilience
+dimension: tool-use
+language: python
+estimated_cost_usd: 0.02
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

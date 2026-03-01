@@ -1,0 +1,20 @@
+id: '188'
+title: Missed Schedule Catch-up
+slug: 188-missed-schedule-catchup
+difficulty: hard
+category: task-sequencing
+dimension: planning
+type: single-session
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- cron
+- catch-up
+- gap-detection
+name: Missed Schedule Catch-up
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

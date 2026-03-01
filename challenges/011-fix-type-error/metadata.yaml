@@ -1,8 +1,9 @@
-id: "011"
-name: "Fix the Type Errors"
-difficulty: "easy"
-category: "code-fixing"
-dimension: "coding"
-language: "python"
+id: '011'
+name: Fix the Type Errors
+difficulty: easy
+category: code-fixing
+dimension: coding
+language: python
 estimated_cost_usd: 0.02
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

@@ -1,0 +1,5 @@
+[
+  {"id": "t1", "policy": "fresh", "command": "initialize"},
+  {"id": "t2", "policy": "reuse", "command": "process"},
+  {"id": "t3", "policy": "fresh", "command": "cleanup"}
+]

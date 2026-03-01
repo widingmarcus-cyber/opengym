@@ -1,0 +1,7 @@
+{
+  "host": "db-old.example.com",
+  "port": 5432,
+  "name": "myapp_prod",
+  "pool_size": 10,
+  "version": 1
+}

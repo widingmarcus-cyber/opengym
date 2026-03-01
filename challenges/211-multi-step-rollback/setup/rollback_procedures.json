@@ -1,0 +1,6 @@
+{
+  "set_field": "Set the field at the given path to the rollback value",
+  "set_fields": "Set multiple fields to their rollback values",
+  "remove_from_list": "Remove the specified value from the list at the given path",
+  "note": "Rollback must be executed in REVERSE step order: 4, 3, 2, 1"
+}

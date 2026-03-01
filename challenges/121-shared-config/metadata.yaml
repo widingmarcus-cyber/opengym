@@ -1,13 +1,14 @@
-id: "121"
-name: "Shared Config"
-difficulty: "medium"
-category: "shared-resources"
-dimension: "multi-agent"
-language: "python"
+id: '121'
+name: Shared Config
+difficulty: medium
+category: shared-resources
+dimension: multi-agent
+language: python
 estimated_cost_usd: 0.05
-type: "multi-session"
+type: multi-session
 steps: 2
 persist:
-  - "setup/shared_config.yaml"
+- setup/shared_config.yaml
 step_timeout: 120
-verify: "python3 tests/verify.py"
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

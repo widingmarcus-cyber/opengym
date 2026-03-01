@@ -1,0 +1,19 @@
+id: '191'
+title: Scheduled Task Cancellation
+slug: 191-scheduled-task-cancel
+difficulty: easy
+category: task-sequencing
+dimension: planning
+type: single-session
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- task-queue
+- cancellation
+name: Scheduled Task Cancellation
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

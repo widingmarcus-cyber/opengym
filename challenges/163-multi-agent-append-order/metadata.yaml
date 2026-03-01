@@ -1,0 +1,14 @@
+id: '163'
+name: Multi-Agent File Append Ordering
+difficulty: medium
+category: shared-resources
+dimension: multi-agent
+language: python
+estimated_cost_usd: 0.05
+type: multi-session
+steps: 3
+persist:
+- setup/log.txt
+step_timeout: 120
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

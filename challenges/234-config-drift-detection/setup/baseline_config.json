@@ -1,0 +1,89 @@
+{
+  "servers": {
+    "web-01": {
+      "hostname": "web-01",
+      "ip": "10.0.1.10",
+      "os": "ubuntu-22.04",
+      "cpu_cores": 4,
+      "memory_gb": 16,
+      "disk_gb": 100,
+      "services": ["nginx", "node"],
+      "firewall": {
+        "ssh_enabled": true,
+        "http_enabled": true,
+        "https_enabled": true,
+        "custom_ports": [8080]
+      },
+      "env": "production",
+      "auto_update": true
+    },
+    "web-02": {
+      "hostname": "web-02",
+      "ip": "10.0.1.11",
+      "os": "ubuntu-22.04",
+      "cpu_cores": 4,
+      "memory_gb": 16,
+      "disk_gb": 100,
+      "services": ["nginx", "node"],
+      "firewall": {
+        "ssh_enabled": true,
+        "http_enabled": true,
+        "https_enabled": true,
+        "custom_ports": [8080]
+      },
+      "env": "production",
+      "auto_update": true
+    },
+    "db-01": {
+      "hostname": "db-01",
+      "ip": "10.0.2.10",
+      "os": "ubuntu-22.04",
+      "cpu_cores": 8,
+      "memory_gb": 64,
+      "disk_gb": 500,
+      "services": ["postgresql"],
+      "firewall": {
+        "ssh_enabled": true,
+        "http_enabled": false,
+        "https_enabled": false,
+        "custom_ports": [5432]
+      },
+      "env": "production",
+      "auto_update": false
+    },
+    "cache-01": {
+      "hostname": "cache-01",
+      "ip": "10.0.3.10",
+      "os": "ubuntu-22.04",
+      "cpu_cores": 4,
+      "memory_gb": 32,
+      "disk_gb": 50,
+      "services": ["redis"],
+      "firewall": {
+        "ssh_enabled": true,
+        "http_enabled": false,
+        "https_enabled": false,
+        "custom_ports": [6379]
+      },
+      "env": "production",
+      "auto_update": false
+    },
+    "worker-01": {
+      "hostname": "worker-01",
+      "ip": "10.0.4.10",
+      "os": "ubuntu-22.04",
+      "cpu_cores": 8,
+      "memory_gb": 32,
+      "disk_gb": 200,
+      "services": ["celery", "rabbitmq"],
+      "firewall": {
+        "ssh_enabled": true,
+        "http_enabled": false,
+        "https_enabled": false,
+        "custom_ports": [5672, 15672]
+      },
+      "env": "production",
+      "auto_update": true
+    }
+  }
+}

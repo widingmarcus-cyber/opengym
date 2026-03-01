@@ -1,0 +1,74 @@
+[
+  {
+    "event_id": "evt-001",
+    "timestamp": 1736085600,
+    "source": "metrics-collector",
+    "message": "CPU spike detected on host-12"
+  },
+  {
+    "event_id": "evt-002",
+    "timestamp": "2025-01-05T09:00:00-05:00",
+    "source": "east-us-monitor",
+    "message": "Disk usage alert on storage-node-3"
+  },
+  {
+    "event_id": "evt-003",
+    "timestamp": "2025-01-05T14:00:00Z",
+    "source": "eu-west-monitor",
+    "message": "Network latency within normal range"
+  },
+  {
+    "event_id": "evt-004",
+    "timestamp": "Sun, 05 Jan 2025 15:30:00 +0000",
+    "source": "email-gateway",
+    "message": "Outbound email queue depth: 142"
+  },
+  {
+    "event_id": "evt-005",
+    "timestamp": 1736092200000,
+    "source": "js-frontend",
+    "message": "Client-side error: undefined is not a function"
+  },
+  {
+    "event_id": "evt-006",
+    "timestamp": "05/Jan/2025 16:45:00 +0000",
+    "source": "apache-access-log",
+    "message": "GET /api/v2/users returned 200"
+  },
+  {
+    "event_id": "evt-007",
+    "timestamp": "2025-01-05T23:00:00+08:00",
+    "source": "asia-pacific-monitor",
+    "message": "Scheduled maintenance window started"
+  },
+  {
+    "event_id": "evt-008",
+    "timestamp": "01/05/2025 09:00:00 AM EST",
+    "source": "legacy-system",
+    "message": "Batch job completed: processed 1,247 records"
+  },
+  {
+    "event_id": "evt-009",
+    "timestamp": "2025-01-05T17:30:00+01:00",
+    "source": "eu-central-monitor",
+    "message": "Database replication lag: 2.3s"
+  },
+  {
+    "event_id": "evt-010",
+    "timestamp": 1736103600,
+    "source": "cron-scheduler",
+    "message": "Nightly backup initiated"
+  },
+  {
+    "event_id": "evt-011",
+    "timestamp": "Sun, 05 Jan 2025 12:00:00 -0800",
+    "source": "west-us-monitor",
+    "message": "Auto-scaling triggered: 3 new instances"
+  },
+  {
+    "event_id": "evt-012",
+    "timestamp": "05/Jan/2025 21:15:00 +0530",
+    "source": "india-dc-monitor",
+    "message": "Cache hit ratio dropped below 80%"
+  }
+]

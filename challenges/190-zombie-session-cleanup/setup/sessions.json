@@ -1,0 +1,6 @@
+[
+  {"id": "s1", "status": "completed", "started": "2024-01-01T00:00:00Z", "finished": "2024-01-01T00:05:00Z"},
+  {"id": "s2", "status": "running", "started": "2024-01-01T00:00:00Z", "finished": null},
+  {"id": "s3", "status": "completed", "started": "2024-01-01T12:00:00Z", "finished": "2024-01-01T12:03:00Z"},
+  {"id": "s4", "status": "running", "started": "2024-01-01T00:00:00Z", "finished": null}
+]

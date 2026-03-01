@@ -1,0 +1,14 @@
+id: '138'
+name: Memory TTL Expiration
+difficulty: medium
+category: memory-state
+dimension: memory
+language: python
+estimated_cost_usd: 0.03
+type: multi-session
+steps: 2
+persist:
+- setup/cache.json
+step_timeout: 120
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

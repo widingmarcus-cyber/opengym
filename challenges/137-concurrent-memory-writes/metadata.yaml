@@ -1,0 +1,14 @@
+id: '137'
+name: Concurrent Memory Writes
+difficulty: hard
+category: memory-state
+dimension: memory
+language: python
+estimated_cost_usd: 0.03
+type: multi-session
+steps: 3
+persist:
+- setup/shared.json
+step_timeout: 60
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

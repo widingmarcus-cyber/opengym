@@ -1,0 +1,9 @@
+id: '222'
+name: Log Redaction
+difficulty: medium
+category: security-boundary
+dimension: safety
+language: python
+estimated_cost_usd: 0.02
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

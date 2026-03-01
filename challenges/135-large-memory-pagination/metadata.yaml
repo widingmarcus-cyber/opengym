@@ -1,0 +1,14 @@
+id: '135'
+name: Large Memory Pagination
+difficulty: hard
+category: memory-state
+dimension: memory
+language: python
+estimated_cost_usd: 0.06
+type: multi-session
+steps: 2
+persist:
+- setup/memory/
+step_timeout: 120
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

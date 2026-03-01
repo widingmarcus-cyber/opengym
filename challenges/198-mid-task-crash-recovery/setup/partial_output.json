@@ -1,0 +1,6 @@
+[
+  {"id": 1, "value": "apple", "quantity": 10, "status": "processed", "result": "APPLE_x10"},
+  {"id": 2, "value": "banana", "quantity": 5, "status": "processed", "result": "BANANA_x5"},
+  {"id": 3, "value": "cherry", "quantity": 20, "status": "processed", "result": "CHERRY_x20"},
+  {"id": 4, "value": "date", "quantity": 15, "status": "processed", "result": "DATE_x15"}
+]

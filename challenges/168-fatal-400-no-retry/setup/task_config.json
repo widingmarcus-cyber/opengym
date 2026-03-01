@@ -1,0 +1,4 @@
+{
+  "primary_input": "bad_data",
+  "fallback_input": "good_data"
+}

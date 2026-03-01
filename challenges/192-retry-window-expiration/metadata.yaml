@@ -1,0 +1,20 @@
+id: '192'
+title: Retry Window Expiration
+slug: 192-retry-window-expiration
+difficulty: hard
+category: task-sequencing
+dimension: planning
+type: single-session
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- retry-logic
+- time-calculation
+- expiration
+name: Retry Window Expiration
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

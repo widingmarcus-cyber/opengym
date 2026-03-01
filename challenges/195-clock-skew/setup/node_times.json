@@ -1,0 +1,6 @@
+{
+  "node_a": "2024-01-01T12:00:00Z",
+  "node_b": "2024-01-01T12:00:05Z",
+  "node_c": "2024-01-01T11:59:55Z",
+  "max_acceptable_skew_seconds": 3
+}

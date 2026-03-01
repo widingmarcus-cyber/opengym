@@ -1,0 +1,23 @@
+{
+  "database.json": {
+    "host": "db-new.example.com",
+    "port": 5433,
+    "name": "myapp_prod_v2",
+    "pool_size": 20,
+    "version": 2
+  },
+  "cache.json": {
+    "host": "cache-new.example.com",
+    "port": 6380,
+    "ttl": 600,
+    "max_memory": "512mb",
+    "version": 2
+  },
+  "api.json": {
+    "base_url": "https://api-new.example.com",
+    "timeout": 60,
+    "retries": 5,
+    "api_key_ref": "vault://new-key",
+    "version": 2
+  }
+}

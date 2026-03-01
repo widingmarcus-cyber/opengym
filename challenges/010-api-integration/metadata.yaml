@@ -1,8 +1,9 @@
-id: "010"
-name: "API Client Integration"
-difficulty: "hard"
-category: "tool-use"
-dimension: "coding"
-language: "python"
+id: '010'
+name: API Client Integration
+difficulty: hard
+category: tool-use
+dimension: coding
+language: python
 estimated_cost_usd: 0.05
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

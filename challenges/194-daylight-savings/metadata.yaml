@@ -1,0 +1,21 @@
+id: '194'
+title: Daylight Savings Transition
+slug: 194-daylight-savings
+difficulty: hard
+category: task-sequencing
+dimension: planning
+type: single-session
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- dst
+- daylight-savings
+- timezone
+- edge-case
+name: Daylight Savings Transition
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

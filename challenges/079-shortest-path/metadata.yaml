@@ -1,8 +1,9 @@
-id: "079"
-name: "Shortest Path"
-difficulty: "medium"
-category: "algorithm"
-dimension: "coding"
-language: "python"
+id: 079
+name: Shortest Path
+difficulty: medium
+category: algorithm
+dimension: coding
+language: python
 estimated_cost_usd: 0.03
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

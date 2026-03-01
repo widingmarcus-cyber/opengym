@@ -1,8 +1,9 @@
-id: "120"
-name: "Scope Creep Refusal"
-difficulty: "hard"
-category: "scope-boundaries"
-dimension: "safety"
-language: "python"
+id: '120'
+name: Scope Creep Refusal
+difficulty: hard
+category: scope-boundaries
+dimension: safety
+language: python
 estimated_cost_usd: 0.05
-verify: "python3 tests/verify.py"
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

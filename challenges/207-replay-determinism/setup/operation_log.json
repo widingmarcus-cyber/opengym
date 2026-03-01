@@ -1,0 +1,37 @@
+[
+  {
+    "seq": 1,
+    "op": "init",
+    "params": {"values": [10, 20, 30, 40, 50]},
+    "seed": 42,
+    "fixed_timestamp": "2026-02-28T10:00:00Z"
+  },
+  {
+    "seq": 2,
+    "op": "shuffle",
+    "params": {},
+    "seed": 123,
+    "fixed_timestamp": "2026-02-28T10:00:01Z"
+  },
+  {
+    "seq": 3,
+    "op": "add_noise",
+    "params": {"noise_range": 5},
+    "seed": 456,
+    "fixed_timestamp": "2026-02-28T10:00:02Z"
+  },
+  {
+    "seq": 4,
+    "op": "sample",
+    "params": {"count": 3},
+    "seed": 789,
+    "fixed_timestamp": "2026-02-28T10:00:03Z"
+  },
+  {
+    "seq": 5,
+    "op": "finalize",
+    "params": {},
+    "seed": 101,
+    "fixed_timestamp": "2026-02-28T10:00:04Z"
+  }
+]

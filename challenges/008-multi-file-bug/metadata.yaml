@@ -1,8 +1,9 @@
-id: "008"
-name: "Multi-File Bug Hunt"
-difficulty: "hard"
-category: "multi-step"
-dimension: "coding"
-language: "python"
+id: 008
+name: Multi-File Bug Hunt
+difficulty: hard
+category: multi-step
+dimension: coding
+language: python
 estimated_cost_usd: 0.05
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

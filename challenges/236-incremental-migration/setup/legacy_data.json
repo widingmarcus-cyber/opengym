@@ -1,0 +1,24 @@
+{
+  "records": [
+    {"record_id": 1, "cust_name": "Alice Johnson", "cust_email": "alice@example.com", "purchase_amt": "150.00", "purchase_date": "2024-01-10", "category_code": "A1", "active_flag": "Y"},
+    {"record_id": 2, "cust_name": "Bob Smith", "cust_email": "bob@example.com", "purchase_amt": "275.50", "purchase_date": "2024-01-11", "category_code": "B2", "active_flag": "Y"},
+    {"record_id": 3, "cust_name": "Charlie Brown", "cust_email": "charlie@example.com", "purchase_amt": "89.99", "purchase_date": "2024-01-12", "category_code": "A1", "active_flag": "N"},
+    {"record_id": 4, "cust_name": "Diana Ross", "cust_email": "diana@example.com", "purchase_amt": "450.00", "purchase_date": "2024-01-13", "category_code": "C3", "active_flag": "Y"},
+    {"record_id": 5, "cust_name": "Eve Wilson", "cust_email": "eve@example.com", "purchase_amt": "120.75", "purchase_date": "2024-01-14", "category_code": "A1", "active_flag": "Y"},
+    {"record_id": 6, "cust_name": "Frank Miller", "cust_email": "frank@example.com", "purchase_amt": "330.00", "purchase_date": "2024-01-15", "category_code": "B2", "active_flag": "N"},
+    {"record_id": 7, "cust_name": "Grace Lee", "cust_email": "grace@example.com", "purchase_amt": "199.99", "purchase_date": "2024-01-16", "category_code": "C3", "active_flag": "Y"},
+    {"record_id": 8, "cust_name": "Hank Davis", "cust_email": "hank@example.com", "purchase_amt": "560.25", "purchase_date": "2024-01-17", "category_code": "A1", "active_flag": "Y"},
+    {"record_id": 9, "cust_name": "Ivy Chen", "cust_email": "ivy@example.com", "purchase_amt": "75.00", "purchase_date": "2024-01-18", "category_code": "B2", "active_flag": "N"},
+    {"record_id": 10, "cust_name": "Jack Taylor", "cust_email": "jack@example.com", "purchase_amt": "410.50", "purchase_date": "2024-01-19", "category_code": "C3", "active_flag": "Y"},
+    {"record_id": 11, "cust_name": "Karen White", "cust_email": "karen@example.com", "purchase_amt": "225.00", "purchase_date": "2024-01-20", "category_code": "A1", "active_flag": "Y"},
+    {"record_id": 12, "cust_name": "Leo Martinez", "cust_email": "leo@example.com", "purchase_amt": "180.75", "purchase_date": "2024-01-21", "category_code": "B2", "active_flag": "Y"},
+    {"record_id": 13, "cust_name": "Mia Garcia", "cust_email": "mia@example.com", "purchase_amt": "95.50", "purchase_date": "2024-01-22", "category_code": "C3", "active_flag": "N"},
+    {"record_id": 14, "cust_name": "Noah Kim", "cust_email": "noah@example.com", "purchase_amt": "670.00", "purchase_date": "2024-01-23", "category_code": "A1", "active_flag": "Y"},
+    {"record_id": 15, "cust_name": "Olivia Park", "cust_email": "olivia@example.com", "purchase_amt": "310.25", "purchase_date": "2024-01-24", "category_code": "B2", "active_flag": "Y"},
+    {"record_id": 16, "cust_name": "Peter Jones", "cust_email": "peter@example.com", "purchase_amt": "140.00", "purchase_date": "2024-01-25", "category_code": "C3", "active_flag": "N"},
+    {"record_id": 17, "cust_name": "Quinn Adams", "cust_email": "quinn@example.com", "purchase_amt": "505.50", "purchase_date": "2024-01-26", "category_code": "A1", "active_flag": "Y"},
+    {"record_id": 18, "cust_name": "Rachel Liu", "cust_email": "rachel@example.com", "purchase_amt": "88.00", "purchase_date": "2024-01-27", "category_code": "B2", "active_flag": "Y"},
+    {"record_id": 19, "cust_name": "Sam Wright", "cust_email": "sam@example.com", "purchase_amt": "395.75", "purchase_date": "2024-01-28", "category_code": "C3", "active_flag": "Y"},
+    {"record_id": 20, "cust_name": "Tina Hall", "cust_email": "tina@example.com", "purchase_amt": "260.00", "purchase_date": "2024-01-29", "category_code": "A1", "active_flag": "N"}
+  ]
+}

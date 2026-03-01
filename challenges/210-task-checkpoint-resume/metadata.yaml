@@ -1,0 +1,18 @@
+id: '210'
+name: Task Checkpoint Resume
+difficulty: hard
+category: failure-recovery
+dimension: resilience
+language: python
+estimated_cost_usd: 0.04
+type: multi-session
+steps: 2
+persist:
+- setup/checkpoints/
+- setup/progress.json
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

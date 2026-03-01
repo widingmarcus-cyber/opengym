@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-02-28T11:45:33Z",
+  "process": "analyzer.py",
+  "pid": 55102,
+  "error": "OSError: [Errno 24] Too many open files",
+  "open_fd_count": 50,
+  "fd_limit": 20,
+  "note": "The analyzer opens all 50 log files simultaneously and never closes them. Rewrite to process files sequentially or in small batches, using at most 5 concurrent file descriptors."
+}

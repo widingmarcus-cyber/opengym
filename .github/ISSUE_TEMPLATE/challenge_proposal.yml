@@ -1,0 +1,59 @@
+name: Challenge Proposal
+description: Propose a new benchmark challenge
+labels: ["challenge"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Challenge name
+      placeholder: "Handle Rate-Limited API"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dimension
+    attributes:
+      label: Dimension
+      description: Which agent capability does this test?
+      options:
+        - coding
+        - memory
+        - tool-use
+        - resilience
+        - safety
+        - multi-agent
+        - planning
+    validations:
+      required: true
+
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      description: "Fine-grained category (e.g., code-fixing, tool-discovery, prompt-injection)"
+      placeholder: "tool-resilience"
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Difficulty
+      options:
+        - easy
+        - medium
+        - hard
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What does this challenge test?
+      description: Describe the scenario and what makes it interesting for agent evaluation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: How would you verify the solution?
+      description: What tests or checks would confirm the agent solved it correctly?

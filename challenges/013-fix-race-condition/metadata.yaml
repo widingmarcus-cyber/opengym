@@ -1,8 +1,9 @@
-id: "013"
-name: "Fix the Race Condition"
-difficulty: "medium"
-category: "code-fixing"
-dimension: "coding"
-language: "python"
+id: '013'
+name: Fix the Race Condition
+difficulty: medium
+category: code-fixing
+dimension: coding
+language: python
 estimated_cost_usd: 0.04
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

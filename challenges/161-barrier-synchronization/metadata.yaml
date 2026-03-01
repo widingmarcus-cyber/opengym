@@ -1,0 +1,15 @@
+id: '161'
+name: Barrier Synchronization
+difficulty: hard
+category: agent-collaboration
+dimension: multi-agent
+language: python
+estimated_cost_usd: 0.05
+type: multi-session
+steps: 3
+persist:
+- setup/barrier.json
+- setup/results/
+step_timeout: 120
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

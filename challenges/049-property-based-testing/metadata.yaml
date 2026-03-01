@@ -1,8 +1,9 @@
-id: "049"
-name: "Property-Based Testing"
-difficulty: "medium"
-category: "testing"
-dimension: "coding"
-language: "python"
+id: 049
+name: Property-Based Testing
+difficulty: medium
+category: testing
+dimension: coding
+language: python
 estimated_cost_usd: 0.03
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

@@ -1,0 +1,11 @@
+{
+  "version": "v2",
+  "new_fields": {
+    "migrated_at": "2024-02-01T00:00:00Z",
+    "source_system": "legacy"
+  },
+  "renamed_fields": {
+    "customer_name": "full_name"
+  },
+  "removed_fields": ["category"]
+}

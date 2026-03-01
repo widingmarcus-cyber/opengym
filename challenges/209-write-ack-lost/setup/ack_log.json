@@ -1,0 +1,32 @@
+[
+  {
+    "record_id": "R001",
+    "status": "ack",
+    "timestamp": "2026-02-28T12:00:01Z"
+  },
+  {
+    "record_id": "R002",
+    "status": "ack",
+    "timestamp": "2026-02-28T12:00:02Z"
+  },
+  {
+    "record_id": "R003",
+    "status": "ack",
+    "timestamp": "2026-02-28T12:00:03Z"
+  },
+  {
+    "record_id": "R004",
+    "status": "ack",
+    "timestamp": "2026-02-28T12:00:04Z"
+  },
+  {
+    "record_id": "R005",
+    "status": "ack",
+    "timestamp": "2026-02-28T12:00:05Z"
+  },
+  {
+    "record_id": "R008",
+    "status": "ack",
+    "timestamp": "2026-02-28T12:00:08Z"
+  }
+]

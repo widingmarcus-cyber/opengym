@@ -1,0 +1,8 @@
+[
+  {"op": "deposit", "params": {"account": "ACC001", "amount": 500}},
+  {"op": "withdraw", "params": {"account": "ACC002", "amount": 300}},
+  {"op": "transfer", "params": {"from": "ACC003", "to": "ACC004", "amount": 200}},
+  {"op": "deposit", "params": {"account": "ACC003", "amount": 1000}},
+  {"op": "withdraw", "params": {"account": "ACC001", "amount": 250}},
+  {"op": "transfer", "params": {"from": "ACC004", "to": "ACC002", "amount": 500}}
+]

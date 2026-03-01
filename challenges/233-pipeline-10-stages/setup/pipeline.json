@@ -1,0 +1,97 @@
+{
+  "stages": [
+    {
+      "name": "parse",
+      "operation": "parse_records",
+      "config": {
+        "delimiter": "|",
+        "fields": ["id", "name", "country", "amount", "timestamp"]
+      }
+    },
+    {
+      "name": "validate",
+      "operation": "validate_schema",
+      "config": {
+        "required_fields": ["id", "name", "country", "amount"],
+        "field_types": {
+          "id": "integer",
+          "amount": "float"
+        }
+      }
+    },
+    {
+      "name": "transform",
+      "operation": "apply_transforms",
+      "config": {
+        "rename": {"timestamp": "created_at"},
+        "compute": {
+          "amount_usd": "amount * 1.0",
+          "name_upper": "name.upper()"
+        }
+      }
+    },
+    {
+      "name": "enrich",
+      "operation": "enrich_records",
+      "config": {
+        "lookup_field": "country",
+        "target_field": "region",
+        "mapping": {
+          "US": "North America",
+          "CA": "North America",
+          "GB": "Europe",
+          "DE": "Europe",
+          "FR": "Europe",
+          "JP": "Asia",
+          "AU": "Oceania",
+          "BR": "South America"
+        }
+      }
+    },
+    {
+      "name": "dedupe",
+      "operation": "deduplicate",
+      "config": {
+        "key_field": "id"
+      }
+    },
+    {
+      "name": "sort",
+      "operation": "sort_records",
+      "config": {
+        "sort_key": "amount",
+        "order": "ascending"
+      }
+    },
+    {
+      "name": "partition",
+      "operation": "partition_by",
+      "config": {
+        "partition_key": "region"
+      }
+    },
+    {
+      "name": "aggregate",
+      "operation": "compute_aggregates",
+      "config": {
+        "metrics": ["count", "sum", "avg"],
+        "value_field": "amount"
+      }
+    },
+    {
+      "name": "format",
+      "operation": "format_output",
+      "config": {
+        "output_format": "summary",
+        "include_metadata": true
+      }
+    },
+    {
+      "name": "emit",
+      "operation": "write_output",
+      "config": {
+        "output_file": "pipeline_result.json"
+      }
+    }
+  ]
+}

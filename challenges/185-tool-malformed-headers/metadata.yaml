@@ -1,0 +1,9 @@
+id: '185'
+name: Tool Malformed Headers
+difficulty: easy
+category: tool-resilience
+dimension: tool-use
+language: python
+estimated_cost_usd: 0.01
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

@@ -1,8 +1,9 @@
-id: "056"
-name: "Search the Codebase"
-difficulty: "easy"
-category: "info-retrieval"
-dimension: "coding"
-language: "python"
+id: '056'
+name: Search the Codebase
+difficulty: easy
+category: info-retrieval
+dimension: coding
+language: python
 estimated_cost_usd: 0.01
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

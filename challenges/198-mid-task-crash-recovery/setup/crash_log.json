@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-02-28T14:32:07Z",
+  "process": "data_processor",
+  "pid": 48291,
+  "last_successful_record": 4,
+  "crashed_on_record": 5,
+  "error": "ZeroDivisionError: division by zero",
+  "traceback": "File processor.py, line 12, in transform_record\n    unit_price = record['quantity'] / price_lookup[record['value']]\nZeroDivisionError: division by zero",
+  "note": "The price_lookup for 'elderberry' returned 0, causing division by zero in transform_record()"
+}

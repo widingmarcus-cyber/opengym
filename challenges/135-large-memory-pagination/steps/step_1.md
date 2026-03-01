@@ -1,0 +1,223 @@
+# Step 1: Store 200 Facts
+
+Below are 200 numbered facts. Store all of them in paginated JSON files inside `setup/memory/`.
+
+**Constraint:** Each page file must contain at most 50 entries. Create the files as:
+- `setup/memory/page_1.json` -- facts 1 through 50
+- `setup/memory/page_2.json` -- facts 51 through 100
+- `setup/memory/page_3.json` -- facts 101 through 150
+- `setup/memory/page_4.json` -- facts 151 through 200
+
+Each page file should be a JSON object mapping the fact number (as a string) to the fact text. For example, `page_1.json` would look like:
+
+```json
+{
+  "1": "The capital of France is Paris",
+  "2": "Water boils at 100 degrees Celsius",
+  ...
+  "50": "The speed of gravity equals the speed of light"
+}
+```
+
+## The 200 Facts
+
+- Fact 1: The capital of France is Paris
+- Fact 2: Water boils at 100 degrees Celsius
+- Fact 3: The Earth orbits the Sun
+- Fact 4: Gold has the chemical symbol Au
+- Fact 5: DNA stands for deoxyribonucleic acid
+- Fact 6: The Pacific Ocean is the largest ocean
+- Fact 7: Mount Everest is 8849 meters tall
+- Fact 8: Pi is approximately 3.14159
+- Fact 9: The human body has 206 bones
+- Fact 10: Jupiter is the largest planet in our solar system
+- Fact 11: The speed of sound is 343 meters per second
+- Fact 12: Shakespeare was born in 1564
+- Fact 13: Iron has the chemical symbol Fe
+- Fact 14: The Amazon River is in South America
+- Fact 15: A marathon is 42.195 kilometers
+- Fact 16: Light travels at about 300000 km per second
+- Fact 17: The Moon orbits the Earth every 27.3 days
+- Fact 18: Oxygen makes up 21 percent of the atmosphere
+- Fact 19: The Nile is the longest river in Africa
+- Fact 20: Mercury is the closest planet to the Sun
+- Fact 21: The human heart beats about 100000 times per day
+- Fact 22: Carbon has 6 protons
+- Fact 23: The Great Wall of China is over 20000 km long
+- Fact 24: Sound cannot travel through a vacuum
+- Fact 25: Diamonds are made of carbon
+- Fact 26: The Sahara is the largest hot desert
+- Fact 27: Venus is the hottest planet in our solar system
+- Fact 28: A light year is about 9.46 trillion kilometers
+- Fact 29: The Eiffel Tower is 330 meters tall
+- Fact 30: Hydrogen is the lightest element
+- Fact 31: The Earth has one natural satellite
+- Fact 32: Absolute zero is minus 273.15 degrees Celsius
+- Fact 33: The human brain has about 86 billion neurons
+- Fact 34: The Atlantic Ocean is the second largest ocean
+- Fact 35: Gravity on the Moon is about one sixth of Earth
+- Fact 36: Photosynthesis converts CO2 to oxygen
+- Fact 37: The boiling point of nitrogen is minus 196 degrees Celsius
+- Fact 38: Copper has the chemical symbol Cu
+- Fact 39: The circumference of Earth is about 40075 km
+- Fact 40: Saturn has prominent rings made of ice and rock
+- Fact 41: A parsec is about 3.26 light years
+- Fact 42: The deepest ocean trench is the Mariana Trench
+- Fact 43: Helium is the second most abundant element in the universe
+- Fact 44: The Andromeda Galaxy is about 2.5 million light years away
+- Fact 45: Water freezes at 0 degrees Celsius
+- Fact 46: The chemical formula for water is H2O
+- Fact 47: An octagon has 8 sides
+- Fact 48: The Sun is a G-type main sequence star
+- Fact 49: Pluto was reclassified as a dwarf planet in 2006
+- Fact 50: The speed of gravity equals the speed of light
+- Fact 51: Silver has the chemical symbol Ag
+- Fact 52: Mars is known as the Red Planet
+- Fact 53: A hexagon has 6 sides
+- Fact 54: The largest known star is UY Scuti
+- Fact 55: Uranium has 92 protons
+- Fact 56: A decade is 10 years
+- Fact 57: The speed of Earth around the Sun is about 107000 km per hour
+- Fact 58: Avogadro number is 6.022 times 10 to the 23rd
+- Fact 59: The chemical formula for table salt is NaCl
+- Fact 60: Titan is the largest moon of Saturn
+- Fact 61: A century is 100 years
+- Fact 62: The first element in the periodic table is hydrogen
+- Fact 63: The chemical formula for glucose is C6H12O6
+- Fact 64: Neptune is the farthest planet from the Sun
+- Fact 65: A triangle has 3 sides
+- Fact 66: The human genome has about 3 billion base pairs
+- Fact 67: The Milky Way has an estimated 100 billion stars
+- Fact 68: The chemical symbol for potassium is K
+- Fact 69: Sound travels faster in water than in air
+- Fact 70: An electron has a negative charge
+- Fact 71: The largest organ in the human body is the skin
+- Fact 72: Plancks constant is 6.626 times 10 to the minus 34
+- Fact 73: The chemical formula for carbon dioxide is CO2
+- Fact 74: A millennium is 1000 years
+- Fact 75: The radius of Earth is about 6371 km
+- Fact 76: Neon is a noble gas
+- Fact 77: The Kelvin scale starts at absolute zero
+- Fact 78: The chemical formula for methane is CH4
+- Fact 79: The International Space Station orbits at about 408 km altitude
+- Fact 80: The density of water is 1 gram per cubic centimeter
+- Fact 81: The chemical formula for ammonia is NH3
+- Fact 82: A proton has a positive charge
+- Fact 83: The Sun is about 4.6 billion years old
+- Fact 84: The chemical formula for ethanol is C2H5OH
+- Fact 85: Ganymede is the largest moon in the solar system
+- Fact 86: The chemical symbol for sodium is Na
+- Fact 87: A neutron has no electrical charge
+- Fact 88: The surface temperature of the Sun is about 5500 degrees Celsius
+- Fact 89: The chemical formula for sulfuric acid is H2SO4
+- Fact 90: The age of the universe is about 13.8 billion years
+- Fact 91: The chemical symbol for tungsten is W
+- Fact 92: The gravitational constant G is 6.674 times 10 to the minus 11
+- Fact 93: Electrons orbit the nucleus of an atom
+- Fact 94: The chemical formula for acetic acid is CH3COOH
+- Fact 95: The charge of an electron is 1.602 times 10 to the minus 19 coulombs
+- Fact 96: The chemical symbol for lead is Pb
+- Fact 97: The mass of the Earth is about 5.972 times 10 to the 24 kg
+- Fact 98: The chemical formula for hydrochloric acid is HCl
+- Fact 99: The Hubble Space Telescope was launched in 1990
+- Fact 100: The chemical symbol for tin is Sn
+- Fact 101: A joule is the SI unit of energy
+- Fact 102: The chemical formula for nitric acid is HNO3
+- Fact 103: The radius of the Sun is about 696000 km
+- Fact 104: A watt is one joule per second
+- Fact 105: The chemical formula for ozone is O3
+- Fact 106: The mass of a proton is 1.673 times 10 to the minus 27 kg
+- Fact 107: The speed of light in a vacuum is exactly 299792458 meters per second
+- Fact 108: The chemical formula for hydrogen peroxide is H2O2
+- Fact 109: The charge of a proton is positive 1.602 times 10 to the minus 19 coulombs
+- Fact 110: An ampere measures electric current
+- Fact 111: The chemical formula for phosphoric acid is H3PO4
+- Fact 112: Earths atmosphere is 78 percent nitrogen
+- Fact 113: The chemical formula for baking soda is NaHCO3
+- Fact 114: One astronomical unit is about 149.6 million km
+- Fact 115: The chemical formula for rust is Fe2O3
+- Fact 116: A mole contains 6.022 times 10 to the 23 particles
+- Fact 117: The chemical formula for bleach is NaClO
+- Fact 118: The mass of the Sun is about 1.989 times 10 to the 30 kg
+- Fact 119: The chemical formula for limestone is CaCO3
+- Fact 120: A pascal is the SI unit of pressure
+- Fact 121: The chemical formula for gypsum is CaSO4 2H2O
+- Fact 122: The escape velocity of Earth is about 11.2 km per second
+- Fact 123: The chemical formula for quartz is SiO2
+- Fact 124: A hertz is one cycle per second
+- Fact 125: The chemical formula for aspirin is C9H8O4
+- Fact 126: The orbital period of Mars is about 687 Earth days
+- Fact 127: The chemical formula for caffeine is C8H10N4O2
+- Fact 128: Boltzmann constant is 1.381 times 10 to the minus 23 J per K
+- Fact 129: The chemical formula for urea is CH4N2O
+- Fact 130: The melting point of iron is 1538 degrees Celsius
+- Fact 131: The chemical formula for benzene is C6H6
+- Fact 132: The luminosity of the Sun is about 3.828 times 10 to the 26 watts
+- Fact 133: The chemical formula for acetone is C3H6O
+- Fact 134: One light year is 9.461 times 10 to the 12 km
+- Fact 135: The chemical formula for citric acid is C6H8O7
+- Fact 136: Earths axial tilt is about 23.4 degrees
+- Fact 137: The speed of light is 299792458 m/s
+- Fact 138: The chemical formula for sucrose is C12H22O11
+- Fact 139: The chemical formula for cholesterol is C27H46O
+- Fact 140: The mass of an electron is 9.109 times 10 to the minus 31 kg
+- Fact 141: The chemical formula for TNT is C7H5N3O6
+- Fact 142: The diameter of the Milky Way is about 100000 light years
+- Fact 143: The chemical formula for vitamin C is C6H8O6
+- Fact 144: One cubic meter of water weighs 1000 kg
+- Fact 145: The chemical formula for dopamine is C8H11NO2
+- Fact 146: The temperature at the center of the Sun is about 15 million degrees Celsius
+- Fact 147: The chemical formula for adrenaline is C9H13NO3
+- Fact 148: The orbital speed of the Moon is about 1 km per second
+- Fact 149: The chemical formula for serotonin is C10H12N2O
+- Fact 150: Proxima Centauri is the closest star to the Sun at 4.24 light years
+- Fact 151: The chemical formula for nicotine is C10H14N2
+- Fact 152: The average depth of the ocean is about 3688 meters
+- Fact 153: The chemical formula for penicillin G is C16H18N2O4S
+- Fact 154: The rotation period of Jupiter is about 9.9 hours
+- Fact 155: The chemical formula for morphine is C17H19NO3
+- Fact 156: The surface gravity of Jupiter is about 24.8 m per s squared
+- Fact 157: The chemical formula for quinine is C20H24N2O2
+- Fact 158: One gallon equals approximately 3.785 liters
+- Fact 159: The chemical formula for ibuprofen is C13H18O2
+- Fact 160: The orbital period of Venus is about 225 Earth days
+- Fact 161: The chemical formula for paracetamol is C8H9NO2
+- Fact 162: The density of air at sea level is about 1.225 kg per cubic meter
+- Fact 163: The chemical formula for strychnine is C21H22N2O2
+- Fact 164: The magnetic field of Earth is generated by its liquid iron core
+- Fact 165: The chemical formula for capsaicin is C18H27NO3
+- Fact 166: The tilt of Mars axis is about 25 degrees
+- Fact 167: The chemical formula for melatonin is C13H16N2O2
+- Fact 168: One nautical mile equals 1.852 km
+- Fact 169: The chemical formula for cortisol is C21H30O5
+- Fact 170: The surface pressure on Venus is about 92 times that of Earth
+- Fact 171: The chemical formula for testosterone is C19H28O2
+- Fact 172: The half-life of carbon 14 is about 5730 years
+- Fact 173: The chemical formula for estradiol is C18H24O2
+- Fact 174: The diameter of Neptune is about 49528 km
+- Fact 175: The chemical formula for insulin has 51 amino acids
+- Fact 176: The mean density of the Earth is about 5.514 g per cubic cm
+- Fact 177: The chemical formula for retinol is C20H30O
+- Fact 178: One bar of pressure equals 100000 pascals
+- Fact 179: The chemical formula for glycerol is C3H8O3
+- Fact 180: The orbital period of Jupiter is about 11.86 Earth years
+- Fact 181: The chemical formula for lactic acid is C3H6O3
+- Fact 182: The escape velocity of the Moon is about 2.38 km per second
+- Fact 183: The chemical formula for oxalic acid is C2H2O4
+- Fact 184: The average distance from Earth to Moon is about 384400 km
+- Fact 185: The chemical formula for formic acid is CH2O2
+- Fact 186: The mass of Mars is about 6.417 times 10 to the 23 kg
+- Fact 187: The chemical formula for butyric acid is C4H8O2
+- Fact 188: One atmosphere equals 101325 pascals
+- Fact 189: The chemical formula for propane is C3H8
+- Fact 190: The surface temperature of Mars ranges from minus 87 to minus 5 degrees Celsius
+- Fact 191: The chemical formula for butane is C4H10
+- Fact 192: The rotation period of Venus is about 243 Earth days
+- Fact 193: The chemical formula for pentane is C5H12
+- Fact 194: The diameter of Saturn is about 116460 km
+- Fact 195: The chemical formula for hexane is C6H14
+- Fact 196: The Voyager 1 probe was launched in 1977
+- Fact 197: The chemical formula for heptane is C7H16
+- Fact 198: The orbital period of Saturn is about 29.5 Earth years
+- Fact 199: The chemical formula for octane is C8H18
+- Fact 200: The core temperature of the Earth is about 5400 degrees Celsius

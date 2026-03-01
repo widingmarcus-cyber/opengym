@@ -1,8 +1,9 @@
-id: "001"
-name: "Fix the Syntax Error"
-difficulty: "easy"
-category: "code-fixing"
-dimension: "coding"
-language: "python"
+id: '001'
+name: Fix the Syntax Error
+difficulty: easy
+category: code-fixing
+dimension: coding
+language: python
 estimated_cost_usd: 0.01
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

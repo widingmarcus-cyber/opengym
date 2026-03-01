@@ -1,0 +1,35 @@
+{
+  "database_version": "v4.0.0",
+  "schema": {
+    "users": {
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "phone"
+      ]
+    },
+    "orders": {
+      "columns": [
+        "id",
+        "user_id",
+        "total"
+      ]
+    }
+  },
+  "feature_flags": {
+    "new_ui": true,
+    "beta_api": true,
+    "dark_mode": true
+  },
+  "config": {
+    "max_connections": 200,
+    "timeout": 60,
+    "cache_ttl": 300
+  },
+  "services": {
+    "api": "running",
+    "worker": "running",
+    "scheduler": "running"
+  }
+}

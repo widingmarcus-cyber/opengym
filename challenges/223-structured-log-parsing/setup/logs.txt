@@ -1,0 +1,15 @@
+<134>Jan  5 14:23:01 webserver01 nginx[2345]: connection accepted from 10.0.0.5
+192.168.1.50 - - [05/Jan/2025:14:23:05 +0000] "GET /api/health HTTP/1.1" 200 15 "-" "curl/7.68.0"
+[ERROR] 2025-01-05T14:23:10Z | auth-service | login failed | user=admin attempt=3 ip=10.0.0.99
+<131>Jan  5 14:23:12 dbserver02 postgres[789]: checkpoint starting: time
+192.168.1.100 - - [05/Jan/2025:14:23:15 +0000] "POST /api/login HTTP/1.1" 401 52 "https://example.com/login" "Mozilla/5.0"
+[INFO] 2025-01-05T14:23:20Z | payment-service | payment processed | order_id=ORD-9821 amount=49.99 currency=USD
+<134>Jan  5 14:23:25 webserver01 nginx[2345]: upstream response time: 0.052s
+[WARN] 2025-01-05T14:23:30Z | inventory-service | stock low | sku=WIDGET-42 remaining=3 threshold=5
+192.168.1.75 - - [05/Jan/2025:14:23:35 +0000] "GET /static/logo.png HTTP/1.1" 304 0 "https://example.com/" "Mozilla/5.0"
+[DEBUG] 2025-01-05T14:23:40Z | auth-service | token validation | token_prefix=eyJhb valid=true latency_ms=12
+<131>Jan  5 14:23:45 dbserver02 postgres[789]: checkpoint complete: wrote 42 buffers
+192.168.1.50 - - [05/Jan/2025:14:23:50 +0000] "DELETE /api/users/57 HTTP/1.1" 403 28 "-" "curl/7.68.0"
+[ERROR] 2025-01-05T14:23:55Z | payment-service | refund failed | order_id=ORD-1122 reason=gateway_timeout retry=true
+<134>Jan  5 14:24:01 webserver01 haproxy[3456]: server backend1 is UP
+192.168.1.200 - - [05/Jan/2025:14:24:05 +0000] "GET /api/metrics HTTP/1.1" 200 1024 "-" "Prometheus/2.45"

@@ -1,8 +1,9 @@
-id: "024"
-name: "Implement Event Emitter"
-difficulty: "easy"
-category: "code-writing"
-dimension: "coding"
-language: "python"
+id: '024'
+name: Implement Event Emitter
+difficulty: easy
+category: code-writing
+dimension: coding
+language: python
 estimated_cost_usd: 0.01
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

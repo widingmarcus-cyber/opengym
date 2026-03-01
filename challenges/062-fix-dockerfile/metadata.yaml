@@ -1,8 +1,9 @@
-id: "062"
-name: "Fix Dockerfile"
-difficulty: "easy"
-category: "devops-config"
-dimension: "coding"
-language: "python"
+id: '062'
+name: Fix Dockerfile
+difficulty: easy
+category: devops-config
+dimension: coding
+language: python
 estimated_cost_usd: 0.01
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

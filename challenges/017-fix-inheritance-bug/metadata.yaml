@@ -1,8 +1,9 @@
-id: "017"
-name: "Fix the Inheritance Bugs"
-difficulty: "hard"
-category: "code-fixing"
-dimension: "coding"
-language: "python"
+id: '017'
+name: Fix the Inheritance Bugs
+difficulty: hard
+category: code-fixing
+dimension: coding
+language: python
 estimated_cost_usd: 0.05
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

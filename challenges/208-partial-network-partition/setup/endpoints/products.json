@@ -1,0 +1,20 @@
+[
+  {
+    "product_id": "P1",
+    "name": "Widget",
+    "price": 9.99,
+    "stock_ref": "INV_P1"
+  },
+  {
+    "product_id": "P2",
+    "name": "Gadget",
+    "price": 24.99,
+    "stock_ref": "INV_P2"
+  },
+  {
+    "product_id": "P3",
+    "name": "Doohickey",
+    "price": 14.99,
+    "stock_ref": "INV_P3"
+  }
+]

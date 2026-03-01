@@ -1,0 +1,28 @@
+[
+  {
+    "user_id": "U1",
+    "name": "Alice",
+    "email": "alice@example.com",
+    "order_ids": [
+      "O1",
+      "O3"
+    ]
+  },
+  {
+    "user_id": "U2",
+    "name": "Bob",
+    "email": "bob@example.com",
+    "order_ids": [
+      "O2"
+    ]
+  },
+  {
+    "user_id": "U3",
+    "name": "Charlie",
+    "email": "charlie@example.com",
+    "order_ids": [
+      "O4",
+      "O5"
+    ]
+  }
+]

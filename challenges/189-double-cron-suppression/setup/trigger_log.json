@@ -1,0 +1,5 @@
+[
+  {"task": "report", "triggered_at": "10:00", "id": "run_1"},
+  {"task": "report", "triggered_at": "10:00", "id": "run_2"},
+  {"task": "report", "triggered_at": "11:00", "id": "run_3"}
+]

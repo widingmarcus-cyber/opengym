@@ -1,0 +1,20 @@
+id: '193'
+title: Timezone Drift
+slug: 193-timezone-drift
+difficulty: medium
+category: task-sequencing
+dimension: planning
+type: single-session
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- timezone
+- utc-conversion
+- time-normalization
+name: Timezone Drift
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

@@ -1,0 +1,22 @@
+[
+  {"timestamp": "2025-01-05T14:00:01Z", "level": "INFO", "service": "user-service", "message": "Server started on port 8080"},
+  {"timestamp": "2025-01-05T14:00:02Z", "level": "DEBUG", "service": "user-service", "message": "Loading configuration from /etc/app/config.yaml"},
+  {"timestamp": "2025-01-05T14:00:03Z", "level": "DEBUG", "service": "user-service", "message": "Database connection pool initialized with 10 connections"},
+  {"timestamp": "2025-01-05T14:00:05Z", "level": "INFO", "service": "user-service", "message": "Health check endpoint registered at /health"},
+  {"timestamp": "2025-01-05T14:00:10Z", "level": "INFO", "service": "auth-service", "message": "JWT token validator initialized"},
+  {"timestamp": "2025-01-05T14:00:15Z", "level": "DEBUG", "service": "auth-service", "message": "Token cache size set to 1000"},
+  {"timestamp": "2025-01-05T14:00:20Z", "level": "WARN", "service": "user-service", "message": "Connection pool nearing capacity: 8/10 connections in use"},
+  {"timestamp": "2025-01-05T14:00:25Z", "level": "INFO", "service": "payment-service", "message": "Processing payment for order ORD-1234"},
+  {"timestamp": "2025-01-05T14:00:30Z", "level": "ERROR", "service": "payment-service", "message": "Payment gateway timeout after 30s for order ORD-1234"},
+  {"timestamp": "2025-01-05T14:00:31Z", "level": "WARN", "service": "payment-service", "message": "Retrying payment for order ORD-1234, attempt 2/3"},
+  {"timestamp": "2025-01-05T14:00:35Z", "level": "DEBUG", "service": "payment-service", "message": "Sending request to gateway: POST /v1/charges"},
+  {"timestamp": "2025-01-05T14:00:40Z", "level": "INFO", "service": "payment-service", "message": "Payment succeeded for order ORD-1234 on retry"},
+  {"timestamp": "2025-01-05T14:00:45Z", "level": "WARN", "service": "auth-service", "message": "Rate limit approaching for IP 192.168.1.100: 95/100 requests"},
+  {"timestamp": "2025-01-05T14:00:50Z", "level": "ERROR", "service": "auth-service", "message": "Rate limit exceeded for IP 192.168.1.100, blocking for 60s"},
+  {"timestamp": "2025-01-05T14:00:55Z", "level": "DEBUG", "service": "user-service", "message": "Cache hit for user profile: user_id=42"},
+  {"timestamp": "2025-01-05T14:01:00Z", "level": "INFO", "service": "user-service", "message": "User login successful: user_id=42"},
+  {"timestamp": "2025-01-05T14:01:05Z", "level": "ERROR", "service": "user-service", "message": "Failed to send welcome email: SMTP connection refused"},
+  {"timestamp": "2025-01-05T14:01:10Z", "level": "WARN", "service": "user-service", "message": "Email service degraded, queuing notifications"},
+  {"timestamp": "2025-01-05T14:01:15Z", "level": "DEBUG", "service": "auth-service", "message": "Refreshing JWKS keys from identity provider"},
+  {"timestamp": "2025-01-05T14:01:20Z", "level": "INFO", "service": "auth-service", "message": "JWKS keys refreshed successfully, 3 active keys"}
+]

@@ -1,0 +1,24 @@
+id: '186'
+title: Cron Fresh vs Reuse
+slug: 186-cron-fresh-vs-reuse
+difficulty: medium
+category: task-sequencing
+dimension: planning
+type: multi-session
+steps: 2
+persist:
+- setup/schedule.json
+- setup/execution_log.json
+scoring:
+  type: tests
+  test_runner: python
+  test_file: tests/verify.py
+tags:
+- scheduling
+- cron
+- execution-policy
+- stateful
+name: Cron Fresh vs Reuse
+language: python
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

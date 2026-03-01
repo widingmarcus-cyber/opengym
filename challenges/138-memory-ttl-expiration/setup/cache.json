@@ -1,0 +1,7 @@
+[
+  {"key": "session_1", "value": "abc", "ttl_seconds": 60, "created_at": "2024-01-01T00:00:00Z"},
+  {"key": "session_2", "value": "def", "ttl_seconds": 60, "created_at": "2024-01-01T00:00:00Z"},
+  {"key": "session_3", "value": "ghi", "ttl_seconds": 60, "created_at": "2024-01-01T00:00:00Z"},
+  {"key": "token_main", "value": "xyz-long-lived", "ttl_seconds": 3600, "created_at": "2024-01-01T00:00:00Z"},
+  {"key": "token_backup", "value": "uvw-long-lived", "ttl_seconds": 3600, "created_at": "2024-01-01T00:00:00Z"}
+]

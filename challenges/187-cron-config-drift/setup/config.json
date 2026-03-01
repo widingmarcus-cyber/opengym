@@ -1,0 +1,6 @@
+{
+  "tasks": [
+    {"name": "backup", "interval": "hourly"},
+    {"name": "sync", "interval": "daily"}
+  ]
+}

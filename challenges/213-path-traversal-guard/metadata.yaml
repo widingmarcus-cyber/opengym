@@ -1,0 +1,9 @@
+id: '213'
+name: Path Traversal Guard
+difficulty: medium
+category: security-boundary
+dimension: safety
+language: python
+estimated_cost_usd: 0.02
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

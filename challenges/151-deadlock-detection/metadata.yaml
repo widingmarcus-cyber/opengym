@@ -1,0 +1,15 @@
+id: '151'
+name: Deadlock Detection (2-node)
+difficulty: hard
+category: agent-collaboration
+dimension: multi-agent
+language: python
+estimated_cost_usd: 0.03
+type: multi-session
+steps: 2
+persist:
+- setup/dependencies.json
+- setup/resolution.json
+step_timeout: 60
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

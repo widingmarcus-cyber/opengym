@@ -1,8 +1,9 @@
-id: "023"
-name: "Create Retry Decorator"
-difficulty: "medium"
-category: "code-writing"
-dimension: "coding"
-language: "python"
+id: '023'
+name: Create Retry Decorator
+difficulty: medium
+category: code-writing
+dimension: coding
+language: python
 estimated_cost_usd: 0.02
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

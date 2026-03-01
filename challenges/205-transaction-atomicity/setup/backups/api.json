@@ -1,0 +1,7 @@
+{
+  "base_url": "https://api-old.example.com",
+  "timeout": 30,
+  "retries": 3,
+  "api_key_ref": "vault://old-key",
+  "version": 1
+}

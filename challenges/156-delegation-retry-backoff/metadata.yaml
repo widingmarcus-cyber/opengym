@@ -1,0 +1,16 @@
+id: '156'
+name: Delegation Retry with Backoff
+difficulty: hard
+category: task-splitting
+dimension: multi-agent
+language: python
+estimated_cost_usd: 0.05
+type: multi-session
+steps: 2
+persist:
+- setup/retry_log.json
+- setup/result.txt
+- setup/attempt_counter.txt
+step_timeout: 120
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

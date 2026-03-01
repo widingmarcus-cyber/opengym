@@ -1,8 +1,9 @@
-id: "054"
-name: "OAuth Token Flow"
-difficulty: "hard"
-category: "api-integration"
-dimension: "coding"
-language: "python"
+id: '054'
+name: OAuth Token Flow
+difficulty: hard
+category: api-integration
+dimension: coding
+language: python
 estimated_cost_usd: 0.08
-verify: "pytest tests/ -v"
+verify: pytest tests/ -v
+challenge_type: MODEL_DEPENDENT

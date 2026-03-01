@@ -1,0 +1,61 @@
+{
+  "zebra": "last animal",
+  "config": {
+    "timeout_ms": 3000,
+    "retries": 3,
+    "enabled": true,
+    "api_url": "https://api.example.com/v2",
+    "weights": [0.1, 0.25, 0.65],
+    "tags": ["production", "critical", "monitored"]
+  },
+  "apple": "first fruit",
+  "users": [
+    {
+      "name": "Zara Ahmed",
+      "age": 28,
+      "email": "zara@example.com",
+      "roles": ["admin", "editor"],
+      "metadata": {
+        "zone": "us-east-1",
+        "active": true,
+        "login_count": 142
+      }
+    },
+    {
+      "name": "Alice Wu",
+      "age": 34,
+      "email": "alice@example.com",
+      "roles": ["viewer"],
+      "metadata": {
+        "zone": "eu-west-1",
+        "active": false,
+        "login_count": 7
+      }
+    }
+  ],
+  "metrics": {
+    "requests_total": 1548203,
+    "error_rate": 0.0023,
+    "p99_latency_ms": 245.7,
+    "uptime_percent": 99.97,
+    "version": "2.1.0"
+  },
+  "empty_object": {},
+  "empty_array": [],
+  "null_value": null,
+  "nested": {
+    "deep": {
+      "deeper": {
+        "value": "found it",
+        "count": 1
+      },
+      "alpha": "first"
+    },
+    "beta": "second"
+  },
+  "boolean_false": false,
+  "boolean_true": true,
+  "integer_zero": 0,
+  "negative_number": -42,
+  "large_number": 9999999999
+}

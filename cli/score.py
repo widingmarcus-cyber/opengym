@@ -1,10 +1,13 @@
 """Score challenges by running tests against agent's work."""
 
+import csv
 import hashlib
+import io
 import json
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import click
@@ -45,8 +48,11 @@ DIMENSION_SUGGESTIONS = {
 @click.option("--workspace", "-w", default=None, help="Workspace directory")
 @click.option("--summary", is_flag=True, help="Show summary with diagnostics")
 @click.option("--json-output", is_flag=True, help="Output as JSON")
+@click.option("--csv-output", is_flag=True, help="Output results as CSV")
+@click.option("--scorecard", is_flag=True, help="Show infra scorecard (per-category breakdown)")
+@click.option("--verbose", "-v", is_flag=True, help="Show full test output for each challenge")
 @click.option("--timeout", "-t", default=120, help="Timeout per challenge in seconds (default: 120)")
-def score(challenge_id: str, workspace: str | None, summary: bool, json_output: bool, timeout: int):
+def score(challenge_id: str, workspace: str | None, summary: bool, json_output: bool, csv_output: bool, scorecard: bool, verbose: bool, timeout: int):
     """Score a challenge or all challenges.
 
     Runs the hidden tests against the agent's work in the workspace.
@@ -60,24 +66,34 @@ def score(challenge_id: str, workspace: str | None, summary: bool, json_output: 
         raise SystemExit(1)
 
     results = []
-    for cid in ids:
+    for i, cid in enumerate(ids, 1):
         challenge_ws = ws / cid
         if not challenge_ws.exists():
-            click.echo(f"  {cid}: not fetched yet. Run 'opengym fetch {cid}' first.", err=True)
+            click.echo(f"  [{i}/{len(ids)}] {cid}: not fetched yet. Run 'opengym fetch {cid}' first.", err=True)
             continue
 
         result = score_challenge(cid, challenge_ws, challenges_dir / cid, timeout=timeout)
         results.append(result)
 
-        if not json_output and not summary:
+        if not json_output and not csv_output and not summary:
             status = "PASS" if result["passed"] else "FAIL"
-            click.echo(f"  {cid}: {status} ({result['tests_passed']}/{result['tests_total']} tests)")
+            click.echo(f"  [{i}/{len(ids)}] {cid}: {status} ({result['tests_passed']}/{result['tests_total']} tests)")
+            if verbose and "output" in result:
+                click.echo(result["output"], err=True)
 
     if not results:
         click.echo("No challenges to score.", err=True)
         raise SystemExit(1)
 
-    if summary or json_output:
+    if csv_output:
+        write_csv(results)
+    elif scorecard:
+        report = build_scorecard(results)
+        if json_output:
+            click.echo(json.dumps(report, indent=2))
+        else:
+            print_scorecard(report)
+    elif summary or json_output:
         report = build_summary(results)
         if json_output:
             click.echo(json.dumps(report, indent=2))
@@ -91,6 +107,9 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
     with open(meta_file) as f:
         meta = yaml.safe_load(f)
 
+    estimated_cost = meta.get("estimated_cost_usd", 0.0)
+    challenge_type = meta.get("challenge_type", "MODEL_DEPENDENT")
+
     # Check test integrity — compare test files against originals
     tampered = check_test_integrity(workspace_path / "tests", original_path / "tests")
 
@@ -101,10 +120,13 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
             "difficulty": meta["difficulty"],
             "category": meta["category"],
             "dimension": meta.get("dimension", "coding"),
+            "challenge_type": challenge_type,
             "passed": False,
             "tests_passed": 0,
             "tests_total": 0,
             "score": 0,
+            "duration_seconds": 0.0,
+            "estimated_cost_usd": estimated_cost,
             "error": "Test files were tampered with. Score invalidated.",
         }
 
@@ -112,6 +134,8 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
     verify_cmd = meta.get("verify", "pytest tests/ -v")
     if verify_cmd.startswith(("python ", "python3 ")):
         verify_cmd = f"{sys.executable} " + verify_cmd.split(" ", 1)[1]
+
+    start_time = time.time()
     try:
         result = subprocess.run(
             verify_cmd,
@@ -122,18 +146,24 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
             timeout=timeout,
         )
     except subprocess.TimeoutExpired:
+        duration = time.time() - start_time
         return {
             "challenge": challenge_id,
             "name": meta["name"],
             "difficulty": meta["difficulty"],
             "category": meta["category"],
             "dimension": meta.get("dimension", "coding"),
+            "challenge_type": challenge_type,
             "passed": False,
             "tests_passed": 0,
             "tests_total": 0,
             "score": 0,
-            "error": f"Verification timed out ({timeout}s limit).",
+            "duration_seconds": round(duration, 2),
+            "estimated_cost_usd": estimated_cost,
+            "error": f"Verification timed out after {timeout}s. Try --timeout {timeout * 2}.",
         }
+
+    duration = time.time() - start_time
 
     # Parse output based on verify command type
     is_pytest = "pytest" in verify_cmd
@@ -157,10 +187,13 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
         "difficulty": meta["difficulty"],
         "category": meta["category"],
         "dimension": meta.get("dimension", "coding"),
+        "challenge_type": challenge_type,
         "passed": challenge_passed,
         "tests_passed": tests_passed,
         "tests_total": tests_total,
         "score": challenge_score,
+        "duration_seconds": round(duration, 2),
+        "estimated_cost_usd": estimated_cost,
     }
 
     # Include per-test failure details for failed challenges
@@ -168,7 +201,7 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
         failed_tests = [t for t in test_details if not t["passed"]]
         if failed_tests:
             res["failed_tests"] = failed_tests
-        res["output"] = result.stdout[-500:]
+        res["output"] = result.stdout[-1000:]
 
     return res
 
@@ -360,11 +393,16 @@ def build_summary(results: list[dict]) -> dict:
                 "failed_tests": r["failed_tests"],
             })
 
+    total_duration = sum(r.get("duration_seconds", 0.0) for r in results)
+    total_cost = sum(r.get("estimated_cost_usd", 0.0) for r in results)
+
     return {
         "total_score": total_score,
         "challenges_attempted": len(results),
         "passed": passed,
         "failed": failed,
+        "total_duration_seconds": round(total_duration, 2),
+        "total_estimated_cost_usd": round(total_cost, 4),
         "by_dimension": dimension_scores,
         "by_category": category_scores,
         "failures": failures_by_dimension,
@@ -373,11 +411,188 @@ def build_summary(results: list[dict]) -> dict:
     }
 
 
+def write_csv(results: list[dict]):
+    """Write results as CSV to stdout."""
+    output = io.StringIO()
+    fieldnames = [
+        "challenge", "name", "dimension", "category", "difficulty",
+        "score", "passed", "tests_passed", "tests_total",
+        "duration_seconds", "estimated_cost_usd",
+    ]
+    writer = csv.DictWriter(output, fieldnames=fieldnames, extrasaction="ignore")
+    writer.writeheader()
+    for r in results:
+        writer.writerow(r)
+    click.echo(output.getvalue(), nl=False)
+
+
+INFRA_CATEGORIES = {
+    "memory-state": "Memory Integrity",
+    "memory-recall": "Memory Recall",
+    "memory-filtering": "Memory Filtering",
+    "memory-updating": "Memory Updates",
+    "shared-resources": "Concurrency Safety",
+    "agent-collaboration": "Agent Coordination",
+    "task-splitting": "Task Splitting",
+    "tool-resilience": "Tool Robustness",
+    "tool-discovery": "Tool Discovery",
+    "tool-orchestration": "Tool Orchestration",
+    "task-sequencing": "Scheduling",
+    "failure-recovery": "Crash Recovery",
+    "security-boundary": "Security Boundaries",
+    "observability": "Observability",
+    "determinism": "Determinism",
+    "long-horizon": "Long-Horizon Stability",
+    "error-diagnosis": "Error Diagnosis",
+    "cascade-recovery": "Cascade Recovery",
+    "noise-filtering": "Noise Filtering",
+    "fault-tolerance": "Fault Tolerance",
+    "adaptive-recovery": "Adaptive Recovery",
+    "prompt-injection": "Prompt Injection Resistance",
+    "destructive-command": "Destructive Command Refusal",
+    "data-exfiltration": "Data Exfiltration Prevention",
+    "scope-boundaries": "Scope Enforcement",
+    "plan-execute": "Plan & Execute",
+    "budget-planning": "Budget Planning",
+    "requirement-adaptation": "Requirement Adaptation",
+}
+
+
+def build_scorecard(results: list[dict]) -> dict:
+    """Build an infra-focused scorecard from results.
+
+    Groups INFRA_CONFORMANCE challenges by category, producing a
+    per-category breakdown that companies can use to identify weak spots.
+    """
+    infra_results = [r for r in results if r.get("challenge_type") == "INFRA_CONFORMANCE"]
+    model_results = [r for r in results if r.get("challenge_type") != "INFRA_CONFORMANCE"]
+
+    # Group infra results by category
+    by_category: dict[str, list[dict]] = {}
+    for r in infra_results:
+        cat = r["category"]
+        by_category.setdefault(cat, []).append(r)
+
+    categories = {}
+    for cat, cat_results in sorted(by_category.items()):
+        cat_passed = sum(1 for r in cat_results if r["passed"])
+        cat_score = round(sum(r["score"] for r in cat_results) / len(cat_results))
+        categories[cat] = {
+            "label": INFRA_CATEGORIES.get(cat, cat.replace("-", " ").title()),
+            "score": cat_score,
+            "passed": cat_passed,
+            "total": len(cat_results),
+            "challenges": [
+                {"id": r["challenge"], "name": r["name"], "score": r["score"], "passed": r["passed"]}
+                for r in cat_results
+            ],
+        }
+
+    # Group infra results by dimension for the dimension rollup
+    by_dimension: dict[str, list[dict]] = {}
+    for r in infra_results:
+        dim = r.get("dimension", "coding")
+        by_dimension.setdefault(dim, []).append(r)
+
+    dimensions = {}
+    for dim, dim_results in sorted(by_dimension.items()):
+        dim_passed = sum(1 for r in dim_results if r["passed"])
+        dim_score = round(sum(r["score"] for r in dim_results) / len(dim_results))
+        dimensions[dim] = {
+            "score": dim_score,
+            "passed": dim_passed,
+            "total": len(dim_results),
+        }
+
+    infra_score = round(sum(r["score"] for r in infra_results) / len(infra_results)) if infra_results else 0
+    infra_passed = sum(1 for r in infra_results if r["passed"])
+
+    model_score = round(sum(r["score"] for r in model_results) / len(model_results)) if model_results else 0
+    model_passed = sum(1 for r in model_results if r["passed"])
+
+    total_duration = sum(r.get("duration_seconds", 0.0) for r in results)
+    total_cost = sum(r.get("estimated_cost_usd", 0.0) for r in results)
+
+    return {
+        "infra_score": infra_score,
+        "infra_passed": infra_passed,
+        "infra_total": len(infra_results),
+        "model_score": model_score,
+        "model_passed": model_passed,
+        "model_total": len(model_results),
+        "overall_score": round(sum(r["score"] for r in results) / len(results)) if results else 0,
+        "total_duration_seconds": round(total_duration, 2),
+        "total_estimated_cost_usd": round(total_cost, 4),
+        "by_dimension": dimensions,
+        "by_category": categories,
+    }
+
+
+def print_scorecard(report: dict):
+    """Print an infra-focused scorecard to stderr."""
+    click.echo(f"\n{'='*64}", err=True)
+    click.echo(f"  INFRA SCORECARD", err=True)
+    click.echo(f"{'='*64}", err=True)
+    click.echo(f"  Infra Conformance:  {report['infra_score']}/100  ({report['infra_passed']}/{report['infra_total']} passed)", err=True)
+    if report["model_total"] > 0:
+        click.echo(f"  Model-Dependent:    {report['model_score']}/100  ({report['model_passed']}/{report['model_total']} passed)", err=True)
+    click.echo(f"  Overall:            {report['overall_score']}/100", err=True)
+    duration = report.get("total_duration_seconds", 0)
+    cost = report.get("total_estimated_cost_usd", 0)
+    if duration > 0:
+        click.echo(f"  Duration:           {duration:.1f}s", err=True)
+    if cost > 0:
+        click.echo(f"  Estimated Cost:     ${cost:.4f}", err=True)
+    click.echo(f"{'='*64}", err=True)
+
+    # Dimension rollup
+    click.echo("\n  By Dimension:", err=True)
+    for dim, info in sorted(report["by_dimension"].items(), key=lambda x: -x[1]["score"]):
+        bar = "#" * (info["score"] // 5) + "." * (20 - info["score"] // 5)
+        click.echo(f"    {dim:<14} [{bar}] {info['score']:>3}/100  ({info['passed']}/{info['total']})", err=True)
+
+    # Category detail — the real scorecard
+    click.echo(f"\n  {'─'*60}", err=True)
+    click.echo(f"  Category Breakdown:", err=True)
+    click.echo(f"  {'─'*60}", err=True)
+
+    for cat, info in sorted(report["by_category"].items(), key=lambda x: x[1]["score"]):
+        label = info["label"]
+        score = info["score"]
+        passed = info["passed"]
+        total = info["total"]
+
+        # Color-coded status
+        if score == 100:
+            status = "PASS"
+        elif score >= 50:
+            status = "WARN"
+        else:
+            status = "FAIL"
+
+        bar = "#" * (score // 5) + "." * (20 - score // 5)
+        click.echo(f"    {label:<28} [{bar}] {score:>3}/100  {passed}/{total}  {status}", err=True)
+
+        # Show failing challenges in this category
+        if score < 100:
+            for ch in info["challenges"]:
+                if not ch["passed"]:
+                    click.echo(f"      x {ch['id']} {ch['name']}", err=True)
+
+    click.echo("", err=True)
+
+
 def print_summary(report: dict):
     """Print a human-readable summary to stderr."""
     click.echo(f"\n{'='*60}", err=True)
     click.echo(f"  OpenGym Score: {report['total_score']}/100", err=True)
     click.echo(f"  Passed: {report['passed']}/{report['challenges_attempted']}", err=True)
+    duration = report.get("total_duration_seconds", 0)
+    cost = report.get("total_estimated_cost_usd", 0)
+    if duration > 0:
+        click.echo(f"  Duration: {duration:.1f}s", err=True)
+    if cost > 0:
+        click.echo(f"  Estimated Cost: ${cost:.4f}", err=True)
     click.echo(f"{'='*60}", err=True)
 
     click.echo("\nBy Dimension:", err=True)

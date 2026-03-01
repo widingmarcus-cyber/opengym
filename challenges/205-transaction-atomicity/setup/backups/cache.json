@@ -1,0 +1,7 @@
+{
+  "host": "cache-old.example.com",
+  "port": 6379,
+  "ttl": 300,
+  "max_memory": "256mb",
+  "version": 1
+}
