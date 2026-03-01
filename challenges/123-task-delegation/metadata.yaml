@@ -11,4 +11,4 @@ persist:
   - "setup/tasks/*"
   - "setup/contact_book.py"
 step_timeout: 180
-verify: "python tests/verify.py"
+verify: "python3 tests/verify.py"

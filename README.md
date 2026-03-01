@@ -1,15 +1,34 @@
 # OpenGym
 
+[![PyPI](https://img.shields.io/pypi/v/opengym-ai)](https://pypi.org/project/opengym-ai/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Challenges](https://img.shields.io/badge/challenges-127-blue)]()
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)]()
+
 **127 challenges to test if your AI agent actually works — not just the model, but the infrastructure.**
 
 OpenGym is an open-source benchmark that evaluates AI agents across **7 capability dimensions**: coding, memory persistence, tool discovery, multi-step planning, self-correction, safety boundaries, and multi-agent coordination. Unlike benchmarks that only test "can the model solve this?", OpenGym tests "does the agent system work reliably?"
 
+### Quickstart
+
 ```bash
 git clone https://github.com/widingmarcus-cyber/opengym && cd opengym
 pip install -e .
-opengym run 101 --agent "python my_agent.py --task '{task}' --dir {workspace}"
-opengym score all --summary
+opengym fetch 001              # grab a challenge
+opengym score 001              # score it (0/100 — your agent hasn't solved it yet)
 ```
+
+Then point your agent at it:
+
+```bash
+# Automated: opengym runs your agent and scores the result
+opengym run 001 --agent "python examples/agents/openai_agent.py --task '{task}' --dir {workspace}"
+
+# Run all 127 challenges
+opengym run all --agent "..." --summary
+```
+
+> **Requires:** Python 3.10+. No Docker needed. See [examples/agents/](examples/agents/) for ready-made OpenAI, Anthropic, and dummy agent adapters.
 
 ## How It Works
 
@@ -186,6 +205,25 @@ opengym score all --json-output           # JSON output
 opengym run 101 --agent "python my_agent.py --task '{task}' --dir {workspace}"
 opengym run all --agent "..." --summary   # Full gauntlet
 ```
+
+## Export Results
+
+```bash
+# JSON output for CI pipelines, dashboards, or sharing
+opengym score all --json-output > results.json
+
+# Includes per-dimension scores, failed test details, and diagnostics
+```
+
+## What OpenGym Is NOT
+
+- **Not an RL gym.** No environments, no reward signals, no training loops.
+- **Not an LLM benchmark.** We don't measure raw model quality (MMLU, HumanEval, etc.).
+- **It's an agent infrastructure test.** Does your agent's memory, tool use, error handling, and safety actually work end-to-end?
+
+## Safety
+
+All challenges run locally on your machine. No network calls are made by the CLI. Agent code executes in your normal environment — if you're running untrusted agents, use a sandbox (Docker, VM, etc.). The CLI never sends data anywhere.
 
 ## Test Your Agent
 

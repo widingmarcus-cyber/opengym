@@ -11,4 +11,4 @@ persist:
   - "setup/notes.md"
   - "setup/buggy_app.py"
 step_timeout: 120
-verify: "python tests/verify.py"
+verify: "python3 tests/verify.py"

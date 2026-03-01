@@ -14,4 +14,4 @@ persist:
   - "setup/services/__init__.py"
   - "setup/repos/__init__.py"
 step_timeout: 120
-verify: "python tests/verify.py"
+verify: "python3 tests/verify.py"

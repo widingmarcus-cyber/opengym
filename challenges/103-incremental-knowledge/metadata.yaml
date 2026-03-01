@@ -11,4 +11,4 @@ persist:
   - "setup/constraints.json"
   - "setup/server_config.json"
 step_timeout: 120
-verify: "python tests/verify.py"
+verify: "python3 tests/verify.py"

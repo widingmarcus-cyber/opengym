@@ -10,4 +10,4 @@ steps: 2
 persist:
   - "setup/shared_config.yaml"
 step_timeout: 120
-verify: "python tests/verify.py"
+verify: "python3 tests/verify.py"

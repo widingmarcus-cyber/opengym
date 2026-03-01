@@ -5,4 +5,4 @@ category: "task-sequencing"
 dimension: "planning"
 language: "python"
 estimated_cost_usd: 0.05
-verify: "python tests/verify.py"
+verify: "python3 tests/verify.py"

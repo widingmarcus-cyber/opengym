@@ -108,8 +108,10 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
             "error": "Test files were tampered with. Score invalidated.",
         }
 
-    # Run the verify command
+    # Run the verify command, ensuring we use the current Python interpreter
     verify_cmd = meta.get("verify", "pytest tests/ -v")
+    if verify_cmd.startswith(("python ", "python3 ")):
+        verify_cmd = f"{sys.executable} " + verify_cmd.split(" ", 1)[1]
     try:
         result = subprocess.run(
             verify_cmd,
