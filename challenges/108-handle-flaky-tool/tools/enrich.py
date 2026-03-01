@@ -8,6 +8,12 @@ a persistent call counter stored in tools/.state/call_count.txt.
 import json
 import os
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_DIR = os.path.join(SCRIPT_DIR, ".state")
@@ -42,6 +48,7 @@ def get_and_increment_counter():
     return count
 
 
+@audit_tool("enrich")
 def main():
     if len(sys.argv) > 1 and sys.argv[1] in ("--help", "-h"):
         print("Enrich product data by SKU lookup.")

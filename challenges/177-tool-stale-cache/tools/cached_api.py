@@ -3,8 +3,15 @@
 
 import argparse
 import json
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("cached_api")
 def main():
     parser = argparse.ArgumentParser(description="Cached API tool")
     parser.add_argument("--key", required=True, help="Data key to look up")

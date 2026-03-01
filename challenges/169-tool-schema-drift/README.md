@@ -2,29 +2,29 @@
 
 ## Objective
 
-Call the data API tool and extract a value even though the response schema has changed from v1 to v2 format. Write the value to `setup/answer.txt`.
+Call the data API tool and extract the numeric value from its response, even if the response format doesn't match what you expect. Write the value to `setup/answer.txt`.
 
 ## Context
 
-APIs evolve over time. A v1 response might return `{"result": 42}` while v2 returns `{"data": {"value": 42}}`. A robust agent must handle schema changes gracefully — checking for the expected key, and if missing, exploring the response structure to find the data.
+APIs evolve over time. Response schemas change between versions — keys get renamed, nested structures get added or flattened. A robust agent must not assume a fixed schema. Instead, it should inspect the response, explore its structure, and extract the data regardless of format changes.
 
 ## Tools
 
-- `tools/data_api.py` — Data API with versioned responses. Takes `--version` argument (v1, v2).
+- `tools/data_api.py` — Data API with versioned responses. Run with `--help` for usage.
 
 ## Setup Files
 
-- `setup/config.json` — Contains `expected_version: "v1"`, but the tool now defaults to v2.
+- `setup/config.json` — Contains the expected API version and configuration.
 
 ## Instructions
 
 1. Read `setup/config.json` to understand the expected version.
-2. Call `tools/data_api.py` (default, no version arg) to get the data.
-3. The response will be in v2 format: `{"data": {"value": 42}}`.
-4. Handle the schema difference — the value is at `data.value` instead of `result`.
-5. Write the numeric value to `setup/answer.txt`.
+2. Call the data API tool to get the response.
+3. Parse the JSON response and locate the numeric value — it may not be where you expect.
+4. Handle any schema differences programmatically.
+5. Write the extracted numeric value to `setup/answer.txt`.
 
-## Expected Behavior
+## Notes
 
-- Default call returns v2 format: `{"data": {"value": 42}}`
-- `setup/answer.txt` should contain: `42`
+- The tool's actual response format may differ from what the config suggests.
+- Do not hardcode assumptions about the JSON structure.

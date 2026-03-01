@@ -2,8 +2,10 @@
 
 import json
 import os
+import signal
 import shutil
 import subprocess
+import threading
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from fnmatch import fnmatch
@@ -270,32 +272,181 @@ def invoke_agent(agent_cmd: str, task: str, workspace: Path, meta: dict, timeout
         env["PATH"] = str(tools_dir) + os.pathsep + env.get("PATH", "")
         env["OPENGYM_TOOLS_DIR"] = str(tools_dir)
 
+        # Inject audit module into tools directory
+        audit_src = Path(__file__).resolve().parent.parent / "lib" / "audit.py"
+        if audit_src.exists():
+            shutil.copy2(str(audit_src), str(tools_dir / "_audit.py"))
+
     env["OPENGYM_WORKSPACE"] = str(workspace)
+
+    # Check for fault injection config
+    faults = meta.get("fault_injection", [])
+    if isinstance(faults, dict):
+        faults = [faults]
 
     click.echo(f"  Invoking agent (timeout: {timeout}s)...", err=True)
 
+    run_start = time.time()
     try:
-        proc = subprocess.run(
-            cmd,
-            shell=True,
-            cwd=str(workspace),
-            timeout=timeout,
-            env=env,
-            capture_output=True,
-            text=True,
-        )
-        if proc.returncode != 0:
-            click.echo(f"  Agent exited with code {proc.returncode}", err=True)
-            if proc.stderr:
-                click.echo(f"  Agent stderr: {proc.stderr[-300:]}", err=True)
-        return proc.returncode == 0
+        if faults:
+            return _run_with_faults(cmd, workspace, env, timeout, faults)
+        else:
+            proc = subprocess.run(
+                cmd,
+                shell=True,
+                cwd=str(workspace),
+                timeout=timeout,
+                env=env,
+                capture_output=True,
+                text=True,
+            )
+            if proc.returncode != 0:
+                click.echo(f"  Agent exited with code {proc.returncode}", err=True)
+                if proc.stderr:
+                    click.echo(f"  Agent stderr: {proc.stderr[-300:]}", err=True)
+            return proc.returncode == 0
     except subprocess.TimeoutExpired:
         click.echo(f"  Agent timed out after {timeout}s. Try --timeout {timeout * 2} for complex challenges.", err=True)
         return False
     finally:
+        # Write behavioral log entry
+        duration_s = time.time() - run_start
+        _write_behavior_log(workspace, duration_s)
         # Clean up task file
         if task_file.exists():
             task_file.unlink()
+
+
+def _run_with_faults(cmd: str, workspace: Path, env: dict, timeout: int,
+                     faults: list[dict]) -> bool:
+    """Run agent with fault injection — uses Popen for mid-execution faults.
+
+    Supported fault types:
+      - file_delete: Delete a file after delay_seconds
+      - file_corrupt: Corrupt a file after delay_seconds
+      - file_appear: Create a file after delay_seconds
+      - sigterm: Send SIGTERM after delay_seconds
+      - env_change: Write a new env file after delay_seconds
+    """
+    proc = subprocess.Popen(
+        cmd, shell=True, cwd=str(workspace), env=env,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    )
+
+    # Schedule fault injections on background threads
+    for fault in faults:
+        fault_type = fault.get("type", "")
+        delay = fault.get("delay_seconds", 3)
+        target = fault.get("target", "")
+
+        if fault_type == "file_delete":
+            threading.Thread(
+                target=_fault_file_delete,
+                args=(workspace / target, delay),
+                daemon=True,
+            ).start()
+        elif fault_type == "file_corrupt":
+            threading.Thread(
+                target=_fault_file_corrupt,
+                args=(workspace / target, delay, fault.get("content", "CORRUPTED")),
+                daemon=True,
+            ).start()
+        elif fault_type == "file_appear":
+            threading.Thread(
+                target=_fault_file_appear,
+                args=(workspace / target, delay, fault.get("content", "")),
+                daemon=True,
+            ).start()
+        elif fault_type == "sigterm":
+            threading.Thread(
+                target=_fault_sigterm,
+                args=(proc, delay),
+                daemon=True,
+            ).start()
+
+    try:
+        stdout, stderr = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        click.echo(f"  Agent timed out after {timeout}s.", err=True)
+        return False
+
+    if proc.returncode != 0:
+        click.echo(f"  Agent exited with code {proc.returncode}", err=True)
+        if stderr:
+            click.echo(f"  Agent stderr: {stderr[-300:]}", err=True)
+    return proc.returncode == 0
+
+
+def _fault_file_delete(target: Path, delay: float):
+    """Delete a file after delay."""
+    time.sleep(delay)
+    try:
+        if target.exists():
+            target.unlink()
+    except Exception:
+        pass
+
+
+def _fault_file_corrupt(target: Path, delay: float, content: str):
+    """Overwrite a file with corrupt content after delay."""
+    time.sleep(delay)
+    try:
+        target.write_text(content, encoding="utf-8")
+    except Exception:
+        pass
+
+
+def _fault_file_appear(target: Path, delay: float, content: str):
+    """Create a file after delay (simulates late-arriving data)."""
+    time.sleep(delay)
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+    except Exception:
+        pass
+
+
+def _fault_sigterm(proc: subprocess.Popen, delay: float):
+    """Send SIGTERM to process after delay."""
+    time.sleep(delay)
+    try:
+        if proc.poll() is None:
+            if os.name == "nt":
+                proc.terminate()
+            else:
+                proc.send_signal(signal.SIGTERM)
+    except Exception:
+        pass
+
+
+def _write_behavior_log(workspace: Path, duration_s: float):
+    """Write a behavioral log entry to setup/behavior.jsonl."""
+    setup_dir = workspace / "setup"
+    setup_dir.mkdir(parents=True, exist_ok=True)
+    log_file = setup_dir / "behavior.jsonl"
+
+    entry = {
+        "ts": time.time(),
+        "duration_s": round(duration_s, 2),
+    }
+
+    # Check if audit log exists for tool-use challenges
+    tools_dir = workspace / "tools"
+    if tools_dir.exists():
+        audit_file = setup_dir / "tool_audit.jsonl"
+        entry["has_audit_log"] = audit_file.exists()
+        if audit_file.exists():
+            try:
+                entry["audit_entries"] = sum(1 for _ in open(audit_file))
+            except Exception:
+                entry["audit_entries"] = 0
+
+    try:
+        with open(log_file, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except Exception:
+        pass
 
 
 def clean_workspace(workspace: Path, persist_patterns: list[str]) -> int:

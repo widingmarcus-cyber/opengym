@@ -3,8 +3,15 @@
 
 import json
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("transform")
 def main():
     if len(sys.argv) > 1 and sys.argv[1] in ("--help", "-h"):
         print("Transform records by aggregating per product.")

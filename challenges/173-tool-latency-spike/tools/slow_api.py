@@ -10,6 +10,12 @@ import argparse
 import json
 import os
 import time
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".state")
 STATE_FILE = os.path.join(STATE_DIR, "api_calls.json")
@@ -29,6 +35,7 @@ def set_call_count(count):
         json.dump({"count": count}, f)
 
 
+@audit_tool("slow_api")
 def main():
     parser = argparse.ArgumentParser(description="Slow API simulator")
     parser.add_argument("--timeout", type=int, default=None,

@@ -10,6 +10,12 @@ import os
 import sys
 import time
 import unicodedata
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_DIR = os.path.join(SCRIPT_DIR, ".state")
@@ -55,6 +61,7 @@ def save_timestamps(timestamps):
         json.dump(timestamps, f)
 
 
+@audit_tool("lookup")
 def main():
     # Ensure consistent UTF-8 output across platforms
     sys.stdout.reconfigure(encoding="utf-8")

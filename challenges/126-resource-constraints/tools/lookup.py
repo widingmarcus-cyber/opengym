@@ -10,6 +10,12 @@ Looks up 1-3 items per call. Maximum 5 total calls (tracked in .state/budget.jso
 import json
 import os
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_PATH = os.path.join(TOOL_DIR, ".state", "budget.json")
@@ -42,6 +48,7 @@ def save_budget(budget):
         json.dump(budget, f, indent=2)
 
 
+@audit_tool("lookup")
 def main():
     if len(sys.argv) < 2:
         print("Usage: python lookup.py \"item1,item2,item3\"", file=sys.stderr)

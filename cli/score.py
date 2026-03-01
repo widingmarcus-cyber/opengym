@@ -163,6 +163,27 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
                 "error": "Test files were tampered with. Score invalidated.",
             }
 
+        # Check tool script integrity — agent must not modify tool scripts
+        tools_tampered = check_tool_integrity(
+            workspace_path / "tools", original_path / "tools"
+        )
+        if tools_tampered:
+            return {
+                "challenge": challenge_id,
+                "name": meta["name"],
+                "difficulty": meta["difficulty"],
+                "category": meta["category"],
+                "dimension": meta.get("dimension", "coding"),
+                "challenge_type": challenge_type,
+                "passed": False,
+                "tests_passed": 0,
+                "tests_total": 0,
+                "score": 0,
+                "duration_seconds": 0.0,
+                "estimated_cost_usd": estimated_cost,
+                "error": "Tool scripts were tampered with. Score invalidated.",
+            }
+
         # Run the verify command, ensuring we use the current Python interpreter
         verify_cmd = meta.get("verify", "pytest tests/ -v")
         if verify_cmd.startswith(("python ", "python3 ")):
@@ -378,6 +399,37 @@ def check_test_integrity(workspace_tests: Path, original_tests: Path) -> bool:
 
         if orig_hash != ws_hash:
             return True  # Test file modified
+
+    return False
+
+
+def check_tool_integrity(workspace_tools: Path, original_tools: Path) -> bool:
+    """Check if tool scripts have been modified by the agent.
+
+    Compares workspace tool files against originals. Ignores:
+    - .state/ directories (tools write state there)
+    - _audit.py (injected by CLI at runtime)
+    """
+    if not original_tools.exists() or not workspace_tools.exists():
+        return False
+
+    for original_file in original_tools.rglob("*"):
+        if not original_file.is_file():
+            continue
+
+        relative = original_file.relative_to(original_tools)
+        # Skip state directories
+        if ".state" in relative.parts:
+            continue
+
+        workspace_file = workspace_tools / relative
+        if not workspace_file.exists():
+            return True  # Tool file deleted
+
+        orig_hash = hashlib.sha256(original_file.read_bytes()).hexdigest()
+        ws_hash = hashlib.sha256(workspace_file.read_bytes()).hexdigest()
+        if orig_hash != ws_hash:
+            return True  # Tool file modified
 
     return False
 

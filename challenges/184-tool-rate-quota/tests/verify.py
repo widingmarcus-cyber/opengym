@@ -65,5 +65,24 @@ if os.path.exists(state_path):
 else:
     results.append({"test": "quota_respected", "passed": False, "message": "Tool state file not found - tool was never called"})
 
+
+# === Audit log validation ===
+_audit_file = os.path.join(CHALLENGE_DIR, "setup", "tool_audit.jsonl")
+_tools_dir = os.path.join(CHALLENGE_DIR, "tools")
+sys.path.insert(0, _tools_dir)
+try:
+    from _audit import full_audit_check
+    _audit_ok, _audit_errors = full_audit_check(
+        _audit_file, "quota_api",
+        min_calls=1, max_calls=5,
+        min_gap_ms=0,
+    )
+    if _audit_ok:
+        results.append({"test": "audit_log_valid", "passed": True, "message": "Audit log signatures, sequences, and nonces valid"})
+    else:
+        for _err in _audit_errors[:3]:
+            results.append({"test": "audit_log_valid", "passed": False, "message": _err})
+except ImportError:
+    results.append({"test": "audit_log_valid", "passed": True, "message": "Audit module not available (skipped)"})
 for r in results:
     print(json.dumps(r))

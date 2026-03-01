@@ -8,8 +8,15 @@ Default (no version): Returns v2 format (schema has drifted)
 
 import argparse
 import json
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("data_api")
 def main():
     parser = argparse.ArgumentParser(description="Data API with versioned schema")
     parser.add_argument("--version", choices=["v1", "v2"], default=None,

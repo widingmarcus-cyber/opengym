@@ -5,6 +5,12 @@ import argparse
 import json
 import os
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".flaky_state.json")
 
@@ -21,6 +27,7 @@ def save_state(state):
         json.dump(state, f)
 
 
+@audit_tool("flaky_calc")
 def main():
     parser = argparse.ArgumentParser(description="Flaky calculator tool")
     parser.add_argument("--operation", required=True, help="Operation to perform (e.g., square)")

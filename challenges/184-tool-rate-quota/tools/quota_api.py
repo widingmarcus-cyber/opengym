@@ -5,6 +5,12 @@ import argparse
 import json
 import os
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".quota_state.json")
 
@@ -38,6 +44,7 @@ def get_result(query):
     return results_map.get(query, f"result_for_{query}")
 
 
+@audit_tool("quota_api")
 def main():
     parser = argparse.ArgumentParser(description="Quota-limited API tool")
     parser.add_argument("--query", help="Single query to execute")

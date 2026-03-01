@@ -2,25 +2,25 @@
 
 ## Objective
 
-Handle paginated data from a tool by fetching all pages and aggregating the results.
+Handle paginated data from a tool by fetching all available pages and computing the sum of all values. Write the total to `setup/answer.txt`.
 
 ## Scenario
 
-You have access to `tools/data_dump.py`, a tool that returns data in pages of 50 records each. You need to fetch all pages until no more data is available, then compute an aggregate.
+You have access to a data dump tool that returns records in pages. You need to fetch all pages until no more data remains, then compute an aggregate.
 
 ## Instructions
 
-1. Call `tools/data_dump.py --page 1` to get the first page of records.
-2. Check the `has_more` field in the response. If `true`, fetch the next page.
-3. Continue until `has_more` is `false` or `data` is empty.
-4. Each record has an `id` and a `value` field (value = id * 2).
-5. Compute the **sum of all `value` fields** across all records.
-6. Write the sum to `setup/answer.txt`.
+1. Call the data dump tool starting at page 1.
+2. Inspect the response to find pagination metadata (e.g., whether more pages exist).
+3. Continue fetching subsequent pages until all data has been retrieved.
+4. Sum all `value` fields from all records across all pages.
+5. Write the total sum to `setup/answer.txt`.
 
 ## Tools
 
-- `tools/data_dump.py --page <N>` - Returns page N of records (50 per page).
+- `tools/data_dump.py --page <N>` — Returns page N of records. Run with `--help` for details.
 
-## Expected Output
+## Notes
 
-- `setup/answer.txt` containing the total sum of all values.
+- Do not assume a fixed number of pages — use the response metadata.
+- The sum must be computed from the actual tool responses.

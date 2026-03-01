@@ -10,6 +10,12 @@ import argparse
 import json
 import os
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".state")
 STATE_FILE = os.path.join(STATE_DIR, "stream_count.json")
@@ -29,6 +35,7 @@ def set_count(count):
         json.dump({"count": count}, f)
 
 
+@audit_tool("streamer")
 def main():
     parser = argparse.ArgumentParser(description="Streaming API simulator with partial JSON")
     parser.add_argument("--stream", action="store_true", help="Enable streaming mode")

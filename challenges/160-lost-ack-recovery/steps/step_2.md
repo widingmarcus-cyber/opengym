@@ -1,14 +1,8 @@
-You are the Receiver agent. Your task is to process messages and send acknowledgements -- but one ack gets "lost".
+You are the Receiver agent. Your task is to process messages and send acknowledgements — but simulate a network failure where one acknowledgement gets "lost".
 
-1. Read `setup/outbox.json` to see the 3 messages sent by the Sender.
-2. Process all messages (you receive all 3).
-3. Write acknowledgements to `setup/inbox.json`, but simulate a "lost" acknowledgement for message m2:
+1. Read `setup/outbox.json` to see the messages sent by the Sender.
+2. Process all messages (you receive all of them successfully).
+3. Write acknowledgements to `setup/inbox.json` as a JSON array. Each entry should have `"id"` (matching the message ID) and `"acked": true`.
+4. However, you must simulate a **lost acknowledgement**: pick the **second** message in the list and do NOT include its acknowledgement in `inbox.json`.
 
-```json
-[
-  {"id": "m1", "acked": true},
-  {"id": "m3", "acked": true}
-]
-```
-
-Note: Only m1 and m3 are acknowledged. The acknowledgement for m2 is "lost" (not included in inbox.json).
+The Sender will later compare outbox and inbox to detect which message was not acknowledged.

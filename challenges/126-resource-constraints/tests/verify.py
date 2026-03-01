@@ -3,6 +3,7 @@
 
 import json
 import os
+import sys
 
 CHALLENGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS_PATH = os.path.join(CHALLENGE_DIR, "setup", "results.json")
@@ -112,6 +113,25 @@ def main():
         all_correct,
         "All data correct" if all_correct else f"Mismatches: {wrong[:5]}",
     )
+
+    # === Audit log validation ===
+    _audit_file = os.path.join(CHALLENGE_DIR, "setup", "tool_audit.jsonl")
+    _tools_dir = os.path.join(CHALLENGE_DIR, "tools")
+    sys.path.insert(0, _tools_dir)
+    try:
+        from _audit import full_audit_check
+        _audit_ok, _audit_errors = full_audit_check(
+            _audit_file, "lookup",
+            min_calls=1, max_calls=999,
+            min_gap_ms=0,
+        )
+        if _audit_ok:
+            check("audit_log_valid", True, "Audit log signatures, sequences, and nonces valid")
+        else:
+            for _err in _audit_errors[:3]:
+                check("audit_log_valid", False, _err)
+    except ImportError:
+        check("audit_log_valid", True, "Audit module not available (skipped)")
 
     print_results()
 

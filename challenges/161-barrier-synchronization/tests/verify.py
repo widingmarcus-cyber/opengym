@@ -9,6 +9,23 @@ SETUP_DIR = os.path.join(CHALLENGE_DIR, "setup")
 
 
 def main():
+    # Compute expected values from input data files
+    expected_a = None
+    expected_b = None
+    data_a_path = os.path.join(SETUP_DIR, "data", "worker_a_input.json")
+    data_b_path = os.path.join(SETUP_DIR, "data", "worker_b_input.json")
+    try:
+        with open(data_a_path, "r") as f:
+            expected_a = sum(json.load(f)["values"])
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        expected_a = 42  # fallback
+    try:
+        with open(data_b_path, "r") as f:
+            expected_b = sum(json.load(f)["values"])
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        expected_b = 58  # fallback
+    expected_total = expected_a + expected_b
+
     # Test 1: barrier.json exists and shows both workers ready
     barrier_path = os.path.join(SETUP_DIR, "barrier.json")
     if not os.path.exists(barrier_path):
@@ -34,10 +51,10 @@ def main():
         try:
             with open(worker_a_path, "r") as f:
                 wa = json.load(f)
-            if wa.get("done") is True and wa.get("result") == 42:
-                print(json.dumps({"test": "worker_a_correct", "passed": True, "message": "worker_a.json has done=true, result=42"}))
+            if wa.get("done") is True and wa.get("result") == expected_a:
+                print(json.dumps({"test": "worker_a_correct", "passed": True, "message": f"worker_a.json has done=true, result={expected_a}"}))
             else:
-                print(json.dumps({"test": "worker_a_correct", "passed": False, "message": f"Expected done=true, result=42. Got {wa}"}))
+                print(json.dumps({"test": "worker_a_correct", "passed": False, "message": f"Expected done=true, result={expected_a}. Got {wa}"}))
         except (json.JSONDecodeError, IOError) as e:
             print(json.dumps({"test": "worker_a_valid", "passed": False, "message": f"Could not parse worker_a.json: {e}"}))
 
@@ -49,10 +66,10 @@ def main():
         try:
             with open(worker_b_path, "r") as f:
                 wb = json.load(f)
-            if wb.get("done") is True and wb.get("result") == 58:
-                print(json.dumps({"test": "worker_b_correct", "passed": True, "message": "worker_b.json has done=true, result=58"}))
+            if wb.get("done") is True and wb.get("result") == expected_b:
+                print(json.dumps({"test": "worker_b_correct", "passed": True, "message": f"worker_b.json has done=true, result={expected_b}"}))
             else:
-                print(json.dumps({"test": "worker_b_correct", "passed": False, "message": f"Expected done=true, result=58. Got {wb}"}))
+                print(json.dumps({"test": "worker_b_correct", "passed": False, "message": f"Expected done=true, result={expected_b}. Got {wb}"}))
         except (json.JSONDecodeError, IOError) as e:
             print(json.dumps({"test": "worker_b_valid", "passed": False, "message": f"Could not parse worker_b.json: {e}"}))
 
@@ -69,10 +86,10 @@ def main():
         print(json.dumps({"test": "answer_valid", "passed": False, "message": f"Could not parse answer.json: {e}"}))
         return
 
-    if answer.get("total") == 100:
-        print(json.dumps({"test": "answer_total", "passed": True, "message": "answer.json total is 100 (42 + 58)"}))
+    if answer.get("total") == expected_total:
+        print(json.dumps({"test": "answer_total", "passed": True, "message": f"answer.json total is {expected_total}"}))
     else:
-        print(json.dumps({"test": "answer_total", "passed": False, "message": f"Expected total 100, got {answer.get('total')}"}))
+        print(json.dumps({"test": "answer_total", "passed": False, "message": f"Expected total {expected_total}, got {answer.get('total')}"}))
 
     if answer.get("all_ready") is True:
         print(json.dumps({"test": "answer_all_ready", "passed": True, "message": "answer.json all_ready is true"}))

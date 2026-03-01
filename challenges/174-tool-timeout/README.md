@@ -2,26 +2,25 @@
 
 ## Objective
 
-Call the hanging tool, detect the timeout, and fall back to the `--fallback` flag to get a result. Write the fallback value to `setup/answer.txt`.
+Call a tool that may hang or timeout. Find an alternative way to get a successful response. Write the result to `setup/answer.txt`.
 
 ## Context
 
-Some operations hang or take far too long. A robust agent must detect when a tool times out and use an alternative approach — such as a fallback flag, a different endpoint, or cached data — rather than waiting indefinitely.
+Some operations hang or take far too long. A robust agent must detect when a tool is unresponsive and explore alternative approaches — such as different flags, fallback modes, or cached data — rather than waiting indefinitely or giving up.
 
 ## Tools
 
-- `tools/hanging.py` — Simulates a tool that times out on first call. Takes optional `--timeout` and `--fallback` flags. Uses state file.
+- `tools/hanging.py` — A tool that may hang or timeout. Run with `--help` to discover available flags and modes.
 
 ## Instructions
 
-1. Call `tools/hanging.py` (no flags).
-2. The first call will return a timeout error after 2 seconds.
-3. Detect the timeout from the response.
-4. Call `tools/hanging.py --fallback` to get the fallback result.
-5. Write the data value to `setup/answer.txt`.
+1. Call the tool and observe its behavior.
+2. If it hangs or returns a timeout/error, explore the tool's help to find alternative invocation options.
+3. Use the appropriate approach to get a successful response.
+4. Extract the data value from the successful response.
+5. Write it to `setup/answer.txt`.
 
-## Expected Behavior
+## Notes
 
-- First call (no flags): Returns `{"status": "timeout", "error": "Operation timed out"}` after 2 seconds.
-- Second call with `--fallback`: Returns immediately with `{"status": "ok", "data": "fallback_value"}`.
-- `setup/answer.txt` should contain: `fallback_value`
+- Read the tool's `--help` output carefully.
+- The tool must be called at least twice (experience the problem, then solve it).

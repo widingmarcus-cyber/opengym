@@ -4,8 +4,15 @@
 import argparse
 import hashlib
 import json
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("verified_api")
 def main():
     parser = argparse.ArgumentParser(description="Verified API tool with checksum")
     parser.parse_args()  # No arguments needed, but keep argparse for consistency

@@ -5,8 +5,15 @@ import argparse
 import gzip
 import sys
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("compress")
 def main():
     parser = argparse.ArgumentParser(description="Compress a file using gzip")
     parser.add_argument("input_file", help="Path to the file to compress")

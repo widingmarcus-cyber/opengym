@@ -2,28 +2,14 @@
 
 You are acting as the **Detector**.
 
-Read `setup/dependencies.json`. It contains:
+Read `setup/dependencies.json`. It describes which agents are waiting for output from other agents.
 
-```json
-{
-  "agent_a": {"waiting_for": "agent_b_output.txt"},
-  "agent_b": {"waiting_for": "agent_a_output.txt"}
-}
-```
+**Your task:** Analyze the dependency graph for cycles. If a circular dependency exists (Agent X waits for Agent Y, and Agent Y waits for Agent X), that is a **deadlock**.
 
-This describes a circular dependency:
-- Agent A is waiting for `agent_b_output.txt` (produced by Agent B)
-- Agent B is waiting for `agent_a_output.txt` (produced by Agent A)
-- Neither can proceed -- this is a **deadlock**.
+Write your findings to `setup/resolution.json` as a JSON object with the following fields:
 
-**Your task:** Detect the cycle and write a resolution plan to `setup/resolution.json`:
+- `"cycle_detected"`: boolean — whether a cycle was found
+- `"cycle"`: array — the ordered list of nodes in the cycle (include the starting node again at the end to show the loop)
+- `"resolution"`: string — a description of how to break the cycle (which agent should produce a default output)
 
-```json
-{
-  "cycle_detected": true,
-  "cycle": ["agent_a", "agent_b", "agent_a"],
-  "resolution": "Break the cycle by having agent_a write a default value to agent_a_output.txt"
-}
-```
-
-The resolution plan must describe how to break the cycle.
+You must programmatically detect the cycle from the dependency data, not assume a specific graph structure.

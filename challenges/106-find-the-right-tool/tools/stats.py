@@ -5,8 +5,15 @@ import argparse
 import csv
 import sys
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("stats")
 def main():
     parser = argparse.ArgumentParser(
         description="Compute basic statistics for a CSV file (row count, column names, etc.)"

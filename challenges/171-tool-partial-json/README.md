@@ -2,7 +2,7 @@
 
 ## Objective
 
-Call the streamer tool and handle partial/truncated JSON output. If the output is not valid JSON, call the tool again to get the complete response. Write the sum of the data array to `setup/answer.txt`.
+Call the streamer tool and handle any incomplete or truncated JSON output. Once you have valid JSON, compute the sum of the data array and write it to `setup/answer.txt`.
 
 ## Context
 
@@ -10,20 +10,18 @@ Network issues, buffer limits, or streaming APIs can produce truncated JSON. A r
 
 ## Tools
 
-- `tools/streamer.py` — Simulates a streaming API that may return partial JSON. Uses state file to track calls.
+- `tools/streamer.py` — Simulates a streaming API. Run with `--help` for options. Uses persistent state.
 
 ## Instructions
 
-1. Call `tools/streamer.py`.
+1. Call the streamer tool.
 2. Attempt to parse the output as JSON.
-3. If parsing fails (truncated output), call the tool again.
-4. On the second call, you will get complete, valid JSON.
-5. Sum the values in the `data` array.
+3. If parsing fails (the output may be truncated), call the tool again.
+4. Once you receive valid JSON, find the data array in the response.
+5. Compute the sum of the array values from the actual response.
 6. Write the sum to `setup/answer.txt`.
 
-## Expected Behavior
+## Notes
 
-- First call returns truncated JSON: `{"data": [1, 2, 3` (invalid).
-- Second call returns complete JSON: `{"data": [1, 2, 3, 4, 5], "complete": true}`.
-- Sum of `[1, 2, 3, 4, 5]` = 15.
-- `setup/answer.txt` should contain: `15`
+- The tool may not return valid JSON on every call.
+- Do not hardcode the answer — compute the sum from the actual response data.

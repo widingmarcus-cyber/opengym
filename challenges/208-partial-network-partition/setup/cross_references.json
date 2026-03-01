@@ -1,65 +1,20 @@
 {
   "orders_from_users": {
-    "description": "Each user has order_ids. Use this mapping to reconstruct order data.",
-    "order_details": {
-      "O1": {
-        "order_id": "O1",
-        "user_id": "U1",
-        "product_id": "P1",
-        "quantity": 2,
-        "total": 19.98
-      },
-      "O2": {
-        "order_id": "O2",
-        "user_id": "U2",
-        "product_id": "P2",
-        "quantity": 1,
-        "total": 24.99
-      },
-      "O3": {
-        "order_id": "O3",
-        "user_id": "U1",
-        "product_id": "P3",
-        "quantity": 3,
-        "total": 44.97
-      },
-      "O4": {
-        "order_id": "O4",
-        "user_id": "U3",
-        "product_id": "P1",
-        "quantity": 5,
-        "total": 49.95
-      },
-      "O5": {
-        "order_id": "O5",
-        "user_id": "U3",
-        "product_id": "P2",
-        "quantity": 2,
-        "total": 49.98
-      }
+    "description": "Each user's order_ids are listed in users.json. Use this mapping to reconstruct order data. Compute totals from product prices.",
+    "order_items": {
+      "O1": {"user_id": "U1", "product_id": "P1", "quantity": 2},
+      "O2": {"user_id": "U2", "product_id": "P2", "quantity": 1},
+      "O3": {"user_id": "U1", "product_id": "P3", "quantity": 3},
+      "O4": {"user_id": "U3", "product_id": "P1", "quantity": 5},
+      "O5": {"user_id": "U3", "product_id": "P2", "quantity": 2}
     }
   },
   "inventory_from_products": {
-    "description": "Each product has a stock_ref. Use this mapping to reconstruct inventory.",
+    "description": "Each product's stock_ref maps to an inventory record. Use the stock_ref to reconstruct inventory data.",
     "stock_levels": {
-      "INV_P1": {
-        "inventory_id": "INV_P1",
-        "product_id": "P1",
-        "quantity_in_stock": 150,
-        "warehouse": "WH-A"
-      },
-      "INV_P2": {
-        "inventory_id": "INV_P2",
-        "product_id": "P2",
-        "quantity_in_stock": 75,
-        "warehouse": "WH-B"
-      },
-      "INV_P3": {
-        "inventory_id": "INV_P3",
-        "product_id": "P3",
-        "quantity_in_stock": 200,
-        "warehouse": "WH-A"
-      }
+      "INV_P1": {"product_id": "P1", "quantity_in_stock": 150, "warehouse": "WH-A"},
+      "INV_P2": {"product_id": "P2", "quantity_in_stock": 75, "warehouse": "WH-B"},
+      "INV_P3": {"product_id": "P3", "quantity_in_stock": 200, "warehouse": "WH-A"}
     }
   }
 }

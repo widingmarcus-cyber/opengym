@@ -9,6 +9,12 @@ Tracks call count in state file.
 import argparse
 import json
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".state")
 STATE_FILE = os.path.join(STATE_DIR, "call_log.json")
@@ -26,6 +32,7 @@ def log_call(input_value):
         json.dump({"calls": calls, "count": len(calls)}, f)
 
 
+@audit_tool("validator")
 def main():
     parser = argparse.ArgumentParser(description="Input validator simulator")
     parser.add_argument("--input", required=True, help="Input data to validate")

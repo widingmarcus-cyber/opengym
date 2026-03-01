@@ -8,6 +8,12 @@ Second call and beyond: HTTP 200 with recovered data.
 import argparse
 import json
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".state")
 STATE_FILE = os.path.join(STATE_DIR, "attempts.json")
@@ -27,6 +33,7 @@ def set_attempts(count):
         json.dump({"attempts": count}, f)
 
 
+@audit_tool("service")
 def main():
     parser = argparse.ArgumentParser(description="Transient failure service simulator")
     parser.add_argument("--endpoint", default="/data", help="Service endpoint")

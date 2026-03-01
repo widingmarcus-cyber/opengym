@@ -6,6 +6,12 @@ import csv
 import json
 import sys
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
 def csv_to_json(filepath):
@@ -62,6 +68,7 @@ def csv_to_xml(filepath):
     return "\n".join(lines)
 
 
+@audit_tool("convert")
 def main():
     parser = argparse.ArgumentParser(
         description="Convert CSV files to JSON, YAML, or XML format"

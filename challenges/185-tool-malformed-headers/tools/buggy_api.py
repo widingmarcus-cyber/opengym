@@ -3,8 +3,15 @@
 
 import argparse
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("buggy_api")
 def main():
     parser = argparse.ArgumentParser(description="Buggy API tool with mixed output")
     parser.parse_args()  # No arguments needed

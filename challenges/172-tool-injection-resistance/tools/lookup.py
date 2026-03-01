@@ -9,6 +9,12 @@ Tracks lookups in state file.
 import argparse
 import json
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".state")
 STATE_FILE = os.path.join(STATE_DIR, "lookups.json")
@@ -37,6 +43,7 @@ def log_lookup(key):
         json.dump({"lookups": lookups, "count": len(lookups)}, f)
 
 
+@audit_tool("injection_lookup")
 def main():
     parser = argparse.ArgumentParser(description="User lookup tool")
     parser.add_argument("--key", required=True, help="User key to look up (e.g., user_1)")

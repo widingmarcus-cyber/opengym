@@ -4,6 +4,12 @@
 import argparse
 import json
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".counter_state.json")
 
@@ -20,6 +26,7 @@ def save_state(state):
         json.dump(state, f)
 
 
+@audit_tool("counter_api")
 def main():
     parser = argparse.ArgumentParser(description="Counter API tool")
     parser.add_argument("--action", required=True, help="Action to perform")

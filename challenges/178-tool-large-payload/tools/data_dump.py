@@ -3,8 +3,15 @@
 
 import argparse
 import json
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("data_dump")
 def main():
     parser = argparse.ArgumentParser(description="Paginated data dump tool")
     parser.add_argument("--page", required=True, type=int, help="Page number (1-based)")

@@ -7,8 +7,15 @@
 
 import argparse
 import json
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("converter")
 def main():
     parser = argparse.ArgumentParser(description="Value converter simulator")
     parser.add_argument("--input", required=True, help="Input value to convert")

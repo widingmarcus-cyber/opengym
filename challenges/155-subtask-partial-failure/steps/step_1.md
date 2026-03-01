@@ -2,19 +2,9 @@
 
 You are acting as the **Executor**.
 
-Read `setup/subtasks.json`:
+Read `setup/subtasks.json`. It contains a list of subtasks, each with an `"id"`, `"type"`, and `"input"` value.
 
-```json
-[
-  {"id": 1, "type": "compute", "input": 10},
-  {"id": 2, "type": "compute", "input": 20},
-  {"id": 3, "type": "compute", "input": -1},
-  {"id": 4, "type": "compute", "input": 40},
-  {"id": 5, "type": "compute", "input": 50}
-]
-```
-
-Each `"compute"` task squares the input value. However, **negative inputs are invalid** and should result in a failure.
+For `"compute"` type tasks, the operation is to **square** the input value. However, **negative inputs are invalid** and should result in a failure.
 
 **Your task:** Process each subtask and write results to `setup/results.json` as a JSON array. Each entry must have:
 - `"id"`: the subtask ID

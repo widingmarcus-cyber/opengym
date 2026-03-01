@@ -2,8 +2,15 @@
 """A mystery data processing tool. No documentation provided."""
 
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("mystery")
 def main():
     if len(sys.argv) > 1:
         arg = sys.argv[1]

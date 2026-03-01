@@ -4,6 +4,12 @@
 import argparse
 import sys
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
 def xor_encrypt(data, key):
@@ -12,6 +18,7 @@ def xor_encrypt(data, key):
     return bytes(b ^ key_bytes[i % len(key_bytes)] for i, b in enumerate(data))
 
 
+@audit_tool("encrypt")
 def main():
     parser = argparse.ArgumentParser(
         description="Encrypt a file using XOR cipher with the given key"

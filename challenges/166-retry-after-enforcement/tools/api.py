@@ -8,6 +8,12 @@ Third call returns HTTP 200 with success data.
 import argparse
 import json
 import os
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".state")
 STATE_FILE = os.path.join(STATE_DIR, "call_count.json")
@@ -27,6 +33,7 @@ def set_call_count(count):
         json.dump({"count": count}, f)
 
 
+@audit_tool("api")
 def main():
     parser = argparse.ArgumentParser(description="Rate-limited API simulator")
     parser.add_argument("--endpoint", default="/data", help="API endpoint to call")

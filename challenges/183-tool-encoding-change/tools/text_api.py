@@ -4,8 +4,15 @@
 import argparse
 import json
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("text_api")
 def main():
     parser = argparse.ArgumentParser(description="Text API tool with encoding support")
     parser.add_argument("--encoding", default="utf-8", help="Encoding to return text in (default: utf-8)")

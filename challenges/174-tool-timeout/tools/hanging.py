@@ -11,6 +11,12 @@ import argparse
 import json
 import os
 import time
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 STATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".state")
 STATE_FILE = os.path.join(STATE_DIR, "hang_state.json")
@@ -30,6 +36,7 @@ def set_call_count(count):
         json.dump({"count": count}, f)
 
 
+@audit_tool("hanging")
 def main():
     parser = argparse.ArgumentParser(description="Hanging tool simulator")
     parser.add_argument("--timeout", type=int, default=None,

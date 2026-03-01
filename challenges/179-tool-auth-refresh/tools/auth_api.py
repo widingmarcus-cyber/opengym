@@ -4,8 +4,15 @@
 import argparse
 import json
 import sys
+try:
+    from _audit import audit_tool
+except ImportError:
+    def audit_tool(name):
+        def decorator(func): return func
+        return decorator
 
 
+@audit_tool("auth_api")
 def main():
     parser = argparse.ArgumentParser(description="Authenticated API tool")
     parser.add_argument("--token", help="Authentication token")
