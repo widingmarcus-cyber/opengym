@@ -13,12 +13,14 @@ Write a detailed implementation plan first, then implement it. Both the plan and
 1. **Step 1:** Write a detailed plan for an inventory management module to `setup/plan.md`. No code yet -- only the plan.
 2. **Step 2:** Implement the inventory module in `setup/inventory.py` following the plan.
 
-## Required Functions
+## Required Implementation
+
+Create an `Inventory` class with the following methods:
 
 - `add_item(name, quantity, price)`: Add item to inventory
-- `remove_item(name, quantity)`: Remove quantity of item (error if insufficient)
-- `get_item(name)`: Return item details or None
-- `total_value()`: Return total value of all inventory
+- `remove_item(name, quantity)`: Remove quantity of item (raise error if insufficient)
+- `get_item(name)`: Return item details as a dict (`{"name", "quantity", "price"}`) or None
+- `total_value()`: Return total value of all inventory (sum of quantity * price per item)
 - `low_stock(threshold)`: Return list of items with quantity below threshold
 
 ## Setup

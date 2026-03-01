@@ -221,6 +221,14 @@ opengym score all --json-output > results.json
 - **Not an LLM benchmark.** We don't measure raw model quality (MMLU, HumanEval, etc.).
 - **It's an agent infrastructure test.** Does your agent's memory, tool use, error handling, and safety actually work end-to-end?
 
+## Fair Use
+
+Tests live in the `tests/` folder and are technically readable by your agent. The CLI detects if tests are **modified**, but not if they're **read**. Reading tests to reverse-engineer answers defeats the purpose of the benchmark. If your agent reads `tests/` to solve challenges, you're benchmarking its ability to cheat, not its ability to work.
+
+For honest results: instruct your agent to only read `README.md` and files in `setup/`.
+
+> We plan to add encrypted/server-side test execution in a future version. For now, it's an honor system.
+
 ## Safety
 
 All challenges run locally on your machine. No network calls are made by the CLI. Agent code executes in your normal environment — if you're running untrusted agents, use a sandbox (Docker, VM, etc.). The CLI never sends data anywhere.
