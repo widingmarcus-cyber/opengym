@@ -33,6 +33,7 @@ htmlcov/
 # Scratch/temp files
 rescore*.json
 *.log
+!challenges/**/setup/**/*.log
 
 # Claude Code
 .claude/

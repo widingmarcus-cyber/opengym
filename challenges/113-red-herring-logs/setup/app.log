@@ -1,0 +1,10 @@
+2024-01-15 10:00:01 ERROR [cache] Cache miss for key 'user_prefs' - falling back to defaults
+2024-01-15 10:00:01 ERROR [cache] Cache miss for key 'theme_settings' - falling back to defaults
+2024-01-15 10:00:02 ERROR [metrics] Failed to send metrics to collector: connection timeout
+2024-01-15 10:00:02 WARN [pool] Connection pool at 80% capacity
+2024-01-15 10:00:03 ERROR [cache] Cache miss for key 'rate_limits' - falling back to defaults
+2024-01-15 10:00:03 ERROR [metrics] Failed to send metrics to collector: connection timeout
+2024-01-15 10:00:04 INFO [app] Processing batch of 50 records
+2024-01-15 10:00:04 ERROR [cache] Cache miss for key 'feature_flags' - falling back to defaults
+2024-01-15 10:00:05 ERROR [metrics] Metrics buffer overflow, dropping oldest entries
+2024-01-15 10:00:05 INFO [app] Batch complete: 50 processed, 0 errors
