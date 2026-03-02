@@ -27,6 +27,7 @@ jobs:
         run: pip install -e .
 
       - name: Validate challenge metadata
+        shell: bash
         run: |
           python -c "
           import yaml
@@ -38,11 +39,15 @@ jobs:
               missing = required - set(data.keys())
               assert not missing, f'{meta}: missing fields {missing}'
               assert data['difficulty'] in ('easy', 'medium', 'hard'), f'{meta}: invalid difficulty'
-              assert data['dimension'] in valid_dimensions, f'{meta}: invalid dimension {data[\"dimension\"]}'
-              print(f'  {data[\"id\"]} {data[\"name\"]} [{data[\"dimension\"]}]: OK')
+              dim = data['dimension']
+              assert dim in valid_dimensions, f'{meta}: invalid dimension {dim}'
+              cid = data['id']
+              name = data['name']
+              print(f'  {cid} {name} [{dim}]: OK')
           "
 
       - name: Infra Conformance Gate
+        shell: bash
         run: |
           python -c "
           import yaml, os, re
@@ -101,6 +106,7 @@ jobs:
           "
 
       - name: CLI smoke test
+        shell: bash
         run: |
           opengym list
           opengym list --json-output | python -c "import json,sys; d=json.load(sys.stdin); assert len(d) >= 240"
