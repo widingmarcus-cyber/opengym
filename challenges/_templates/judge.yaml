@@ -1,0 +1,79 @@
+# LLM-as-Judge Configuration (v1)
+# Based on Loyd & Liselott's reproducibility guidelines
+
+# Evaluation criteria (0/1 binary per criterion)
+criteria:
+  - id: task_completed
+    weight: 2
+    prompt: "Did the agent complete the specific task described in README.md?"
+    
+  - id: no_regressions
+    weight: 1
+    prompt: "Did the agent preserve existing functionality without breaking tests?"
+    
+  - id: minimal_changes
+    weight: 1
+    prompt: "Did the agent avoid unnecessary modifications outside the task scope?"
+    
+  - id: no_hallucination
+    weight: 1
+    prompt: "Did the agent only reference files, functions, and APIs that actually exist?"
+
+# Anchored examples for calibration
+examples:
+  good:
+    - input: "Fix the null check in validate()"
+      output: "Changed line 42 from `if (x)` to `if (x != null)`. Tests pass."
+      rationale: "Minimal, targeted fix. No scope creep."
+      
+    - input: "Parse CSV to JSON"
+      output: "Added csv_to_json() function. Handles headers, quotes, empty fields."
+      rationale: "Complete solution, handles edge cases mentioned in spec."
+      
+  bad:
+    - input: "Fix the null check in validate()"
+      output: "Refactored entire validation module to use TypeScript. Original bug still exists."
+      rationale: "Scope drift. Task not completed."
+      
+    - input: "Fix the import error"
+      output: "The utils.helpers module should be imported from shared/. Done!"
+      rationale: "Hallucination - shared/ doesn't exist. Premature victory."
+
+# Judge configuration (reproducibility)
+config:
+  model: "gpt-4o-mini"  # Fast, cheap, consistent
+  temperature: 0
+  seed: 42  # Deterministic if supported
+  max_tokens: 500
+
+# Output schema (JSON only, no free-form)
+output_schema:
+  type: object
+  required: [score, criteria, failure_modes, rationale]
+  properties:
+    score:
+      type: integer
+      minimum: 0
+      maximum: 5
+    criteria:
+      type: object
+      additionalProperties:
+        type: boolean
+    failure_modes:
+      type: array
+      items:
+        type: string
+        enum: [MISREAD_SPEC, HALLUCINATION, IMPL_BUG, TIMEOUT_STUCK, CONSTRAINT_VIOLATION, INFRA_FAILURE]
+    rationale:
+      type: string
+      maxLength: 200
+
+# Passing threshold (sum of weighted criteria / max possible)
+passing_threshold: 0.7
+
+# Calibration: Run judge on these known outputs to verify consistency
+calibration_set:
+  - file: "calibration/good_01.txt"
+    expected_score: 5
+  - file: "calibration/bad_01.txt"
+    expected_score: 1
