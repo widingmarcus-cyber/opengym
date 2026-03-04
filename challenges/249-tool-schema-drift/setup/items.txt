@@ -1,0 +1,8 @@
+laptop
+keyboard
+mouse
+monitor
+headset
+webcam
+microphone
+speaker

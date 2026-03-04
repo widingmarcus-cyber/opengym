@@ -1,0 +1,22 @@
+{
+  "description": "Interleaved 4-tool pipeline with budgets",
+  "tools": {
+    "transform": {"script": "tools/transform.py", "budget": 3},
+    "validate": {"script": "tools/validate.py", "budget": 3},
+    "enrich": {"script": "tools/enrich.py", "budget": 2},
+    "emit": {"script": "tools/emit.py", "budget": 2}
+  },
+  "sequence": [
+    {"step": 1, "tool": "transform", "description": "Transform first batch of items"},
+    {"step": 2, "tool": "validate", "description": "Validate first transformed batch"},
+    {"step": 3, "tool": "transform", "description": "Transform second batch of items"},
+    {"step": 4, "tool": "enrich", "description": "Enrich first validated batch"},
+    {"step": 5, "tool": "validate", "description": "Validate second transformed batch"},
+    {"step": 6, "tool": "transform", "description": "Transform third batch of items"},
+    {"step": 7, "tool": "enrich", "description": "Enrich second validated batch"},
+    {"step": 8, "tool": "validate", "description": "Validate third transformed batch"},
+    {"step": 9, "tool": "emit", "description": "Emit first batch of enriched items"},
+    {"step": 10, "tool": "emit", "description": "Emit second batch of enriched items"}
+  ],
+  "notes": "Split 6 items into batches to stay within budgets. Each tool call can process multiple items at once."
+}

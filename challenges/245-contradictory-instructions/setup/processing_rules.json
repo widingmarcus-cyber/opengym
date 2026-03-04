@@ -1,0 +1,6 @@
+{
+  "round_decimals": 2,
+  "exclude_null_from_averages": true,
+  "include_all_statuses": true,
+  "output_format": "json"
+}

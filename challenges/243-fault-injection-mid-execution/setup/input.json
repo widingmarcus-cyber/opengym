@@ -1,0 +1,17 @@
+[
+  {"id": 1, "product": "Widget A", "quantity": 10, "unit_price": 25.00, "tax_rate": 0.08},
+  {"id": 2, "product": "Widget B", "quantity": 5, "unit_price": 49.99, "tax_rate": 0.08},
+  {"id": 3, "product": "Gadget X", "quantity": 3, "unit_price": 199.50, "tax_rate": 0.10},
+  {"id": 4, "product": "Gadget Y", "quantity": 20, "unit_price": 12.75, "tax_rate": 0.06},
+  {"id": 5, "product": "Part #100", "quantity": 100, "unit_price": 1.50, "tax_rate": 0.05},
+  {"id": 6, "product": "Part #200", "quantity": 50, "unit_price": 3.25, "tax_rate": 0.05},
+  {"id": 7, "product": "Service Plan", "quantity": 1, "unit_price": 999.00, "tax_rate": 0.00},
+  {"id": 8, "product": "Cable Kit", "quantity": 15, "unit_price": 8.99, "tax_rate": 0.08},
+  {"id": 9, "product": "Monitor Stand", "quantity": 2, "unit_price": 74.50, "tax_rate": 0.10},
+  {"id": 10, "product": "Keyboard Pro", "quantity": 7, "unit_price": 129.00, "tax_rate": 0.08},
+  {"id": 11, "product": "Mouse Pad XL", "quantity": 25, "unit_price": 15.00, "tax_rate": 0.06},
+  {"id": 12, "product": "USB Hub", "quantity": 12, "unit_price": 22.50, "tax_rate": 0.08},
+  {"id": 13, "product": "Power Strip", "quantity": 8, "unit_price": 35.00, "tax_rate": 0.07},
+  {"id": 14, "product": "Desk Lamp", "quantity": 4, "unit_price": 45.99, "tax_rate": 0.10},
+  {"id": 15, "product": "Headset", "quantity": 6, "unit_price": 89.00, "tax_rate": 0.08}
+]

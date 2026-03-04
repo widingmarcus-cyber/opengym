@@ -1,0 +1,50 @@
+{
+  "rules": [
+    {
+      "id": "rule_1",
+      "name": "normalize_whitespace",
+      "description": "Strip leading and trailing whitespace from each line.",
+      "deps": []
+    },
+    {
+      "id": "rule_2",
+      "name": "lowercase_values",
+      "description": "Lowercase the value part of each line (after the first ':'). The key remains unchanged.",
+      "deps": ["rule_1"]
+    },
+    {
+      "id": "rule_3",
+      "name": "deduplicate",
+      "description": "Remove duplicate lines, keeping only the first occurrence of each.",
+      "deps": ["rule_2"]
+    },
+    {
+      "id": "rule_4",
+      "name": "sort_lines",
+      "description": "Sort all lines in standard alphabetical (lexicographic) order.",
+      "deps": ["rule_3"]
+    },
+    {
+      "id": "rule_5",
+      "name": "extract_names",
+      "description": "Extract lines where the key is 'name'. Write only the values (one per line) to outputs/names.txt.",
+      "deps": ["rule_4"],
+      "output": "outputs/names.txt"
+    },
+    {
+      "id": "rule_6",
+      "name": "extract_numbers",
+      "description": "Extract lines where the key is 'amount' or 'priority' (numeric values). Write in 'key:value' format, sorted by numeric value ascending, to outputs/numbers.txt.",
+      "deps": ["rule_4"],
+      "output": "outputs/numbers.txt"
+    },
+    {
+      "id": "rule_7",
+      "name": "extract_dates",
+      "description": "Extract lines where the key is 'date'. Write only the date values, sorted chronologically (ascending), to outputs/dates.txt.",
+      "deps": ["rule_4"],
+      "output": "outputs/dates.txt"
+    }
+  ],
+  "notes": "All output files must use Unix line endings (\\n), end with a trailing newline, and have no trailing spaces on any line."
+}

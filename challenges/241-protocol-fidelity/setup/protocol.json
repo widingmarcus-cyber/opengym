@@ -1,0 +1,18 @@
+{
+  "states": ["IDLE", "PROCESSING", "VALIDATING", "APPROVED", "REJECTED", "ESCALATED", "COMPLETED", "ERROR"],
+  "initial_state": "IDLE",
+  "transitions": [
+    {"from": "IDLE",       "event": "submit",           "to": "PROCESSING",  "guard": null,                    "action": "log_submit"},
+    {"from": "PROCESSING", "event": "validate",         "to": "VALIDATING",  "guard": "has_data",              "action": "start_validation"},
+    {"from": "VALIDATING", "event": "pass",             "to": "APPROVED",    "guard": "score_above_threshold", "action": "mark_approved"},
+    {"from": "VALIDATING", "event": "fail",             "to": "REJECTED",    "guard": null,                    "action": "mark_rejected"},
+    {"from": "REJECTED",   "event": "resubmit",         "to": "PROCESSING",  "guard": "attempts_below_max",   "action": "increment_attempts"},
+    {"from": "APPROVED",   "event": "escalate",         "to": "ESCALATED",   "guard": "value_above_limit",    "action": "flag_review"},
+    {"from": "APPROVED",   "event": "complete",         "to": "COMPLETED",   "guard": null,                    "action": "finalize"},
+    {"from": "ESCALATED",  "event": "approve_override", "to": "COMPLETED",   "guard": "has_override_auth",    "action": "finalize_with_override"},
+    {"from": "ESCALATED",  "event": "reject_override",  "to": "REJECTED",    "guard": null,                    "action": "mark_rejected"},
+    {"from": "COMPLETED",  "event": "archive",          "to": "IDLE",        "guard": null,                    "action": "archive_record"},
+    {"from": "ERROR",      "event": "reset",            "to": "IDLE",        "guard": null,                    "action": "clear_state"},
+    {"from": "*",          "event": "error",            "to": "ERROR",       "guard": null,                    "action": "log_error"}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "multipliers": {
+    "A": 1.5,
+    "B": 2.0,
+    "C": 0.75
+  },
+  "round_to": 2,
+  "add_processed_at": true
+}

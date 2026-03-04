@@ -1,0 +1,14 @@
+id: '242'
+name: Five-Session Cumulative State Machine
+difficulty: hard
+category: memory-state
+dimension: memory
+language: python
+estimated_cost_usd: 0.08
+type: multi-session
+steps: 5
+persist:
+  - "setup/*.json"
+step_timeout: 90
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

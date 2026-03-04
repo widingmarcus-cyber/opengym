@@ -1,0 +1,15 @@
+id: '246'
+name: Six-Session Incremental Build with Rollback
+difficulty: hard
+category: long-horizon
+dimension: planning
+language: python
+estimated_cost_usd: 0.10
+type: multi-session
+steps: 6
+persist:
+  - "setup/*.py"
+  - "setup/*.json"
+step_timeout: 120
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

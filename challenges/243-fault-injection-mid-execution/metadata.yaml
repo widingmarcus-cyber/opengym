@@ -1,0 +1,17 @@
+id: '243'
+name: Fault Injection Mid-Execution
+difficulty: hard
+category: failure-recovery
+dimension: resilience
+language: python
+estimated_cost_usd: 0.05
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE
+fault_injection:
+  - type: file_delete
+    target: setup/input.json
+    delay_seconds: 5
+  - type: file_appear
+    target: setup/input.json
+    delay_seconds: 10
+    content: '{"CORRUPTED": true, "records": "THIS_IS_NOT_VALID_DATA"}'

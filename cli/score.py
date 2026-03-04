@@ -14,6 +14,9 @@ from pathlib import Path
 import click
 import yaml
 
+from cli.crypto import decrypt_bytes
+from cli.keys import get_test_encryption_key
+
 from cli.utils import get_workspace_dir, resolve_challenge_ids, get_challenges_dir
 
 CATEGORY_SUGGESTIONS = {
@@ -139,7 +142,7 @@ def score_challenge(challenge_id: str, workspace_path: Path, original_path: Path
     workspace_tests = workspace_path / "tests"
     tests_injected = False
     if not workspace_tests.exists() and (original_path / "tests").exists():
-        shutil.copytree(original_path / "tests", workspace_tests)
+        _inject_tests(original_path / "tests", workspace_tests)
         tests_injected = True
 
     try:
@@ -380,21 +383,50 @@ def parse_verify_output(output: str) -> tuple[int, int, list[dict]]:
     return passed, total, test_results
 
 
+def _inject_tests(original_tests: Path, workspace_tests: Path):
+    """Decrypt encrypted test files (or copy plain ones) into workspace."""
+    key = get_test_encryption_key()
+    workspace_tests.mkdir(parents=True, exist_ok=True)
+    for item in original_tests.iterdir():
+        if not item.is_file():
+            continue
+        if item.name.startswith("__"):
+            continue
+        if item.suffix == ".enc":
+            plaintext = decrypt_bytes(item.read_bytes(), key)
+            (workspace_tests / item.stem).write_bytes(plaintext)
+        else:
+            shutil.copy2(item, workspace_tests / item.name)
+
+
 def check_test_integrity(workspace_tests: Path, original_tests: Path) -> bool:
     """Check if test files have been modified by the agent."""
     if not original_tests.exists() or not workspace_tests.exists():
         return False
 
+    key = get_test_encryption_key()
+
     for original_file in original_tests.rglob("*"):
         if not original_file.is_file():
             continue
+        if original_file.name.startswith("__"):
+            continue
         relative = original_file.relative_to(original_tests)
-        workspace_file = workspace_tests / relative
+
+        # Determine the workspace filename and original content
+        if original_file.suffix == ".enc":
+            ws_relative = relative.parent / relative.stem  # strip .enc
+            orig_content = decrypt_bytes(original_file.read_bytes(), key)
+        else:
+            ws_relative = relative
+            orig_content = original_file.read_bytes()
+
+        workspace_file = workspace_tests / ws_relative
 
         if not workspace_file.exists():
             return True  # Test file deleted
 
-        orig_hash = hashlib.sha256(original_file.read_bytes()).hexdigest()
+        orig_hash = hashlib.sha256(orig_content).hexdigest()
         ws_hash = hashlib.sha256(workspace_file.read_bytes()).hexdigest()
 
         if orig_hash != ws_hash:

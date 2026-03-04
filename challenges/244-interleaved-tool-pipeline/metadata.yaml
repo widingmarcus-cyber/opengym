@@ -1,0 +1,9 @@
+id: '244'
+name: Interleaved Multi-Tool Pipeline
+difficulty: hard
+category: tool-orchestration
+dimension: tool-use
+language: python
+estimated_cost_usd: 0.07
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

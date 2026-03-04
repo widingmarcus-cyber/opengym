@@ -1,0 +1,39 @@
+{
+  "modules": {
+    "module_a": {
+      "file": "setup/module_a.py",
+      "function": "sort_records",
+      "signature": "sort_records(records) -> list",
+      "description": "Sort records by 'priority' descending, then by 'name' ascending. Returns sorted list.",
+      "example_input": [{"name": "b", "priority": 3}, {"name": "a", "priority": 3}, {"name": "c", "priority": 5}],
+      "example_output": [{"name": "c", "priority": 5}, {"name": "a", "priority": 3}, {"name": "b", "priority": 3}]
+    },
+    "module_b": {
+      "file": "setup/module_b.py",
+      "function": "filter_records",
+      "signature": "filter_records(records, min_priority) -> list",
+      "description": "Keep records where priority meets the threshold. Initial implementation uses >=, but session 5 requires changing to strict >.",
+      "example_input_records": [{"name": "a", "priority": 3}, {"name": "b", "priority": 5}],
+      "example_input_min_priority": 3,
+      "example_output_gte": [{"name": "a", "priority": 3}, {"name": "b", "priority": 5}],
+      "example_output_gt": [{"name": "b", "priority": 5}]
+    },
+    "module_c": {
+      "file": "setup/module_c.py",
+      "function": "summarize_records",
+      "signature": "summarize_records(records) -> dict",
+      "description": "Return a summary: {'count': N, 'avg_priority': float (rounded to 2 decimals), 'names': [sorted list of names]}.",
+      "example_input": [{"name": "c", "priority": 5}, {"name": "a", "priority": 3}],
+      "example_output": {"count": 2, "avg_priority": 4.0, "names": ["a", "c"]}
+    }
+  },
+  "pipeline": {
+    "file": "setup/pipeline.py",
+    "function": "run_pipeline",
+    "signature": "run_pipeline(records, min_priority) -> dict",
+    "description": "1. Filter with module_b (using the current filter logic). 2. Sort with module_a. 3. Summarize with module_c. Return the summary.",
+    "input_data": "setup/test_data.json",
+    "min_priority": 3,
+    "output_file": "setup/pipeline_result.json"
+  }
+}

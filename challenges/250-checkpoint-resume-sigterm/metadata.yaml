@@ -1,0 +1,19 @@
+id: '250'
+name: Checkpoint-Resume Under SIGTERM
+difficulty: hard
+category: failure-recovery
+dimension: resilience
+language: python
+estimated_cost_usd: 0.06
+type: multi-session
+steps: 2
+persist:
+- setup/checkpoint.json
+- setup/output.json
+step_timeout: 30
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE
+fault_injection:
+- type: sigterm
+  delay_seconds: 8
+  step: 1

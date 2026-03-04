@@ -1,0 +1,12 @@
+[
+  {"name": "alpha", "priority": 5},
+  {"name": "beta", "priority": 2},
+  {"name": "gamma", "priority": 4},
+  {"name": "delta", "priority": 3},
+  {"name": "epsilon", "priority": 7},
+  {"name": "zeta", "priority": 1},
+  {"name": "eta", "priority": 3},
+  {"name": "theta", "priority": 6},
+  {"name": "iota", "priority": 4},
+  {"name": "kappa", "priority": 5}
+]

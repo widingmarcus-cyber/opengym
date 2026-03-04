@@ -2,6 +2,7 @@
 
 import click
 
+from cli.encrypt_cmd import encrypt_tests
 from cli.fetch import fetch
 from cli.list_cmd import list_challenges
 from cli.run import run
@@ -15,6 +16,7 @@ def main():
     pass
 
 
+main.add_command(encrypt_tests, name="encrypt-tests")
 main.add_command(fetch)
 main.add_command(list_challenges, name="list")
 main.add_command(run)

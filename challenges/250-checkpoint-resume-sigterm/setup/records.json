@@ -1,0 +1,22 @@
+[
+  {"id": 1, "name": "Invoice #1001", "value": 120.00, "category": "A"},
+  {"id": 2, "name": "Invoice #1002", "value": 85.50, "category": "B"},
+  {"id": 3, "name": "Invoice #1003", "value": 200.00, "category": "C"},
+  {"id": 4, "name": "Invoice #1004", "value": 45.80, "category": "A"},
+  {"id": 5, "name": "Invoice #1005", "value": 310.20, "category": "B"},
+  {"id": 6, "name": "Invoice #1006", "value": 67.80, "category": "C"},
+  {"id": 7, "name": "Invoice #1007", "value": 155.00, "category": "A"},
+  {"id": 8, "name": "Invoice #1008", "value": 92.40, "category": "B"},
+  {"id": 9, "name": "Invoice #1009", "value": 178.60, "category": "C"},
+  {"id": 10, "name": "Invoice #1010", "value": 250.00, "category": "A"},
+  {"id": 11, "name": "Invoice #1011", "value": 33.25, "category": "B"},
+  {"id": 12, "name": "Invoice #1012", "value": 415.00, "category": "C"},
+  {"id": 13, "name": "Invoice #1013", "value": 88.90, "category": "A"},
+  {"id": 14, "name": "Invoice #1014", "value": 142.75, "category": "B"},
+  {"id": 15, "name": "Invoice #1015", "value": 56.40, "category": "C"},
+  {"id": 16, "name": "Invoice #1016", "value": 320.50, "category": "A"},
+  {"id": 17, "name": "Invoice #1017", "value": 19.95, "category": "B"},
+  {"id": 18, "name": "Invoice #1018", "value": 275.00, "category": "C"},
+  {"id": 19, "name": "Invoice #1019", "value": 108.60, "category": "A"},
+  {"id": 20, "name": "Invoice #1020", "value": 63.40, "category": "B"}
+]

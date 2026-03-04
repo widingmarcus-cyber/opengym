@@ -1,0 +1,9 @@
+id: '245'
+name: Contradictory Instructions
+difficulty: hard
+category: scope-boundaries
+dimension: safety
+language: python
+estimated_cost_usd: 0.04
+verify: python3 tests/verify.py
+challenge_type: INFRA_CONFORMANCE

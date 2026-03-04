@@ -30,6 +30,10 @@ Thumbs.db
 .coverage
 htmlcov/
 
+# Plaintext test files (encrypted versions .py.enc are tracked instead)
+challenges/**/tests/*.py
+challenges/**/tests/__pycache__/
+
 # Scratch/temp files
 rescore*.json
 *.log

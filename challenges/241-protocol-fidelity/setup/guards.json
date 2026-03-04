@@ -1,0 +1,7 @@
+{
+  "has_data": {"field": "data", "op": "not_null"},
+  "score_above_threshold": {"field": "score", "op": "gte", "value": 70},
+  "attempts_below_max": {"field": "attempts", "op": "lt", "value": 3},
+  "value_above_limit": {"field": "value", "op": "gt", "value": 1000},
+  "has_override_auth": {"field": "override_auth", "op": "eq", "value": true}
+}

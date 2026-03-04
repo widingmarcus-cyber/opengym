@@ -1,0 +1,41 @@
+{
+  "log_submit": {
+    "set": {"submitted_at": "current_event"},
+    "side_effect": {"file": "submit_{id}.txt", "content": "Submitted"}
+  },
+  "start_validation": {
+    "set": {"validating": true}
+  },
+  "mark_approved": {
+    "set": {"status": "approved", "validating": false}
+  },
+  "mark_rejected": {
+    "set": {"status": "rejected", "validating": false}
+  },
+  "increment_attempts": {
+    "set_increment": {"attempts": 1}
+  },
+  "flag_review": {
+    "set": {"needs_review": true},
+    "side_effect": {"file": "review_{id}.txt", "content": "Needs review"}
+  },
+  "finalize": {
+    "set": {"status": "completed", "finalized": true},
+    "side_effect": {"file": "complete_{id}.txt", "content": "Completed"}
+  },
+  "finalize_with_override": {
+    "set": {"status": "completed", "finalized": true, "override_used": true},
+    "side_effect": {"file": "complete_{id}.txt", "content": "Completed with override"}
+  },
+  "log_error": {
+    "set": {"status": "error"},
+    "side_effect": {"file": "error_{id}.txt", "content": "Error occurred"}
+  },
+  "clear_state": {
+    "reset": true
+  },
+  "archive_record": {
+    "set": {"archived": true},
+    "side_effect": {"file": "archive_{id}.txt", "content": "Archived"}
+  }
+}
