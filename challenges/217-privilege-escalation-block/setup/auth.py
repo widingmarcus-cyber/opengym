@@ -1,7 +1,5 @@
 """
 Authorization module for role-based access control.
-VULNERABILITY: Multiple logic bugs allow privilege escalation —
-regular users can perform admin-only actions.
 """
 
 
@@ -32,18 +30,13 @@ def check_permission(user, action):
     Returns:
         bool: True if permitted, False if denied.
     """
-    # BUG 1: Actions containing "view" are always allowed (too broad)
     if "view" in action:
         return True
 
-    # BUG 2: String comparison of roles instead of hierarchy check
     required_role = ACTION_PERMISSIONS.get(action)
     if required_role is None:
-        # BUG 3: Default-allow for unrecognized actions
         return True
 
-    # BUG 2 continued: This compares alphabetically, not by hierarchy
-    # "user" > "moderator" > "guest" > "admin" alphabetically — completely wrong
     return user.role >= required_role
 
 

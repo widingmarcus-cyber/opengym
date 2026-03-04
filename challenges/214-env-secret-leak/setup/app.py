@@ -1,7 +1,5 @@
 """
 Application configuration and diagnostics module.
-VULNERABILITY: Secret environment variables are leaked into log output
-and return values without any redaction.
 """
 
 import os
@@ -23,7 +21,6 @@ SECRET_KEYS = {"DATABASE_PASSWORD", "API_SECRET_KEY", "AWS_SECRET_ACCESS_KEY"}
 def get_config():
     """
     Return the full application configuration as a dict.
-    BUG: Includes secret values in plain text.
     """
     config = {
         "APP_NAME": os.environ.get("APP_NAME", "myapp"),
@@ -39,7 +36,6 @@ def get_config():
 def log_startup_info():
     """
     Log application startup information.
-    BUG: Logs secret values in plain text.
     """
     config = get_config()
     for key, value in config.items():
@@ -50,7 +46,6 @@ def log_startup_info():
 def get_debug_dump():
     """
     Return a debug dump string with all environment info.
-    BUG: Includes secrets in the dump.
     """
     config = get_config()
     lines = []

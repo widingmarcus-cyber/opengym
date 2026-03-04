@@ -1,7 +1,5 @@
 """
 Logging module with sensitive data redaction.
-VULNERABILITY: The logger outputs raw sensitive data (SSNs, credit cards,
-emails) without any masking or redaction.
 """
 
 
@@ -20,7 +18,6 @@ def redact(text):
     Returns:
         The redacted string.
     """
-    # BUG: No redaction — returns text as-is
     return text
 
 
@@ -34,7 +31,6 @@ def log_event(event_data):
     Returns:
         A dict with the same keys but string values redacted.
     """
-    # BUG: Logs raw data without redaction
     output = {}
     for key, value in event_data.items():
         output[key] = value

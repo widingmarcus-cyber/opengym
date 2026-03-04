@@ -30,9 +30,8 @@ def verify_password(username, password):
 
     user = USERS[username]
 
-    # BUG: Admin users bypass password check
     if user["role"] == "admin":
-        return True  # This is the bug - should check password like everyone else
+        return True
 
     password_hash = hashlib.sha256(password.encode()).hexdigest()
     return password_hash == user["password_hash"]

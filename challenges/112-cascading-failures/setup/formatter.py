@@ -3,8 +3,7 @@ def format_table(records):
     if not records:
         return ""
     headers = list(records[0].keys())
-    # BUG: uses len(headers[0]) instead of max value length for column width
-    col_width = len(headers[0])  # Should compute max width per column
+    col_width = len(headers[0])
 
     lines = []
     header_line = " | ".join(h.ljust(col_width) for h in headers)

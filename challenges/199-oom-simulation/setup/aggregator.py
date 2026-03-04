@@ -1,4 +1,4 @@
-"""Aggregator — this script OOMs because it loads everything into memory at once.
+"""Aggregator.
 Rewrite it to use chunked/streaming processing."""
 
 import json
@@ -6,17 +6,15 @@ import glob
 import os
 
 def aggregate_all():
-    """BUG: Loads all data into one giant list — causes OOM on large datasets."""
+    """Aggregate all data chunks and produce a summary."""
     all_records = []
     chunk_files = sorted(glob.glob(os.path.join(os.path.dirname(__file__), "data_chunks", "*.json")))
 
-    # BAD: accumulates everything in memory
     for fpath in chunk_files:
         with open(fpath) as f:
             data = json.load(f)
             all_records.extend(data)
 
-    # BAD: sorts the entire list in memory
     all_records.sort(key=lambda r: r["value"])
 
     summary = {

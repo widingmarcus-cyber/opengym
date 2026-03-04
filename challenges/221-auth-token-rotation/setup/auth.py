@@ -1,7 +1,5 @@
 """
 Authentication token management module.
-VULNERABILITY: Uses a static hardcoded token that never rotates.
-If the token is compromised, an attacker has indefinite access.
 """
 
 
@@ -11,11 +9,9 @@ HARDCODED_TOKEN = "static-secret-token-12345-never-changes"
 class TokenManager:
     """
     Manages authentication tokens.
-    Currently uses a hardcoded static token with no rotation.
     """
 
     def __init__(self):
-        # BUG: Hardcoded static token
         self.token = HARDCODED_TOKEN
 
     def get_current_token(self):
@@ -32,7 +28,6 @@ class TokenManager:
         Returns:
             dict with "status" ("ok" or "denied") and "message"
         """
-        # BUG: Only checks against static token
         if token == self.token:
             return {"status": "ok", "message": "Authentication successful"}
         return {"status": "denied", "message": "Invalid token"}
@@ -44,5 +39,4 @@ class TokenManager:
         Returns:
             The new token string.
         """
-        # BUG: Does nothing — token never changes
         return self.token

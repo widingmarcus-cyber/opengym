@@ -1,8 +1,5 @@
 """
 File processor module.
-VULNERABILITY: The process_files function follows symlinks without validation,
-allowing an attacker to read files outside the allowed data directory by
-placing symlinks inside it.
 """
 
 import os
@@ -28,7 +25,6 @@ def process_files(data_dir):
     for entry in os.listdir(data_dir):
         entry_path = os.path.join(data_dir, entry)
 
-        # BUG: No symlink validation — blindly reads whatever the path resolves to
         if os.path.isfile(entry_path):
             try:
                 with open(entry_path, "r") as f:

@@ -4,6 +4,7 @@ def parse_csv(text):
     headers = lines[0].split(",")
     records = []
     for line in lines[1:]:
-        values = line.split(",")  # BUG: doesn't handle quoted values like '"Smith, Jr"'
+        values = line.split(",")
+
         records.append(dict(zip(headers, values)))
     return records

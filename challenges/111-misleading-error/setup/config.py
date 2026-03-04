@@ -10,4 +10,4 @@ DISCOUNTS = {
 }
 
 def get_discount(code):
-    return DISCOUNTS.get(code)  # BUG: returns None for unknown codes
+    return DISCOUNTS.get(code)

@@ -2,17 +2,17 @@ import json
 from pathlib import Path
 
 RATES = {"USD": 1.0, "EUR": 1.1, "GBP": 1.27, "JPY": 0.0067}
-MULTIPLIERS = {"standard": 1.0, "premium": 1.5}  # BUG 1: missing "express" type
+MULTIPLIERS = {"standard": 1.0, "premium": 1.5}
 
 def process_record(record):
     """Process a single record."""
-    value = float(record["value"])  # BUG 3: crashes on values like "425.00 USD"
+    value = float(record["value"])
 
-    if value < 0:  # BUG 2: negative values should be converted to absolute value, not rejected
+    if value < 0:
         raise ValueError(f"Negative value not allowed: {value}")
 
     rate = RATES[record["currency"]]
-    multiplier = MULTIPLIERS[record["type"]]  # BUG 1: KeyError for "express"
+    multiplier = MULTIPLIERS[record["type"]]
 
     return {
         "id": record["id"],

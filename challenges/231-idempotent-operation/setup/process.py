@@ -1,7 +1,6 @@
-"""Record processor with idempotency bugs.
+"""Record processor.
 
 This script processes input records and writes results.
-BUG: Running this script multiple times produces different/corrupted output.
 Your task is to make it idempotent — running it N times should produce
 the same result as running it once.
 """
@@ -36,7 +35,6 @@ def process():
     # Load existing state
     state = load_state()
 
-    # Process each record (BUG: no deduplication by id)
     processed = []
     for record in records:
         processed.append({
@@ -47,7 +45,6 @@ def process():
             "status": "processed"
         })
 
-    # BUG: Appends to existing output instead of overwriting
     existing = []
     if os.path.exists(OUTPUT_PATH):
         with open(OUTPUT_PATH) as f:
@@ -58,7 +55,6 @@ def process():
     with open(OUTPUT_PATH, "w") as f:
         json.dump(all_records, f, indent=2)
 
-    # BUG: Accumulates counter across runs instead of setting it
     state["processed_count"] += len(processed)
     state["total_amount"] += sum(r["amount"] for r in processed)
     save_state(state)

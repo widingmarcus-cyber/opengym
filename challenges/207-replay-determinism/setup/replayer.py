@@ -1,4 +1,4 @@
-"""Operation log replayer — BUG: non-deterministic due to unseeded RNG and timestamps.
+"""Operation log replayer.
 Fix this to produce deterministic replay by using the seed and fixed_timestamp from each log entry."""
 
 import json
@@ -18,27 +18,22 @@ def replay(log_path, output_path):
     for entry in log:
         op = entry["op"]
         params = entry["params"]
-        # BUG: should use entry["seed"] to seed RNG, but doesn't
-        # BUG: uses current timestamp instead of entry["fixed_timestamp"]
 
         if op == "init":
             state = list(params["values"])
             results.append({"seq": entry["seq"], "op": op, "state": list(state), "timestamp": datetime.now().isoformat()})
 
         elif op == "shuffle":
-            # BUG: random shuffle without seeding — different each run
             random.shuffle(state)
             results.append({"seq": entry["seq"], "op": op, "state": list(state), "timestamp": datetime.now().isoformat()})
 
         elif op == "add_noise":
             noise_range = params["noise_range"]
-            # BUG: random noise without seeding
             state = [v + random.randint(-noise_range, noise_range) for v in state]
             results.append({"seq": entry["seq"], "op": op, "state": list(state), "timestamp": datetime.now().isoformat()})
 
         elif op == "sample":
             count = params["count"]
-            # BUG: random sample without seeding
             state = random.sample(state, count)
             results.append({"seq": entry["seq"], "op": op, "state": list(state), "timestamp": datetime.now().isoformat()})
 

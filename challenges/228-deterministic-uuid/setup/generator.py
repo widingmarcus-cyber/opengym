@@ -12,7 +12,6 @@ def generate_id(name: str) -> str:
     Returns:
         A UUID string.
     """
-    # BUG: This uses random UUIDs — not deterministic!
     return str(uuid.uuid4())
 
 

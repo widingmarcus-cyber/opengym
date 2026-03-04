@@ -6,4 +6,3 @@ def generate_report(csv_text, title="Report"):
     records = parse_csv(csv_text)
     table = format_table(records)
     return f"=== {title} ===\n{table}\n=== End ==="
-    # BUG: crashes if csv_text is empty or has only headers
