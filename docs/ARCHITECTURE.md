@@ -21,20 +21,22 @@ User / CI Pipeline
     │                 │              │
     ▼                 ▼              ▼
  challenges/     score_challenge()   invoke_agent()
- (127 dirs)      parse output        subprocess
+ (250 dirs)      parse output        subprocess
                  build_summary()     multi-session
 ```
 
 ## CLI Pipeline
 
-**Entry point:** `cli/__main__.py` registers a Click group with 4 commands.
+**Entry point:** `cli/__main__.py` registers a Click group with 6 commands.
 
 | Command | Module | Purpose |
 |---------|--------|---------|
 | `fetch` | `cli/fetch.py` | Copy challenge from `challenges/` to workspace |
+| `init-key` | `cli/keygen_cmd.py` | Create local key material for private encrypted tests |
 | `list` | `cli/list_cmd.py` | List/filter challenges by dimension, category, difficulty |
 | `score` | `cli/score.py` | Run tests, parse output, build reports |
 | `run` | `cli/run.py` | Orchestrate agent execution + scoring |
+| `encrypt-tests` | `cli/encrypt_cmd.py` | Encrypt challenge tests for distribution |
 
 **Shared utilities** in `cli/utils.py`:
 - `get_project_root()` — locates `pyproject.toml`
@@ -51,9 +53,9 @@ score_challenge(challenge_id, workspace_path, original_path)
     │
     ├── Load metadata.yaml
     │
-    ├── check_test_integrity()
-    │   └── SHA-256 compare workspace tests/ vs original tests/
-    │   └── If tampered → score 0, "Test files were tampered with"
+    ├── Build isolated staging workspace
+    │   └── Copy workspace to temp dir
+    │   └── Inject canonical hidden tests into staging/tests/
     │
     ├── Run verify command (subprocess)
     │   └── Default: "pytest tests/ -v"
@@ -122,7 +124,7 @@ run_multi_session(challenge_id, workspace, agent_cmd, meta, timeout)
 ```python
 {
     "total_score": 68,
-    "challenges_attempted": 127,
+    "challenges_attempted": 250,
     "passed": 87,
     "failed": 40,
     "by_dimension": {"coding": 82, "memory": 40, ...},
@@ -137,9 +139,9 @@ run_multi_session(challenge_id, workspace, agent_cmd, meta, timeout)
 
 ## Anti-Cheat
 
-`check_test_integrity()` computes SHA-256 hashes of every file in `tests/` and compares workspace copies against originals. If any file is deleted or modified, the challenge scores 0.
-
-Note: This detects **modification** but not **reading** of test files. See README's Fair Use section.
+Scoring runs in an isolated temporary staging directory. Hidden tests are
+injected only into staging, never into the live workspace, and canonical test
+fixtures are always used during verification.
 
 ## Challenge Directory Layout
 

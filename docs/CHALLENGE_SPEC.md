@@ -302,13 +302,13 @@ Every challenge must declare its type:
 | `MODEL_DEPENDENT` | Requires cognitive problem-solving (coding, algorithms) | Mechanical grading, cognitive solving |
 | `HYBRID` | Infra scenario + code output | Graded mechanically but solving requires reasoning |
 
-Current classification:
+Current classification (suite v250):
 
-| ID Range | Type |
-|----------|------|
-| 001-100 | `MODEL_DEPENDENT` |
-| 101-127 | `INFRA_CONFORMANCE` |
-| 128-240 | `INFRA_CONFORMANCE` |
+| Type | Count |
+|------|-------|
+| `MODEL_DEPENDENT` | 100 |
+| `INFRA_CONFORMANCE` | 150 |
+| `HYBRID` | 0 |
 
 ### Drift Detection Rule
 

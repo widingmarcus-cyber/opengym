@@ -63,7 +63,7 @@ opengym run 001 --agent "claude --print --dangerously-skip-permissions 'Read {ta
 
 ```bash
 opengym --version          # Should print version
-opengym list               # Should list 127 challenges
+opengym list               # Should list 250 challenges
 opengym fetch 001          # Downloads challenge to opengym-workspace/
 opengym score 001          # Runs tests (will score 0 — nothing solved yet)
 ```

@@ -1,3 +1,3 @@
-"""OpenGym CLI — 100 challenges to test if your AI agent actually works."""
+"""OpenGym CLI package."""
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

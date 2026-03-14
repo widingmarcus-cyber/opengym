@@ -2,21 +2,24 @@
 
 Working agent scripts that you can use with `opengym run` out of the box.
 
+Use the `{repo}` placeholder in `--agent` commands so adapter paths resolve
+correctly even though the agent process runs with `cwd={workspace}`.
+
 ## Quick Start
 
 ```bash
 pip install opengym-ai
 
 # Test the pipeline works (scores 0 — dummy doesn't solve anything)
-opengym run 001 --agent "python examples/agents/dummy_agent.py --task '{task}' --dir {workspace}"
+opengym run 001 --agent "python {repo}/examples/agents/dummy_agent.py --task '{task}' --dir {workspace}"
 
 # Run with OpenAI (requires OPENAI_API_KEY)
 pip install openai
-opengym run all --agent "python examples/agents/openai_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/examples/agents/openai_agent.py --task '{task}' --dir {workspace}" --summary
 
 # Run with Anthropic (requires ANTHROPIC_API_KEY)
 pip install anthropic
-opengym run all --agent "python examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}" --summary
 ```
 
 ## Adapters
@@ -26,7 +29,7 @@ opengym run all --agent "python examples/agents/anthropic_agent.py --task '{task
 Does nothing. Reads the task, prints workspace info, exits. Use this to verify `opengym run` works before spending API credits.
 
 ```bash
-opengym run 001 --agent "python examples/agents/dummy_agent.py --task '{task}' --dir {workspace}"
+opengym run 001 --agent "python {repo}/examples/agents/dummy_agent.py --task '{task}' --dir {workspace}"
 ```
 
 ### `openai_agent.py` — OpenAI GPT
@@ -42,13 +45,13 @@ export OPENAI_API_KEY=sk-...
 **Usage:**
 ```bash
 # Single challenge
-opengym run 001 --agent "python examples/agents/openai_agent.py --task '{task}' --dir {workspace}"
+opengym run 001 --agent "python {repo}/examples/agents/openai_agent.py --task '{task}' --dir {workspace}"
 
 # All challenges with summary
-opengym run all --agent "python examples/agents/openai_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/examples/agents/openai_agent.py --task '{task}' --dir {workspace}" --summary
 
 # Custom model
-OPENGYM_MODEL=gpt-4o-mini opengym run 001 --agent "python examples/agents/openai_agent.py --task '{task}' --dir {workspace}"
+OPENGYM_MODEL=gpt-4o-mini opengym run 001 --agent "python {repo}/examples/agents/openai_agent.py --task '{task}' --dir {workspace}"
 ```
 
 ### `anthropic_agent.py` — Anthropic Claude
@@ -64,10 +67,10 @@ export ANTHROPIC_API_KEY=sk-ant-...
 **Usage:**
 ```bash
 # Single challenge
-opengym run 001 --agent "python examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}"
+opengym run 001 --agent "python {repo}/examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}"
 
 # Custom model
-OPENGYM_MODEL=claude-haiku-4-5-20251001 opengym run all --agent "python examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}" --summary
+OPENGYM_MODEL=claude-haiku-4-5-20251001 opengym run all --agent "python {repo}/examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}" --summary
 ```
 
 ### Claude Code CLI
@@ -117,5 +120,5 @@ workspace = Path(args.dir)
 
 Then run it:
 ```bash
-opengym run all --agent "python my_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/my_agent.py --task '{task}' --dir {workspace}" --summary
 ```

@@ -8,17 +8,17 @@ How to test your AI agent with OpenGym.
 pip install opengym-ai
 
 # Test the pipeline (scores 0 — dummy doesn't solve anything)
-opengym run 001 --agent "python examples/agents/dummy_agent.py --task '{task}' --dir {workspace}"
+opengym run 001 --agent "python {repo}/examples/agents/dummy_agent.py --task '{task}' --dir {workspace}"
 
 # Run with OpenAI
 pip install openai
 export OPENAI_API_KEY=sk-...
-opengym run all --agent "python examples/agents/openai_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/examples/agents/openai_agent.py --task '{task}' --dir {workspace}" --summary
 
 # Run with Anthropic
 pip install anthropic
 export ANTHROPIC_API_KEY=sk-ant-...
-opengym run all --agent "python examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}" --summary
 ```
 
 ## Two Workflows
@@ -39,13 +39,15 @@ opengym score 001        →  Runs hidden tests, outputs score
 Required for multi-session challenges (memory, multi-agent, planning). The CLI orchestrates your agent, killing the process between sessions to test persistent memory.
 
 ```bash
-opengym run 101 --agent "python examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}"
+opengym run 101 --agent "python {repo}/examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}"
 ```
 
 **Placeholders:**
 - `{task}` — Path to a file containing the task description
 - `{workspace}` — Absolute path to the challenge workspace
 - `{task_content}` — First 2000 chars of task inlined (for simple agents)
+- `{repo}` — Absolute path to the OpenGym repository root
+- `--enforce-scope` (default) fails runs that modify files outside `setup/` (except `tools/.state/`)
 
 For multi-session challenges, the CLI:
 1. Runs your agent with step 1's task
@@ -65,7 +67,7 @@ Full agentic loop with function calling. Explores workspace, reads/writes files,
 ```bash
 pip install openai
 export OPENAI_API_KEY=sk-...
-opengym run all --agent "python examples/agents/openai_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/examples/agents/openai_agent.py --task '{task}' --dir {workspace}" --summary
 ```
 
 ### Anthropic Agent
@@ -75,7 +77,7 @@ Same capabilities using Claude's tool_use API.
 ```bash
 pip install anthropic
 export ANTHROPIC_API_KEY=sk-ant-...
-opengym run all --agent "python examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}" --summary
 ```
 
 ### Claude Code CLI
@@ -91,7 +93,7 @@ opengym run 001 --agent "claude --print --dangerously-skip-permissions 'Read {ta
 Reads task, prints info, exits without solving. Use to verify the pipeline works before spending API credits.
 
 ```bash
-opengym run 001 --agent "python examples/agents/dummy_agent.py --task '{task}' --dir {workspace}"
+opengym run 001 --agent "python {repo}/examples/agents/dummy_agent.py --task '{task}' --dir {workspace}"
 ```
 
 ### Writing Your Own Adapter
@@ -120,7 +122,7 @@ workspace = Path(args.dir)
 ```
 
 ```bash
-opengym run all --agent "python my_agent.py --task '{task}' --dir {workspace}" --summary
+opengym run all --agent "python {repo}/my_agent.py --task '{task}' --dir {workspace}" --summary
 ```
 
 ## Scoring Output
@@ -132,7 +134,7 @@ When you run with `--summary`, you get dimension and category breakdowns, per-te
 ```
 ============================================================
   OpenGym Score: 68/100
-  Passed: 87/127
+  Passed: 87/250
 ============================================================
 
 By Dimension:
@@ -172,7 +174,7 @@ Diagnostics:
 ```json
 {
   "total_score": 68,
-  "challenges_attempted": 127,
+  "challenges_attempted": 250,
   "passed": 87,
   "failed": 40,
   "by_dimension": {
@@ -207,6 +209,13 @@ Diagnostics:
   "suggestions": [
     "memory (40/100): Your agent cannot persist information across sessions...",
     "multi-agent (30/100): Your agent cannot coordinate with other agents..."
+  ],
+  "action_plan": [
+    {
+      "area": "memory",
+      "reason": "score 40/100",
+      "action": "Implement a durable state file with explicit schema + versioning, and checkpoint after each mutation."
+    }
   ],
   "details": [
     {

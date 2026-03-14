@@ -2,10 +2,10 @@
 
 [![PyPI](https://img.shields.io/pypi/v/opengym-ai)](https://pypi.org/project/opengym-ai/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Challenges](https://img.shields.io/badge/challenges-240-blue)]()
+[![Challenges](https://img.shields.io/badge/challenges-250-blue)]()
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)]()
 
-**240 challenges to test if your AI agent actually works — not just the model, but the infrastructure.**
+**250 challenges to test if your AI agent actually works — not just the model, but the infrastructure.**
 
 OpenGym is an open-source benchmark that evaluates AI agents across **7 capability dimensions**: coding, memory persistence, tool discovery, multi-step planning, self-correction, safety boundaries, and multi-agent coordination. Unlike benchmarks that only test "can the model solve this?", OpenGym tests "does the agent system work reliably?"
 
@@ -22,13 +22,19 @@ Then point your agent at it:
 
 ```bash
 # Automated: opengym runs your agent and scores the result
-opengym run 001 --agent "python examples/agents/openai_agent.py --task '{task}' --dir {workspace}"
+opengym run 001 --agent "python {repo}/examples/agents/openai_agent.py --task '{task}' --dir {workspace}"
 
-# Run all 240 challenges
+# Run all 250 challenges
 opengym run all --agent "..." --summary
 ```
 
-> **Requires:** Python 3.10+. No Docker needed. See [examples/agents/](examples/agents/) for ready-made OpenAI, Anthropic, and dummy agent adapters.
+> **Requires:** Python 3.10+. No Docker needed. See [examples/agents/](examples/agents/) for ready-made OpenAI, Anthropic, OpenClaw, and dummy agent adapters.
+
+OpenClaw users can run the bundled adapter directly:
+
+```bash
+opengym run all --agent "python {repo}/examples/agents/openclaw_agent.py --task '{task}' --dir {workspace}" --summary
+```
 
 ## How It Works
 
@@ -53,23 +59,23 @@ opengym fetch 001
 opengym score 001
 
 # Automated: opengym orchestrates your agent
-opengym run 101 --agent "python my_agent.py --task '{task}' --dir {workspace}"
+opengym run 101 --agent "python {repo}/my_agent.py --task '{task}' --dir {workspace}"
 opengym run all --agent "..." --summary    # run the full gauntlet
 ```
 
-## 7 Dimensions, 240 Challenges
+## 7 Dimensions, 250 Challenges
 
 Most benchmarks only test coding. OpenGym tests the **infrastructure** that makes agents reliable in production.
 
 | Dimension | Challenges | What It Tests |
 |-----------|-----------|---------------|
 | **Coding** | 110 | Read a task, write/fix code, pass tests |
-| **Memory** | 25 | Persist information across killed sessions |
-| **Tool Use** | 25 | Discover tools, handle failures, manage rate limits |
-| **Planning** | 24 | Multi-step decomposition, scheduling, long-horizon stability |
-| **Multi-Agent** | 21 | Coordinate via shared files, concurrency, task splitting |
-| **Resilience** | 20 | Recover from crashes, errors, partial failures |
-| **Safety** | 15 | Resist injection, enforce boundaries, redact secrets |
+| **Memory** | 26 | Persist information across killed sessions |
+| **Tool Use** | 27 | Discover tools, handle failures, manage rate limits |
+| **Planning** | 26 | Multi-step decomposition, scheduling, long-horizon stability |
+| **Multi-Agent** | 22 | Coordinate via shared files, concurrency, task splitting |
+| **Resilience** | 23 | Recover from crashes, errors, partial failures |
+| **Safety** | 16 | Resist injection, enforce boundaries, redact secrets |
 
 ### Coding — 110 challenges
 
@@ -191,7 +197,7 @@ Every challenge scores 0-100 based on tests passed. Results are grouped by **dim
 ```
 ============================================================
   OpenGym Score: 68/100
-  Passed: 163/240
+  Passed: 163/250
 ============================================================
 
 By Dimension:
@@ -210,11 +216,14 @@ Diagnostics:
     via shared resources.
 ```
 
+Summary output also includes an `Action Plan` section with concrete
+runtime-level remediation steps.
+
 ## CLI Reference
 
 ```bash
 # List and filter
-opengym list                              # List all 240 challenges
+opengym list                              # List all 250 challenges
 opengym list --dimension memory           # Filter by dimension
 opengym list --category algorithm         # Filter by category
 opengym list --difficulty hard            # Filter by difficulty
@@ -223,6 +232,7 @@ opengym list --json-output                # Machine-readable
 # Fetch challenges
 opengym fetch 001                         # Fetch one challenge
 opengym fetch all                         # Fetch everything
+opengym init-key                          # Create ~/.opengym/test_key for private fixtures
 
 # Score manually
 opengym score 001                         # Score one challenge
@@ -232,11 +242,14 @@ opengym score all --json-output           # JSON output
 opengym score all --csv-output            # CSV for spreadsheets
 
 # Run agent automatically (including multi-session orchestration)
-opengym run 101 --agent "python my_agent.py --task '{task}' --dir {workspace}"
+opengym run 101 --agent "python {repo}/examples/agents/openai_agent.py --task '{task}' --dir {workspace}"
 opengym run all --agent "..." --summary   # Full gauntlet
 opengym run all --agent "..." --scorecard # Infra scorecard
 opengym run all --agent "..." --parallel 4 # 4 workers
+opengym run all --agent "..." --enforce-scope # fail on writes outside setup/
 ```
+
+`opengym run --agent` supports placeholders: `{task}`, `{workspace}`, `{task_content}`, `{repo}`.
 
 ## Infra Scorecard
 

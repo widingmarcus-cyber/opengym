@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- 113 new challenges (total: 240) across 8 new categories:
+- 123 new challenges (total: 250) across 8 new categories:
   - Memory & State (128-147): append-only logs, state merge, schema migration, LRU eviction, WAL
   - Concurrency & Coordination (148-165): file locking, atomic counters, producer-consumer, leader election
   - Tool Robustness (166-185): retry-after, malformed JSON, paginated APIs, deprecated migration
@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Failure Recovery (198-212): crash recovery, OOM, disk full, SIGTERM, atomicity, rollback
   - Security & Boundary (213-222): path traversal, secret leaks, injection, deserialization, rate limiting
   - Observability & Determinism (223-232): log parsing, metrics, tracing, dedup, reproducible builds
-  - Long-Horizon Stability (233-240): 10-stage pipeline, config drift, state machines, consensus
+  - Long-Horizon Stability (233-250): 10-stage pipeline, config drift, state machines, consensus
 - `docs/ARCHITECTURE.md` — system design overview
 - `docs/INSTALLATION.md` — detailed setup guide
 - This changelog
@@ -34,6 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `challenge_type` field in metadata (`INFRA_CONFORMANCE` / `MODEL_DEPENDENT` / `HYBRID`)
 - Infra Conformance Gate — CI enforcement of 5 testability conditions
 - Challenge classification system with drift detection rule
+- `init-key` command for local/private test encryption keys
+- `{repo}` placeholder in `opengym run --agent` templates
+
+### Changed
+- `opengym score` now verifies in an isolated staging workspace with canonical hidden tests
+- `opengym run` adds `--enforce-scope` (enabled by default) to fail on writes outside `setup/`
+- Fault injection supports step-scoped execution (`fault_injection[].step`)
+- Summary output now includes actionable remediation plan entries (`action_plan`)
 
 ## [0.2.0] - 2026-03-01
 
