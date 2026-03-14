@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+import random
 import shutil
 import signal
 import subprocess
@@ -73,6 +74,27 @@ ALLOWED_MUTATION_FILES = {
     default=True,
     help="Recreate workspace for INFRA_CONFORMANCE challenges before each run to prevent pre-seeded outputs.",
 )
+@click.option(
+    "--trials",
+    type=click.IntRange(1),
+    default=1,
+    show_default=True,
+    help="Repeat each challenge N times and report reliability/stability across attempts.",
+)
+@click.option(
+    "--chaos-level",
+    type=click.Choice(["off", "light", "hard"], case_sensitive=False),
+    default="off",
+    show_default=True,
+    help="Apply deterministic runtime perturbations to expose infra fragility.",
+)
+@click.option(
+    "--chaos-seed",
+    type=int,
+    default=0,
+    show_default=True,
+    help="Base seed for chaos/trial variation (0 = derive from current time).",
+)
 def run(
     challenge_id: str,
     agent: str,
@@ -87,6 +109,9 @@ def run(
     no_score: bool,
     enforce_scope: bool,
     fresh_infra_workspace: bool,
+    trials: int,
+    chaos_level: str,
+    chaos_seed: int,
 ):
     """Run an agent against a challenge or all challenges.
 
@@ -109,6 +134,14 @@ def run(
         click.echo(f"Error: Challenge '{challenge_id}' not found.", err=True)
         raise SystemExit(1)
 
+    chaos_mode = chaos_level.lower()
+    base_seed = chaos_seed if chaos_seed != 0 else int(time.time())
+    if trials > 1 or chaos_mode != "off":
+        click.echo(
+            f"Reliability mode: trials={trials}, chaos={chaos_mode}, seed={base_seed}",
+            err=True,
+        )
+
     if parallel > 1:
         results = _run_parallel(
             ids,
@@ -120,6 +153,9 @@ def run(
             parallel,
             enforce_scope,
             fresh_infra_workspace,
+            trials,
+            chaos_mode,
+            base_seed,
         )
     else:
         results = _run_sequential(
@@ -132,19 +168,30 @@ def run(
             verbose,
             enforce_scope,
             fresh_infra_workspace,
+            trials,
+            chaos_mode,
+            base_seed,
         )
+
+    reliability_report = (
+        build_reliability_report(results, trials) if results and trials > 1 else None
+    )
 
     # Output results
     if results and csv_output:
         write_csv(results)
     elif results and scorecard:
         report = build_scorecard(results)
+        if reliability_report:
+            report["reliability"] = reliability_report
         if json_output:
             click.echo(json.dumps(report, indent=2))
         else:
             print_scorecard(report)
     elif results and (summary or json_output):
         report = build_summary(results)
+        if reliability_report:
+            report["reliability"] = reliability_report
         if json_output:
             click.echo(json.dumps(report, indent=2))
         else:
@@ -155,6 +202,9 @@ def run(
         click.echo(f"\n{'=' * 50}", err=True)
         click.echo(f"  Total: {total}/100 ({passed}/{len(results)} passed)", err=True)
         click.echo(f"{'=' * 50}", err=True)
+
+    if reliability_report and not json_output and not csv_output:
+        print_reliability_report(reliability_report)
 
 
 def _run_sequential(
@@ -167,14 +217,21 @@ def _run_sequential(
     verbose: bool,
     enforce_scope: bool,
     fresh_infra_workspace: bool,
+    trials: int,
+    chaos_level: str,
+    base_seed: int,
 ) -> list[dict]:
     """Run challenges one at a time with progress reporting."""
+    jobs = [(cid, trial) for cid in ids for trial in range(1, trials + 1)]
     results = []
-    for i, cid in enumerate(ids, 1):
-        click.echo(f"\n[{i}/{len(ids)}] Running: {cid}", err=True)
+    for i, (cid, trial) in enumerate(jobs, 1):
+        label = cid
+        if trials > 1:
+            label = f"{cid} (trial {trial}/{trials})"
+        click.echo(f"\n[{i}/{len(jobs)}] Running: {label}", err=True)
 
         src = challenges_dir / cid
-        challenge_ws = ws / cid
+        challenge_ws = ws / cid if trials == 1 else ws / f"{cid}__trial_{trial}"
 
         # Load metadata
         meta_file = src / "metadata.yaml"
@@ -185,6 +242,8 @@ def _run_sequential(
         should_reset_workspace = (
             fresh_infra_workspace and challenge_class == "INFRA_CONFORMANCE"
         )
+        if trials > 1:
+            should_reset_workspace = True
         _prepare_challenge_workspace(
             src,
             challenge_ws,
@@ -204,10 +263,21 @@ def _run_sequential(
                 timeout,
                 original_path=src,
                 enforce_scope=enforce_scope,
+                trial=trial,
+                chaos_level=chaos_level,
+                base_seed=base_seed,
             )
         else:
             run_single_session(
-                cid, challenge_ws, agent, meta, timeout, enforce_scope=enforce_scope
+                cid,
+                challenge_ws,
+                agent,
+                meta,
+                timeout,
+                enforce_scope=enforce_scope,
+                trial=trial,
+                chaos_level=chaos_level,
+                base_seed=base_seed,
             )
 
         # Score
@@ -217,11 +287,13 @@ def _run_sequential(
             )
             # Override duration to include agent run time, not just scoring time
             result["duration_seconds"] = round(time.time() - run_start, 2)
+            result["trial"] = trial
             results.append(result)
 
             status = "PASS" if result["passed"] else "FAIL"
             click.echo(
-                f"  Result: {status} ({result['tests_passed']}/{result['tests_total']} tests, score: {result['score']}/100)",
+                f"  Result: {status} ({result['tests_passed']}/{result['tests_total']} tests, score: {result['score']}/100)"
+                + (f", trial={trial}" if trials > 1 else ""),
                 err=True,
             )
 
@@ -254,10 +326,15 @@ def _run_parallel(
     parallel: int,
     enforce_scope: bool,
     fresh_infra_workspace: bool,
+    trials: int,
+    chaos_level: str,
+    base_seed: int,
 ) -> list[dict]:
     """Run challenges in parallel using ProcessPoolExecutor."""
+    jobs = [(cid, trial) for cid in ids for trial in range(1, trials + 1)]
     click.echo(
-        f"\nRunning {len(ids)} challenges with {parallel} workers...\n", err=True
+        f"\nRunning {len(jobs)} jobs ({len(ids)} challenges x {trials} trials) with {parallel} workers...\n",
+        err=True,
     )
 
     results = []
@@ -268,6 +345,7 @@ def _run_parallel(
             executor.submit(
                 _run_one_challenge,
                 cid,
+                trial,
                 challenges_dir,
                 ws,
                 agent,
@@ -275,34 +353,40 @@ def _run_parallel(
                 no_score,
                 enforce_scope,
                 fresh_infra_workspace,
-            ): cid
-            for cid in ids
+                trials,
+                chaos_level,
+                base_seed,
+            ): (cid, trial)
+            for cid, trial in jobs
         }
         for future in as_completed(futures):
-            cid = futures[future]
+            cid, trial = futures[future]
             completed += 1
             try:
                 result = future.result()
                 if result:
                     results.append(result)
                     status = "PASS" if result["passed"] else "FAIL"
+                    label = cid if trials == 1 else f"{cid} (trial {trial}/{trials})"
                     click.echo(
-                        f"  [{completed}/{len(ids)}] {cid}: {status} ({result['score']}/100)",
+                        f"  [{completed}/{len(jobs)}] {label}: {status} ({result['score']}/100)",
                         err=True,
                     )
             except Exception as exc:
+                label = cid if trials == 1 else f"{cid} (trial {trial}/{trials})"
                 click.echo(
-                    f"  [{completed}/{len(ids)}] {cid}: ERROR ({exc})",
+                    f"  [{completed}/{len(jobs)}] {label}: ERROR ({exc})",
                     err=True,
                 )
 
     # Sort results by challenge ID for deterministic output
-    results.sort(key=lambda r: r["challenge"])
+    results.sort(key=lambda r: (r["challenge"], r.get("trial", 1)))
     return results
 
 
 def _run_one_challenge(
     cid: str,
+    trial: int,
     challenges_dir: Path,
     ws: Path,
     agent_cmd: str,
@@ -310,10 +394,13 @@ def _run_one_challenge(
     no_score: bool,
     enforce_scope: bool,
     fresh_infra_workspace: bool,
+    trials: int,
+    chaos_level: str,
+    base_seed: int,
 ) -> dict | None:
     """Run and score a single challenge. Designed to be called by parallel workers."""
     src = challenges_dir / cid
-    challenge_ws = ws / cid
+    challenge_ws = ws / cid if trials == 1 else ws / f"{cid}__trial_{trial}"
 
     # Load metadata
     meta_file = src / "metadata.yaml"
@@ -324,6 +411,8 @@ def _run_one_challenge(
     should_reset_workspace = (
         fresh_infra_workspace and challenge_class == "INFRA_CONFORMANCE"
     )
+    if trials > 1:
+        should_reset_workspace = True
     _prepare_challenge_workspace(
         src,
         challenge_ws,
@@ -343,10 +432,21 @@ def _run_one_challenge(
             timeout,
             original_path=src,
             enforce_scope=enforce_scope,
+            trial=trial,
+            chaos_level=chaos_level,
+            base_seed=base_seed,
         )
     else:
         run_single_session(
-            cid, challenge_ws, agent_cmd, meta, timeout, enforce_scope=enforce_scope
+            cid,
+            challenge_ws,
+            agent_cmd,
+            meta,
+            timeout,
+            enforce_scope=enforce_scope,
+            trial=trial,
+            chaos_level=chaos_level,
+            base_seed=base_seed,
         )
 
     if not no_score:
@@ -354,6 +454,7 @@ def _run_one_challenge(
             cid, challenge_ws, src, timeout=timeout, _internal=True
         )
         result["duration_seconds"] = round(time.time() - run_start, 2)
+        result["trial"] = trial
         return result
     return None
 
@@ -389,6 +490,9 @@ def run_single_session(
     meta: dict,
     timeout: int,
     enforce_scope: bool = True,
+    trial: int = 1,
+    chaos_level: str = "off",
+    base_seed: int = 0,
 ) -> bool:
     """Run agent once for a single-session challenge."""
     # Read task from README
@@ -408,6 +512,9 @@ def run_single_session(
         timeout,
         step=1,
         enforce_scope=enforce_scope,
+        trial=trial,
+        chaos_level=chaos_level,
+        base_seed=base_seed,
     )
 
 
@@ -419,6 +526,9 @@ def run_multi_session(
     timeout: int,
     original_path: Path = None,
     enforce_scope: bool = True,
+    trial: int = 1,
+    chaos_level: str = "off",
+    base_seed: int = 0,
 ) -> bool:
     """Run agent across multiple sessions, killing process between steps."""
     num_steps = meta.get("steps", 1)
@@ -454,6 +564,9 @@ def run_multi_session(
             step_timeout,
             step=step,
             enforce_scope=enforce_scope,
+            trial=trial,
+            chaos_level=chaos_level,
+            base_seed=base_seed,
         )
 
         # Clean workspace between steps (not after last step)
@@ -476,6 +589,9 @@ def invoke_agent(
     timeout: int,
     step: int | None = None,
     enforce_scope: bool = True,
+    trial: int = 1,
+    chaos_level: str = "off",
+    base_seed: int = 0,
 ) -> bool:
     """Invoke the agent command with substituted placeholders."""
     before_snapshot = _snapshot_workspace(workspace) if enforce_scope else {}
@@ -511,6 +627,15 @@ def invoke_agent(
 
     # Check for fault injection config
     faults = _faults_for_step(meta.get("fault_injection", []), step)
+    faults = _apply_chaos_to_faults(
+        faults,
+        challenge_meta=meta,
+        timeout=timeout,
+        step=step,
+        trial=trial,
+        chaos_level=chaos_level,
+        base_seed=base_seed,
+    )
 
     click.echo(f"  Invoking agent (timeout: {timeout}s)...", err=True)
 
@@ -559,7 +684,7 @@ def invoke_agent(
     finally:
         # Write behavioral log entry
         duration_s = time.time() - run_start
-        _write_behavior_log(workspace, duration_s)
+        _write_behavior_log(workspace, duration_s, trial=trial, chaos_level=chaos_level)
         # Clean up task file
         if task_file.exists():
             task_file.unlink()
@@ -660,6 +785,50 @@ def _faults_for_step(raw_faults, step: int | None) -> list[dict]:
     return selected
 
 
+def _apply_chaos_to_faults(
+    faults: list[dict],
+    challenge_meta: dict,
+    timeout: int,
+    step: int | None,
+    trial: int,
+    chaos_level: str,
+    base_seed: int,
+) -> list[dict]:
+    """Derive per-trial perturbations for fault schedules."""
+    if chaos_level == "off":
+        return faults
+
+    level = chaos_level.lower()
+    jitter_ratio = 0.25 if level == "light" else 0.5
+    seed_key = (
+        f"{base_seed}:{challenge_meta.get('name', '')}:"
+        f"{challenge_meta.get('category', '')}:{trial}:{step or 0}"
+    )
+    rng = random.Random(seed_key)
+
+    mutated: list[dict] = []
+    for fault in faults:
+        updated = dict(fault)
+        delay = fault.get("delay_seconds")
+        if isinstance(delay, (int, float)):
+            jitter = 1.0 + rng.uniform(-jitter_ratio, jitter_ratio)
+            updated["delay_seconds"] = round(max(0.1, float(delay) * jitter), 2)
+        mutated.append(updated)
+
+    # Hard mode adds occasional unsignaled termination pressure on infra challenges.
+    # This exposes brittle checkpointing that deterministic runs often miss.
+    has_sigterm = any(f.get("type") == "sigterm" for f in mutated)
+    is_infra = challenge_meta.get("challenge_type") == "INFRA_CONFORMANCE"
+    if level == "hard" and is_infra and not has_sigterm and timeout >= 5:
+        if rng.random() < 0.35:
+            delay = round(
+                rng.uniform(max(1.0, timeout * 0.2), max(1.5, timeout * 0.7)), 2
+            )
+            mutated.append({"type": "sigterm", "delay_seconds": delay})
+
+    return mutated
+
+
 def _replace_placeholder(command: str, key: str, value: str) -> str:
     """Replace placeholders and normalize quoted variants for shell safety."""
     command = command.replace(f"'{{{key}}}'", f'"{value}"')
@@ -748,7 +917,9 @@ def _fault_sigterm(proc: subprocess.Popen, delay: float):
         pass
 
 
-def _write_behavior_log(workspace: Path, duration_s: float):
+def _write_behavior_log(
+    workspace: Path, duration_s: float, trial: int = 1, chaos_level: str = "off"
+):
     """Write a behavioral log entry to setup/behavior.jsonl."""
     setup_dir = workspace / "setup"
     setup_dir.mkdir(parents=True, exist_ok=True)
@@ -757,6 +928,8 @@ def _write_behavior_log(workspace: Path, duration_s: float):
     entry = {
         "ts": time.time(),
         "duration_s": round(duration_s, 2),
+        "trial": trial,
+        "chaos_level": chaos_level,
     }
 
     # Check if audit log exists for tool-use challenges
@@ -775,6 +948,116 @@ def _write_behavior_log(workspace: Path, duration_s: float):
             f.write(json.dumps(entry) + "\n")
     except Exception:
         pass
+
+
+def build_reliability_report(results: list[dict], trials: int) -> dict:
+    """Aggregate per-challenge stability across repeated trials."""
+    by_challenge: dict[str, dict] = {}
+    for result in results:
+        cid = result["challenge"]
+        item = by_challenge.setdefault(
+            cid,
+            {
+                "challenge": cid,
+                "name": result.get("name", cid),
+                "attempts": 0,
+                "passes": 0,
+                "scores": [],
+            },
+        )
+        item["attempts"] += 1
+        if result.get("passed"):
+            item["passes"] += 1
+        item["scores"].append(result.get("score", 0))
+
+    challenge_reports = []
+    stable = 0
+    flaky = 0
+    broken = 0
+    for item in sorted(by_challenge.values(), key=lambda x: x["challenge"]):
+        attempts = item["attempts"]
+        passes = item["passes"]
+        pass_rate = round((passes / attempts) * 100, 1) if attempts else 0.0
+        avg_score = (
+            round(sum(item["scores"]) / len(item["scores"])) if item["scores"] else 0
+        )
+        min_score = min(item["scores"]) if item["scores"] else 0
+        max_score = max(item["scores"]) if item["scores"] else 0
+
+        if pass_rate == 100.0:
+            bucket = "stable"
+            stable += 1
+        elif pass_rate == 0.0:
+            bucket = "broken"
+            broken += 1
+        else:
+            bucket = "flaky"
+            flaky += 1
+
+        challenge_reports.append(
+            {
+                "challenge": item["challenge"],
+                "name": item["name"],
+                "attempts": attempts,
+                "passes": passes,
+                "pass_rate_pct": pass_rate,
+                "avg_score": avg_score,
+                "min_score": min_score,
+                "max_score": max_score,
+                "status": bucket,
+            }
+        )
+
+    trial_pass_rate = (
+        round(
+            sum(1 for r in results if r.get("passed")) / len(results) * 100,
+            1,
+        )
+        if results
+        else 0.0
+    )
+
+    return {
+        "trials": trials,
+        "overall_trial_pass_rate_pct": trial_pass_rate,
+        "stable_challenges": stable,
+        "flaky_challenges": flaky,
+        "broken_challenges": broken,
+        "by_challenge": challenge_reports,
+    }
+
+
+def print_reliability_report(report: dict):
+    """Print reliability/stability summary for multi-trial runs."""
+    click.echo(f"\n{'=' * 50}", err=True)
+    click.echo(
+        f"  Reliability: {report['overall_trial_pass_rate_pct']}/100 trial pass rate",
+        err=True,
+    )
+    click.echo(
+        (
+            "  Stability: "
+            f"{report['stable_challenges']} stable, "
+            f"{report['flaky_challenges']} flaky, "
+            f"{report['broken_challenges']} broken"
+        ),
+        err=True,
+    )
+    click.echo(f"{'=' * 50}", err=True)
+
+    flaky = [r for r in report["by_challenge"] if r["status"] == "flaky"]
+    if flaky:
+        click.echo("\nFlaky Challenges:", err=True)
+        for item in flaky[:10]:
+            click.echo(
+                (
+                    f"  {item['challenge']}: {item['passes']}/{item['attempts']} passes "
+                    f"(avg={item['avg_score']}, min={item['min_score']}, max={item['max_score']})"
+                ),
+                err=True,
+            )
+        if len(flaky) > 10:
+            click.echo(f"  ... and {len(flaky) - 10} more", err=True)
 
 
 def clean_workspace(workspace: Path, persist_patterns: list[str]) -> int:

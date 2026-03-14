@@ -48,6 +48,14 @@ opengym run 101 --agent "python {repo}/examples/agents/anthropic_agent.py --task
 - `{task_content}` — First 2000 chars of task inlined (for simple agents)
 - `{repo}` — Absolute path to the OpenGym repository root
 - `--enforce-scope` (default) fails runs that modify files outside `setup/` (except `tools/.state/`)
+- `--trials N` repeats each challenge and reports stability (stable/flaky/broken)
+- `--chaos-level light|hard` applies deterministic perturbations to expose brittle infra behavior
+
+For weekly regression tracking:
+
+```bash
+opengym run all --agent "python {repo}/my_agent.py --task '{task}' --dir {workspace}" --trials 3 --chaos-level light --chaos-seed 42 --summary
+```
 
 For multi-session challenges, the CLI:
 1. Runs your agent with step 1's task

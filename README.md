@@ -219,6 +219,23 @@ Diagnostics:
 Summary output also includes an `Action Plan` section with concrete
 runtime-level remediation steps.
 
+### Reliability Runs (When Baseline Is 100/100)
+
+Single-pass scores can saturate for strong agents. Use repeated runs with
+deterministic chaos to measure stability over time:
+
+```bash
+# 5 repeated trials, deterministic fault jitter
+opengym run 243 --agent "..." --trials 5 --chaos-level light --chaos-seed 42 --summary
+
+# Harder pressure: larger jitter + occasional unsignaled SIGTERM on infra tasks
+opengym run all --agent "..." --trials 3 --chaos-level hard --summary
+```
+
+`--trials N` reports a reliability block: trial pass rate and stable/flaky/broken
+challenge counts. This is the intended "did my infra get more reliable this week?"
+signal.
+
 ## CLI Reference
 
 ```bash
@@ -248,6 +265,7 @@ opengym run all --agent "..." --scorecard # Infra scorecard
 opengym run all --agent "..." --parallel 4 # 4 workers
 opengym run all --agent "..." --enforce-scope # fail on writes outside setup/
 opengym run all --agent "..." --fresh-infra-workspace # reset infra workspaces before each run
+opengym run all --agent "..." --trials 5 --chaos-level light --chaos-seed 42 # reliability/stability run
 ```
 
 `opengym run --agent` supports placeholders: `{task}`, `{workspace}`, `{task_content}`, `{repo}`.
