@@ -234,10 +234,10 @@ opengym fetch 001                         # Fetch one challenge
 opengym fetch all                         # Fetch everything
 opengym init-key                          # Create ~/.opengym/test_key for private fixtures
 
-# Score manually
-opengym score 001                         # Score one challenge
-opengym score all --summary               # Score all + diagnostics
-opengym score all --scorecard             # Infra category breakdown
+# Score manually (MODEL_DEPENDENT challenges only)
+opengym score 001                         # Score one model-dependent challenge
+opengym score all --summary               # Includes blocked infra entries unless run via `opengym run`
+opengym score all --scorecard             # Scorecard view of available results
 opengym score all --json-output           # JSON output
 opengym score all --csv-output            # CSV for spreadsheets
 
@@ -247,6 +247,7 @@ opengym run all --agent "..." --summary   # Full gauntlet
 opengym run all --agent "..." --scorecard # Infra scorecard
 opengym run all --agent "..." --parallel 4 # 4 workers
 opengym run all --agent "..." --enforce-scope # fail on writes outside setup/
+opengym run all --agent "..." --fresh-infra-workspace # reset infra workspaces before each run
 ```
 
 `opengym run --agent` supports placeholders: `{task}`, `{workspace}`, `{task_content}`, `{repo}`.
@@ -293,35 +294,32 @@ opengym score all --csv-output > results.csv
 
 ## Fair Use & Anti-Cheat
 
-**Test files are excluded from the workspace.** When you `opengym fetch` a challenge, the `tests/` directory is not copied to your workspace. Your agent cannot read test files to reverse-engineer answers. Verification happens by temporarily injecting tests during `opengym score`.
+**Test files are excluded from the workspace.** When you `opengym fetch` a challenge, the `tests/` directory is not copied to your workspace. Your agent cannot read test files to reverse-engineer answers.
 
-For `opengym run` (multi-session mode), both `tests/` and `steps/` are excluded — your agent only sees the current step, not future ones.
+Scoring uses an isolated temporary staging workspace with canonical hidden tests. Tests are not injected into your live challenge workspace.
 
-## Multi-Session Challenges (Infra-Only)
+For `opengym run` on multi-session challenges, both `tests/` and `steps/` are excluded — your agent only sees the current step, not future ones.
 
-> **Hard ≠ infra.** Single-session challenges test LLM reasoning and coding. Only multi-session challenges are true infrastructure tests — they kill your agent between steps and verify that state persists through your system, not through a large context window.
+## Infra Challenges (Run-Only)
 
-Challenges that test **memory persistence, multi-agent coordination, and cross-session state** require `opengym run` — manual `opengym score` is blocked for these challenges.
+> **Hard ≠ infra.** Difficulty alone does not make a task infrastructure-focused.
+
+All challenges marked `challenge_type: INFRA_CONFORMANCE` must be executed with `opengym run`. Direct `opengym score` is blocked for these challenges because infra verification depends on orchestration behavior (fault injection, process restarts, scope enforcement).
 
 ```bash
-# Single-session: fetch + solve + score
+# Model-dependent challenge: fetch + solve + score
 opengym fetch 167 && opengym score 167
 
-# Multi-session: must use run (kills agent between steps)
-opengym run 130 --agent "python my_agent.py"
+# Infra challenge: must use run
+opengym run 243 --agent "python {repo}/my_agent.py --task '{task}' --dir {workspace}"
 ```
 
-**Why?** A bare LLM can solve single-session challenges by reading the README and writing files. But multi-session challenges require actual infrastructure: persistent memory that survives process restarts, state management across sessions, and coordination between agents. `opengym run` enforces this by killing the agent process between steps — only persisted files survive.
+**Why?** A bare LLM (or a human pre-writing output files) can bypass many static output checks. `opengym run` validates infrastructure behavior under orchestration: step boundaries, fault injection, workspace resets, and runtime policy checks.
 
-| Dimension | Requires `opengym run`? | What it tests |
-|-----------|------------------------|---------------|
-| Memory (101-147) | **Yes** | State survives process kill |
-| Multi-Agent (148-165) | **Yes** | Coordination across agents |
-| Planning/Cron (186-197) | **Yes** | Scheduling across sessions |
-| Tool Use (166-185) | No | Retry, discovery, resilience |
-| Safety (116-120, 213-222) | No | Boundary enforcement |
-| Resilience (198-212) | Mixed | Some require restart |
-| Coding (001-100) | No | Implementation capability |
+| Challenge Type | Direct `opengym score` | `opengym run` |
+|----------------|------------------------|---------------|
+| `MODEL_DEPENDENT` | Allowed | Allowed |
+| `INFRA_CONFORMANCE` | Blocked | **Required** |
 
 ## Safety
 

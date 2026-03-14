@@ -173,6 +173,31 @@ def score(
             print_summary(report)
 
 
+def _blocked_score_result(
+    challenge_id: str,
+    meta: dict,
+    challenge_type: str,
+    estimated_cost: float,
+    error: str,
+) -> dict:
+    """Build a standardized blocked-score response."""
+    return {
+        "challenge": challenge_id,
+        "name": meta["name"],
+        "difficulty": meta["difficulty"],
+        "category": meta["category"],
+        "dimension": meta.get("dimension", "coding"),
+        "challenge_type": challenge_type,
+        "passed": False,
+        "tests_passed": 0,
+        "tests_total": 0,
+        "score": 0,
+        "duration_seconds": 0.0,
+        "estimated_cost_usd": estimated_cost,
+        "error": error,
+    }
+
+
 def score_challenge(
     challenge_id: str,
     workspace_path: Path,
@@ -188,6 +213,23 @@ def score_challenge(
     estimated_cost = meta.get("estimated_cost_usd", 0.0)
     challenge_type = meta.get("challenge_type", "MODEL_DEPENDENT")
 
+    # Block direct scoring of infra challenges. Infra correctness depends on
+    # runtime orchestration (session resets, fault injection, scope checks),
+    # which is enforced by `opengym run`.
+    if challenge_type == "INFRA_CONFORMANCE" and not _internal:
+        click.echo(
+            f"  Error: '{challenge_id}' is an INFRA_CONFORMANCE challenge. "
+            f"Use 'opengym run {challenge_id} --agent <cmd>' instead.",
+            err=True,
+        )
+        return _blocked_score_result(
+            challenge_id,
+            meta,
+            challenge_type,
+            estimated_cost,
+            "INFRA_CONFORMANCE challenge cannot be scored directly. Use 'opengym run'.",
+        )
+
     # Block direct scoring of multi-session challenges
     if meta.get("type") == "multi-session" and not _internal:
         click.echo(
@@ -195,21 +237,13 @@ def score_challenge(
             f"Use 'opengym run {challenge_id} --agent <cmd>' instead.",
             err=True,
         )
-        return {
-            "challenge": challenge_id,
-            "name": meta["name"],
-            "difficulty": meta["difficulty"],
-            "category": meta["category"],
-            "dimension": meta.get("dimension", "coding"),
-            "challenge_type": challenge_type,
-            "passed": False,
-            "tests_passed": 0,
-            "tests_total": 0,
-            "score": 0,
-            "duration_seconds": 0.0,
-            "estimated_cost_usd": estimated_cost,
-            "error": "Multi-session challenge cannot be scored directly. Use 'opengym run'.",
-        }
+        return _blocked_score_result(
+            challenge_id,
+            meta,
+            challenge_type,
+            estimated_cost,
+            "Multi-session challenge cannot be scored directly. Use 'opengym run'.",
+        )
 
     with tempfile.TemporaryDirectory(prefix=f"opengym-score-{challenge_id}-") as tmp:
         staging_path = Path(tmp) / challenge_id

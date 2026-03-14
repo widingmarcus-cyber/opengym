@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `opengym score` now verifies in an isolated staging workspace with canonical hidden tests
 - `opengym run` adds `--enforce-scope` (enabled by default) to fail on writes outside `setup/`
+- `opengym score` now blocks direct scoring for `INFRA_CONFORMANCE` challenges (must use `opengym run`)
+- `opengym run` recreates infra challenge workspaces by default (`--fresh-infra-workspace`) to prevent pre-seeded output cheating
 - Fault injection supports step-scoped execution (`fault_injection[].step`)
 - Summary output now includes actionable remediation plan entries (`action_plan`)
 

@@ -68,6 +68,11 @@ ALLOWED_MUTATION_FILES = {
     default=True,
     help="Fail run if agent modifies files outside setup/ (except tools/.state).",
 )
+@click.option(
+    "--fresh-infra-workspace/--no-fresh-infra-workspace",
+    default=True,
+    help="Recreate workspace for INFRA_CONFORMANCE challenges before each run to prevent pre-seeded outputs.",
+)
 def run(
     challenge_id: str,
     agent: str,
@@ -81,6 +86,7 @@ def run(
     parallel: int,
     no_score: bool,
     enforce_scope: bool,
+    fresh_infra_workspace: bool,
 ):
     """Run an agent against a challenge or all challenges.
 
@@ -91,7 +97,11 @@ def run(
     For multi-session challenges, the agent is invoked once per session step
     with its process killed between steps to test persistent memory.
     """
-    ws = Path(workspace) if workspace else get_workspace_dir()
+    ws = (
+        Path(workspace).expanduser().resolve()
+        if workspace
+        else get_workspace_dir().resolve()
+    )
     challenges_dir = get_challenges_dir()
 
     ids = resolve_challenge_ids(challenge_id, challenges_dir)
@@ -101,11 +111,27 @@ def run(
 
     if parallel > 1:
         results = _run_parallel(
-            ids, challenges_dir, ws, agent, timeout, no_score, parallel, enforce_scope
+            ids,
+            challenges_dir,
+            ws,
+            agent,
+            timeout,
+            no_score,
+            parallel,
+            enforce_scope,
+            fresh_infra_workspace,
         )
     else:
         results = _run_sequential(
-            ids, challenges_dir, ws, agent, timeout, no_score, verbose, enforce_scope
+            ids,
+            challenges_dir,
+            ws,
+            agent,
+            timeout,
+            no_score,
+            verbose,
+            enforce_scope,
+            fresh_infra_workspace,
         )
 
     # Output results
@@ -140,6 +166,7 @@ def _run_sequential(
     no_score: bool,
     verbose: bool,
     enforce_scope: bool,
+    fresh_infra_workspace: bool,
 ) -> list[dict]:
     """Run challenges one at a time with progress reporting."""
     results = []
@@ -149,17 +176,21 @@ def _run_sequential(
         src = challenges_dir / cid
         challenge_ws = ws / cid
 
-        # Fetch if not already present (exclude tests/steps to prevent answer leakage)
-        if not challenge_ws.exists():
-            shutil.copytree(
-                src, challenge_ws, ignore=shutil.ignore_patterns("tests", "steps")
-            )
-            click.echo(f"  Fetched to {challenge_ws}", err=True)
-
         # Load metadata
         meta_file = src / "metadata.yaml"
         with open(meta_file) as f:
             meta = yaml.safe_load(f)
+
+        challenge_class = meta.get("challenge_type", "MODEL_DEPENDENT")
+        should_reset_workspace = (
+            fresh_infra_workspace and challenge_class == "INFRA_CONFORMANCE"
+        )
+        _prepare_challenge_workspace(
+            src,
+            challenge_ws,
+            should_reset_workspace,
+            announce=True,
+        )
 
         challenge_type = meta.get("type", "single-session")
         run_start = time.time()
@@ -222,6 +253,7 @@ def _run_parallel(
     no_score: bool,
     parallel: int,
     enforce_scope: bool,
+    fresh_infra_workspace: bool,
 ) -> list[dict]:
     """Run challenges in parallel using ProcessPoolExecutor."""
     click.echo(
@@ -242,6 +274,7 @@ def _run_parallel(
                 timeout,
                 no_score,
                 enforce_scope,
+                fresh_infra_workspace,
             ): cid
             for cid in ids
         }
@@ -276,21 +309,27 @@ def _run_one_challenge(
     timeout: int,
     no_score: bool,
     enforce_scope: bool,
+    fresh_infra_workspace: bool,
 ) -> dict | None:
     """Run and score a single challenge. Designed to be called by parallel workers."""
     src = challenges_dir / cid
     challenge_ws = ws / cid
 
-    # Fetch if not already present (exclude tests/steps to prevent answer leakage)
-    if not challenge_ws.exists():
-        shutil.copytree(
-            src, challenge_ws, ignore=shutil.ignore_patterns("tests", "steps")
-        )
-
     # Load metadata
     meta_file = src / "metadata.yaml"
     with open(meta_file) as f:
         meta = yaml.safe_load(f)
+
+    challenge_class = meta.get("challenge_type", "MODEL_DEPENDENT")
+    should_reset_workspace = (
+        fresh_infra_workspace and challenge_class == "INFRA_CONFORMANCE"
+    )
+    _prepare_challenge_workspace(
+        src,
+        challenge_ws,
+        should_reset_workspace,
+        announce=False,
+    )
 
     challenge_type = meta.get("type", "single-session")
     run_start = time.time()
@@ -317,6 +356,30 @@ def _run_one_challenge(
         result["duration_seconds"] = round(time.time() - run_start, 2)
         return result
     return None
+
+
+def _prepare_challenge_workspace(
+    source: Path,
+    destination: Path,
+    reset: bool,
+    announce: bool = False,
+):
+    """Ensure workspace exists, optionally forcing a fresh copy from source."""
+    if destination.exists() and reset:
+        shutil.rmtree(destination)
+        shutil.copytree(
+            source, destination, ignore=shutil.ignore_patterns("tests", "steps")
+        )
+        if announce:
+            click.echo(f"  Reset infra workspace at {destination}", err=True)
+        return
+
+    if not destination.exists():
+        shutil.copytree(
+            source, destination, ignore=shutil.ignore_patterns("tests", "steps")
+        )
+        if announce:
+            click.echo(f"  Fetched to {destination}", err=True)
 
 
 def run_single_session(

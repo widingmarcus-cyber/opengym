@@ -302,6 +302,10 @@ Every challenge must declare its type:
 | `MODEL_DEPENDENT` | Requires cognitive problem-solving (coding, algorithms) | Mechanical grading, cognitive solving |
 | `HYBRID` | Infra scenario + code output | Graded mechanically but solving requires reasoning |
 
+Evaluation rule:
+- `INFRA_CONFORMANCE` challenges are **run-only** and must be executed with `opengym run`.
+- Direct `opengym score` is reserved for `MODEL_DEPENDENT` challenges.
+
 Current classification (suite v250):
 
 | Type | Count |

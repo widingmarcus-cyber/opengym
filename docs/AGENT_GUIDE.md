@@ -36,7 +36,7 @@ opengym score 001        →  Runs hidden tests, outputs score
 
 ### 2. Automated: `opengym run`
 
-Required for multi-session challenges (memory, multi-agent, planning). The CLI orchestrates your agent, killing the process between sessions to test persistent memory.
+Required for `INFRA_CONFORMANCE` challenges (including multi-session memory/multi-agent/planning). The CLI orchestrates your agent, applies runtime constraints, and kills the process between sessions where applicable.
 
 ```bash
 opengym run 101 --agent "python {repo}/examples/agents/anthropic_agent.py --task '{task}' --dir {workspace}"
@@ -55,6 +55,8 @@ For multi-session challenges, the CLI:
 3. Deletes non-persisted files from workspace
 4. Runs your agent with step 2's task (fresh session)
 5. Repeats for all steps, then scores
+
+Direct `opengym score` is blocked for `INFRA_CONFORMANCE` challenges. Use `opengym run` so orchestration behavior is actually tested.
 
 ## Example Agents
 
