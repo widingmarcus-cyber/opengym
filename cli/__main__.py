@@ -2,6 +2,7 @@
 
 import click
 
+from cli.compare_cmd import compare_reports
 from cli.encrypt_cmd import encrypt_tests
 from cli.fetch import fetch
 from cli.keygen_cmd import init_key
@@ -23,6 +24,7 @@ main.add_command(fetch)
 main.add_command(list_challenges, name="list")
 main.add_command(run)
 main.add_command(score)
+main.add_command(compare_reports)
 
 
 if __name__ == "__main__":

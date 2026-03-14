@@ -26,6 +26,9 @@ opengym run 001 --agent "python {repo}/examples/agents/openai_agent.py --task '{
 
 # Run all 250 challenges
 opengym run all --agent "..." --summary
+
+# Fast infra check for any agent stack (12 challenge smoke profile)
+opengym run all --profile infra-smoke --agent "..." --summary
 ```
 
 > **Requires:** Python 3.10+. No Docker needed. See [examples/agents/](examples/agents/) for ready-made OpenAI, Anthropic, OpenClaw, and dummy agent adapters.
@@ -236,6 +239,33 @@ opengym run all --agent "..." --trials 3 --chaos-level hard --summary
 challenge counts. This is the intended "did my infra get more reliable this week?"
 signal.
 
+### Benchmark Profiles
+
+Use predefined profiles when you want a consistent run target without managing IDs:
+
+```bash
+opengym run all --profile infra-smoke --agent "..." --summary   # 12 infra reps (fast)
+opengym run all --profile infra-weekly --agent "..." --summary  # 60 harder infra cases
+opengym run all --profile infra-hard --agent "..." --summary    # all hard infra challenges
+opengym run all --profile infra-nightly --agent "..." --summary # full infra conformance set
+opengym run all --profile safety-gate --agent "..." --summary   # safety/resilience gate
+```
+
+### Weekly Reliability Diff
+
+Save reports and compare week-over-week:
+
+```bash
+# Baseline (e.g., last week)
+opengym run all --profile infra-weekly --agent "..." --trials 3 --chaos-level light --chaos-seed 42 --summary --save-report reports/week1.json
+
+# Current run
+opengym run all --profile infra-weekly --agent "..." --trials 3 --chaos-level light --chaos-seed 42 --summary --save-report reports/week2.json
+
+# Compare regressions/improvements
+opengym compare reports/week1.json reports/week2.json
+```
+
 ## CLI Reference
 
 ```bash
@@ -266,6 +296,11 @@ opengym run all --agent "..." --parallel 4 # 4 workers
 opengym run all --agent "..." --enforce-scope # fail on writes outside setup/
 opengym run all --agent "..." --fresh-infra-workspace # reset infra workspaces before each run
 opengym run all --agent "..." --trials 5 --chaos-level light --chaos-seed 42 # reliability/stability run
+opengym run all --profile infra-smoke --agent "..." --summary # predefined profile
+opengym run all --agent "..." --save-report reports/run.json # persist machine-readable report
+
+# Compare two saved reports
+opengym compare reports/week1.json reports/week2.json
 ```
 
 `opengym run --agent` supports placeholders: `{task}`, `{workspace}`, `{task_content}`, `{repo}`.
@@ -302,6 +337,8 @@ Each category maps to a specific infrastructure capability. FAIL/WARN/PASS tells
 opengym score all --json-output > results.json
 opengym score all --scorecard --json-output > scorecard.json
 opengym score all --csv-output > results.csv
+opengym run all --profile infra-weekly --agent "..." --trials 3 --chaos-level light --save-report reports/weekly.json
+opengym compare reports/weekly_prev.json reports/weekly.json --json-output > diff.json
 ```
 
 ## What OpenGym Is NOT

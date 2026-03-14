@@ -10,12 +10,15 @@ import subprocess
 import threading
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from datetime import datetime, timezone
 from fnmatch import fnmatch
 from pathlib import Path
 
 import click
 import yaml
 
+from cli import __version__
+from cli.profiles import PROFILE_NAMES, resolve_profile_ids
 from cli.score import (
     build_scorecard,
     build_summary,
@@ -45,6 +48,12 @@ ALLOWED_MUTATION_FILES = {
     help="Agent command template. Use {task}, {workspace}, and optional {repo} placeholders.",
 )
 @click.option("--workspace", "-w", default=None, help="Workspace directory")
+@click.option(
+    "--profile",
+    type=click.Choice(PROFILE_NAMES, case_sensitive=False),
+    default=None,
+    help="Predefined benchmark profile (infra-smoke/weekly/nightly, etc). Requires CHALLENGE_ID='all'.",
+)
 @click.option(
     "--timeout", "-t", default=300, help="Timeout per step in seconds (default: 300)"
 )
@@ -95,10 +104,16 @@ ALLOWED_MUTATION_FILES = {
     show_default=True,
     help="Base seed for chaos/trial variation (0 = derive from current time).",
 )
+@click.option(
+    "--save-report",
+    default=None,
+    help="Write structured JSON report to file (includes run metadata and report hash).",
+)
 def run(
     challenge_id: str,
     agent: str,
     workspace: str | None,
+    profile: str | None,
     timeout: int,
     summary: bool,
     json_output: bool,
@@ -112,6 +127,7 @@ def run(
     trials: int,
     chaos_level: str,
     chaos_seed: int,
+    save_report: str | None,
 ):
     """Run an agent against a challenge or all challenges.
 
@@ -129,9 +145,26 @@ def run(
     )
     challenges_dir = get_challenges_dir()
 
-    ids = resolve_challenge_ids(challenge_id, challenges_dir)
+    selected_profile = profile.lower() if profile else None
+    if selected_profile and challenge_id != "all":
+        click.echo(
+            "Error: --profile can only be used with CHALLENGE_ID='all'.",
+            err=True,
+        )
+        raise SystemExit(1)
+
+    if selected_profile:
+        ids = resolve_profile_ids(selected_profile, challenges_dir)
+        if ids:
+            click.echo(
+                f"Profile '{selected_profile}' selected ({len(ids)} challenges).",
+                err=True,
+            )
+    else:
+        ids = resolve_challenge_ids(challenge_id, challenges_dir)
     if not ids:
-        click.echo(f"Error: Challenge '{challenge_id}' not found.", err=True)
+        selector = f"profile '{selected_profile}'" if selected_profile else challenge_id
+        click.echo(f"Error: Challenge selector '{selector}' not found.", err=True)
         raise SystemExit(1)
 
     chaos_mode = chaos_level.lower()
@@ -177,25 +210,27 @@ def run(
         build_reliability_report(results, trials) if results and trials > 1 else None
     )
 
+    report_payload = None
+
     # Output results
     if results and csv_output:
         write_csv(results)
     elif results and scorecard:
-        report = build_scorecard(results)
+        report_payload = build_scorecard(results)
         if reliability_report:
-            report["reliability"] = reliability_report
+            report_payload["reliability"] = reliability_report
         if json_output:
-            click.echo(json.dumps(report, indent=2))
+            click.echo(json.dumps(report_payload, indent=2))
         else:
-            print_scorecard(report)
+            print_scorecard(report_payload)
     elif results and (summary or json_output):
-        report = build_summary(results)
+        report_payload = build_summary(results)
         if reliability_report:
-            report["reliability"] = reliability_report
+            report_payload["reliability"] = reliability_report
         if json_output:
-            click.echo(json.dumps(report, indent=2))
+            click.echo(json.dumps(report_payload, indent=2))
         else:
-            print_summary(report)
+            print_summary(report_payload)
     elif results and not json_output and not csv_output:
         total = round(sum(r["score"] for r in results) / len(results))
         passed = sum(1 for r in results if r["passed"])
@@ -205,6 +240,35 @@ def run(
 
     if reliability_report and not json_output and not csv_output:
         print_reliability_report(reliability_report)
+
+    if save_report and results:
+        if report_payload is None:
+            report_payload = build_summary(results)
+            if reliability_report:
+                report_payload["reliability"] = reliability_report
+        save_path = Path(save_report).expanduser().resolve()
+        _save_run_report(
+            save_path=save_path,
+            report=report_payload,
+            agent_command=agent,
+            challenge_id_arg=challenge_id,
+            selected_profile=selected_profile,
+            challenge_ids=ids,
+            trials=trials,
+            chaos_mode=chaos_mode,
+            base_seed=base_seed,
+            parallel=parallel,
+            timeout=timeout,
+            enforce_scope=enforce_scope,
+            fresh_infra_workspace=fresh_infra_workspace,
+            no_score=no_score,
+        )
+        click.echo(f"Saved report to {save_path}", err=True)
+    elif save_report and not results:
+        click.echo(
+            "No scored results to save. Remove --no-score to generate a report.",
+            err=True,
+        )
 
 
 def _run_sequential(
@@ -1058,6 +1122,62 @@ def print_reliability_report(report: dict):
             )
         if len(flaky) > 10:
             click.echo(f"  ... and {len(flaky) - 10} more", err=True)
+
+
+def _save_run_report(
+    save_path: Path,
+    report: dict,
+    agent_command: str,
+    challenge_id_arg: str,
+    selected_profile: str | None,
+    challenge_ids: list[str],
+    trials: int,
+    chaos_mode: str,
+    base_seed: int,
+    parallel: int,
+    timeout: int,
+    enforce_scope: bool,
+    fresh_infra_workspace: bool,
+    no_score: bool,
+):
+    """Persist report + run metadata for reproducible week-over-week comparisons."""
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+
+    canonical_report = json.dumps(
+        report,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("utf-8")
+    report_hash = hashlib.sha256(canonical_report).hexdigest()
+
+    payload = {
+        "metadata": {
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "opengym_version": __version__,
+            "command": "opengym run",
+            "challenge_selector": challenge_id_arg,
+            "profile": selected_profile,
+            "challenge_count": len(challenge_ids),
+            "challenge_ids": challenge_ids,
+            "agent_command_sha256": hashlib.sha256(
+                agent_command.encode("utf-8")
+            ).hexdigest(),
+            "trials": trials,
+            "chaos_level": chaos_mode,
+            "chaos_seed": base_seed,
+            "parallel": parallel,
+            "timeout_seconds": timeout,
+            "enforce_scope": enforce_scope,
+            "fresh_infra_workspace": fresh_infra_workspace,
+            "no_score": no_score,
+            "report_sha256": report_hash,
+        },
+        "report": report,
+    }
+
+    with open(save_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
 
 
 def clean_workspace(workspace: Path, persist_patterns: list[str]) -> int:

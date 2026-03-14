@@ -36,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Challenge classification system with drift detection rule
 - `init-key` command for local/private test encryption keys
 - `{repo}` placeholder in `opengym run --agent` templates
+- Predefined run profiles for infra benchmarking (`infra-smoke`, `infra-weekly`, `infra-nightly`, `infra-hard`, `safety-gate`)
+- `opengym compare` command for report-to-report regression and improvement analysis
+- `opengym run --save-report` for metadata-wrapped JSON artifacts with report hashes
 
 ### Changed
 - `opengym score` now verifies in an isolated staging workspace with canonical hidden tests

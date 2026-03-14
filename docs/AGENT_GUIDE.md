@@ -50,11 +50,19 @@ opengym run 101 --agent "python {repo}/examples/agents/anthropic_agent.py --task
 - `--enforce-scope` (default) fails runs that modify files outside `setup/` (except `tools/.state/`)
 - `--trials N` repeats each challenge and reports stability (stable/flaky/broken)
 - `--chaos-level light|hard` applies deterministic perturbations to expose brittle infra behavior
+- `--profile infra-smoke|infra-weekly|infra-nightly|infra-hard|safety-gate` selects curated benchmark sets
+- `--save-report reports/run.json` writes a metadata-wrapped JSON report for comparison
 
 For weekly regression tracking:
 
 ```bash
 opengym run all --agent "python {repo}/my_agent.py --task '{task}' --dir {workspace}" --trials 3 --chaos-level light --chaos-seed 42 --summary
+```
+
+Then compare with a previous run:
+
+```bash
+opengym compare reports/week1.json reports/week2.json
 ```
 
 For multi-session challenges, the CLI:
